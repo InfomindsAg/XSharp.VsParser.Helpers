@@ -21,7 +21,8 @@ namespace IM.DevTools.XsFormToWinForm.Parser.Tests
             {
                 base.EnterMethod(context);
 
-                Methods.Add($"{Current.ClassName}.{Current.MethodName}");
+                if (Current.Class != null && Current.Method != null)
+                    Methods.Add($"{Current.Class.Name}.{Current.Method.Name}");
             }
         }
 
