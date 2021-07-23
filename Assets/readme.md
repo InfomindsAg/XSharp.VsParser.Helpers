@@ -1,0 +1,1 @@
+The Parser needs the XSharp.VSParser.dll from the c:\Program Files (x86)\XSharp\Extension\Project\ directory
