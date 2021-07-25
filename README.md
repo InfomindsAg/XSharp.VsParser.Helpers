@@ -17,14 +17,14 @@ In order to use this Nuget, you must install a version of the XSharp Compiler an
 
 ### ParserHelper
 
-* Parses a x# file
-* Executes XSharpBaseListeners on the parsed source
-* Executes XSharpBaseRewriters on the parsed source
+* Parses a x# file and exposes is SyntaxTree
+* SyntaxTree 
+  * Can be enumerated
+  * Exposes a Rewriter to change sourcecode
 
-## ExtendedXSharpBaseListener
+### Extension Methods
 
-* Extends the XSharpBaseListener with a Current property, that gives easy access to the current classname, methodname, ...
-
-## XSharpBaseRewriter
-
-* Adds a series of methods to simplify source code rewriting
+* WhereType Filter for SyntaxTree
+* FirstParentOrDefault to get a specific parent matching the type
+* ToValues Methods for Class, Method, ... to give easy access to important values
+* Various Replace... Methods to simplify source rewriting
