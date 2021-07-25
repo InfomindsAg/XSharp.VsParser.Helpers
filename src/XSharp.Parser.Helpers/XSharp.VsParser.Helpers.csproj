@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="XSharp.VSParser">
+      <HintPath>..\..\Assets\XSharp.VSParser.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <!-- 
+       Include the original parser assembly in the nuget
+       https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#targetsfortfmspecificbuildoutput 
+  -->
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);GetParserAssembly</TargetsForTfmSpecificBuildOutput>
+    <PackageId>XSharp.VsParser.Helpers</PackageId>
+    <Version>0.1.0.0-2.8.1.12</Version>
+    <Authors>Volkmar Rigo</Authors>
+    <Company />
+    <Product>XSharp.VsParser.Helpers</Product>
+    <Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>XSharp;VsParser;Helper</PackageTags>
+  </PropertyGroup>
+
+  <Target Name="GetParserAssembly">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)XSharp.VSParser.dll" />
+    </ItemGroup>
+  </Target>
+
+</Project>

@@ -2,11 +2,11 @@
 
 ## Introduction
 
-XSharp.Parser.Helpers contains some helper classes, that simplify the parsing of XSharp code files.
+XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files.
 
 ## Requirements
 
-In order to use this Nuget, you must install a version of the XSharp Compiler.
+In order to use this Nuget, you must install a version of the XSharp Compiler and accept the terms and conditions of the XSharp project.
 
 ## Classes
 
