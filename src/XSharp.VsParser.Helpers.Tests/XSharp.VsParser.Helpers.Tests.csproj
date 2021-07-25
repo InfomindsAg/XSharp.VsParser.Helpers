@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtendedXSharpBaseListenerTests.cs" />
+    <Compile Include="SourceTreeTests.cs" />
     <Compile Include="ProjectHelperTests.cs" />
     <Compile Include="ParserHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

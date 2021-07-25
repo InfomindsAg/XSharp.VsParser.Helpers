@@ -1,5 +1,4 @@
-﻿using IM.DevTools.XsFormToWinForm.Parser.Rewriters;
-using LanguageService.CodeAnalysis.XSharp;
+﻿using LanguageService.CodeAnalysis.XSharp;
 using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
 using LanguageService.SyntaxTree;
 using LanguageService.SyntaxTree.Tree;
@@ -9,7 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml.Linq;
-using XSharp.Parser;
+using XSharp.VsParser.Helpers.Rewriters;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
@@ -147,6 +146,7 @@ namespace XSharp.VsParser.Helpers.Parser
             DumpElement(_StartRule, doc);
             return doc;
         }
+
 
         /// <summary>
         /// Dumps the AST created by parsing as Yaml

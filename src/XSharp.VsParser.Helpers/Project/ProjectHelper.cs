@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 
-namespace XSharp.Parser.Helpers
+namespace XSharp.VsParser.Helpers.Project
 {
     public class ProjectHelper
     {

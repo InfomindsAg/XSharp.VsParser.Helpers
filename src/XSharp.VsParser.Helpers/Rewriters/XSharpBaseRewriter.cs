@@ -2,16 +2,15 @@
 using LanguageService.SyntaxTree;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using XSharp.Parser.Helpers.Listeners;
+using XSharp.VsParser.Helpers.Listeners;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
-namespace IM.DevTools.XsFormToWinForm.Parser.Rewriters
+namespace XSharp.VsParser.Helpers.Rewriters
 {
-	public class XSharpBaseRewriter : ExtendedXSharpBaseListener
-	{
-		protected TokenStreamRewriter _Rewriter = null;
-		public List<string> Warnings = new();
+    public class XSharpBaseRewriter : ExtendedXSharpBaseListener
+    {
+        protected TokenStreamRewriter _Rewriter = null;
+        public List<string> Warnings = new();
 
 
         public void Initialize(TokenStreamRewriter rewriter)
@@ -63,7 +62,7 @@ namespace IM.DevTools.XsFormToWinForm.Parser.Rewriters
 
             if (addVoid || addStrict)
             {
-                var text = "";
+                var text = string.Empty;
                 if (addVoid)
                     text += " as void";
                 if (addStrict)

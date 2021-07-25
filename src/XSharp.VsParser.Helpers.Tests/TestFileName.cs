@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IM.DevTools.XsFormToWinForm.Parser.Tests
+namespace XSharp.Parser.Helpers.Tests
 {
     static class TestFileName
     {

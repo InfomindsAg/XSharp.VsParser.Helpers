@@ -1,19 +1,14 @@
 ﻿using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
-using LanguageService.SyntaxTree;
 using LanguageService.SyntaxTree.Misc;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
-namespace XSharp.Parser.Helpers.Listeners
+namespace XSharp.VsParser.Helpers.Listeners
 {
     public class ExtendedXSharpBaseListener : XSharpBaseListener
     {
-
         protected ParserContext Current = new();
 
         public override void EnterSource([NotNull] SourceContext context)
