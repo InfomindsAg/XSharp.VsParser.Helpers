@@ -19,11 +19,11 @@ namespace XSharp.VsParser.Helpers.Parser
         string _SourceCode;
         XSharpParseOptions _XSharpOptions;
 
-        protected ITokenStream _Tokens;
-        protected XSharpParserRuleContext _StartRule;
+        protected internal ITokenStream _Tokens;
+        protected internal XSharpParserRuleContext _StartRule;
         protected string _FileName;
 
-        public AbstractSyntaxTree SourceTree { get; internal set; }
+        public AbstractSyntaxTree SourceTree { get; }
 
         void CheckParseSuccessful()
         {
@@ -38,6 +38,8 @@ namespace XSharp.VsParser.Helpers.Parser
             XSharpSpecificCompilationOptions.SetSysDir(Environment.GetFolderPath(Environment.SpecialFolder.System));
 
             _XSharpOptions = xsharpOptions;
+
+            SourceTree = new AbstractSyntaxTree(this);
         }
 
         public void Clear()
@@ -47,15 +49,17 @@ namespace XSharp.VsParser.Helpers.Parser
             _StartRule = null;
             _FileName = null;
             _ErrorListener.Clear();
-
-            SourceTree = null;
+            SourceTree.Clear();
         }
 
         public Result ParseFile(string fileName)
+            => ParseText(File.ReadAllText(fileName), fileName);
+
+        public Result ParseText(string sourceCode, string fileName)
         {
             Clear();
 
-            _SourceCode = File.ReadAllText(fileName);
+            _SourceCode = sourceCode;
 
             var ok = XSharp.Parser.VsParser.Parse(_SourceCode, fileName, _XSharpOptions, _ErrorListener, out _Tokens, out _StartRule);
             if (!ok && _ErrorListener.Result.OK)
@@ -69,7 +73,6 @@ namespace XSharp.VsParser.Helpers.Parser
             else
                 _FileName = fileName;
 
-            SourceTree = new AbstractSyntaxTree(_StartRule);
             return _ErrorListener.Result;
         }
 

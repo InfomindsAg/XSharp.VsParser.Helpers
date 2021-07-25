@@ -1,4 +1,5 @@
 ﻿using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
+using LanguageService.SyntaxTree;
 using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections;
@@ -9,11 +10,23 @@ namespace XSharp.VsParser.Helpers.Parser
 {
     public class AbstractSyntaxTree : IEnumerable<IParseTree>
     {
-        readonly XSharpParserRuleContext _Start;
+        readonly ParserHelper _ParserHelper;
+        TokenStreamRewriter _TokenStreamRewriter = null;
 
-        internal AbstractSyntaxTree(XSharpParserRuleContext start)
+
+        public TokenStreamRewriter Rewriter
         {
-            _Start = start;
+            get => _TokenStreamRewriter ??= new TokenStreamRewriter(_ParserHelper._Tokens);
+        }
+
+        public void Clear()
+        {
+            _TokenStreamRewriter = null;
+        }
+
+        internal AbstractSyntaxTree(ParserHelper parserHelper)
+        {
+            _ParserHelper = parserHelper;
         }
 
         IEnumerator<IParseTree> GetEnumerator(IParseTree start)
@@ -29,13 +42,17 @@ namespace XSharp.VsParser.Helpers.Parser
 
         public IEnumerator<IParseTree> GetEnumerator()
         {
-            return GetEnumerator(_Start);
+            if (_ParserHelper._StartRule == null)
+                throw new ArgumentException("Parsing was not successful");
+
+            return GetEnumerator(_ParserHelper._StartRule);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator(_Start);
+            return GetEnumerator();
         }
+
 
     }
 }
