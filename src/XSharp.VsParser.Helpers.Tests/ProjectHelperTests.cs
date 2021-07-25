@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using XSharp.VsParser.Helpers.Project;
 using Xunit;
-using XSharp.Parser.Helpers;
-using static IM.DevTools.XsFormToWinForm.Parser.Tests.TestFileName;
+using static XSharp.Parser.Helpers.Tests.TestFileName;
 
-namespace IM.DevTools.XsFormToWinForm.Parser.Tests
+namespace XSharp.Parser.Helpers.Tests
 {
     public class ProjectHelperTests
     {

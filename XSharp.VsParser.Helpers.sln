@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XSharp.Parser.Helpers", "src\XSharp.Parser.Helpers\XSharp.Parser.Helpers.csproj", "{52115E2E-383C-4420-BF18-21416F835BFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XSharp.VsParser.Helpers", "src\XSharp.VsParser.Helpers\XSharp.VsParser.Helpers.csproj", "{52115E2E-383C-4420-BF18-21416F835BFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XSharp.Parser.Helpers.Tests", "src\XSharp.Parser.Helpers.Tests\XSharp.Parser.Helpers.Tests.csproj", "{3935BBBD-B255-495A-8698-F27117A93306}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XSharp.VsParser.Helpers.Tests", "src\XSharp.VsParser.Helpers.Tests\XSharp.VsParser.Helpers.Tests.csproj", "{3935BBBD-B255-495A-8698-F27117A93306}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{40D4CD9D-0C78-4EFD-B535-DD213522F2D4}"
 EndProject

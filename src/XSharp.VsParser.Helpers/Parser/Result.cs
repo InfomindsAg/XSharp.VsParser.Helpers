@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace XSharp.Parser.Helpers.Parser
+namespace XSharp.VsParser.Helpers.Parser
 {
     public class Result
     {

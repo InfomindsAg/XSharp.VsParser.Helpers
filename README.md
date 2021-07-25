@@ -2,11 +2,11 @@
 
 ## Introduction
 
-XSharp.Parser.Helpers contains some helper classes, that simplify the parsing of XSharp code files.
+XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files.
 
 ## Requirements
 
-In order to use this Nuget, you must install a version of the XSharp Compiler.
+In order to use this Nuget, you must install a version of the XSharp Compiler and accept the terms and conditions of the XSharp project.
 
 ## Classes
 
@@ -17,14 +17,15 @@ In order to use this Nuget, you must install a version of the XSharp Compiler.
 
 ### ParserHelper
 
-* Parses a x# file
-* Executes XSharpBaseListeners on the parsed source
-* Executes XSharpBaseRewriters on the parsed source
+* Parses a x# file and exposes it as SourceTree
+* SourceTree
+  * Can be enumerated
+  * Exposes a Rewriter to change the source code
+  * Can dump the tree as Xml or Yaml
 
-## ExtendedXSharpBaseListener
+### Extension Methods
 
-* Extends the XSharpBaseListener with a Current property, that gives easy access to the current classname, methodname, ...
-
-## XSharpBaseRewriter
-
-* Adds a series of methods to simplify source code rewriting
+* WhereType Filter for SyntaxTree
+* FirstParentOrDefault to get a specific parent matching the type
+* ToValues Methods for Class, Method, ... to give easy access to important values
+* Various ToIndex and Replace... Methods to simplify source rewriting

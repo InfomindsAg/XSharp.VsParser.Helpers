@@ -1,5 +1,4 @@
-﻿using IM.DevTools.XsFormToWinForm.Parser.Rewriters;
-using LanguageService.CodeAnalysis.XSharp;
+﻿using LanguageService.CodeAnalysis.XSharp;
 using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
 using LanguageService.SyntaxTree;
 using LanguageService.SyntaxTree.Tree;
@@ -7,9 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using XSharp.Parser.Helpers.Parser;
+using System.Text;
+using System.Xml.Linq;
 
-namespace XSharp.Parser.Helpers
+namespace XSharp.VsParser.Helpers.Parser
 {
     public class ParserHelper
     {
@@ -17,10 +17,17 @@ namespace XSharp.Parser.Helpers
         string _SourceCode;
         XSharpParseOptions _XSharpOptions;
 
-        protected ITokenStream _Tokens;
-        protected XSharpParserRuleContext _StartRule;
-        protected bool _ParseSuccessful;
+        protected internal ITokenStream _Tokens;
+        protected internal XSharpParserRuleContext _StartRule;
         protected string _FileName;
+
+        public AbstractSyntaxTree SourceTree { get; }
+
+        internal void CheckParseSuccessful()
+        {
+            if (_StartRule == null)
+                throw new ArgumentException("Parsing was not successful");
+        }
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
         {
@@ -29,6 +36,8 @@ namespace XSharp.Parser.Helpers
             XSharpSpecificCompilationOptions.SetSysDir(Environment.GetFolderPath(Environment.SpecialFolder.System));
 
             _XSharpOptions = xsharpOptions;
+
+            SourceTree = new AbstractSyntaxTree(this);
         }
 
         public void Clear()
@@ -36,17 +45,21 @@ namespace XSharp.Parser.Helpers
             _SourceCode = null;
             _Tokens = null;
             _StartRule = null;
-            _ParseSuccessful = false;
             _FileName = null;
             _ErrorListener.Clear();
+            SourceTree.Clear();
         }
 
         public Result ParseFile(string fileName)
-        {
-            _ErrorListener.Clear();
-            _SourceCode = File.ReadAllText(fileName);
+            => ParseText(File.ReadAllText(fileName), fileName);
 
-            var ok = VsParser.Parse(_SourceCode, fileName, _XSharpOptions, _ErrorListener, out _Tokens, out _StartRule);
+        public Result ParseText(string sourceCode, string fileName)
+        {
+            Clear();
+
+            _SourceCode = sourceCode;
+
+            var ok = XSharp.Parser.VsParser.Parse(_SourceCode, fileName, _XSharpOptions, _ErrorListener, out _Tokens, out _StartRule);
             if (!ok && _ErrorListener.Result.OK)
                 _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
 
@@ -58,52 +71,17 @@ namespace XSharp.Parser.Helpers
             else
                 _FileName = fileName;
 
-            _ParseSuccessful = _ErrorListener.Result.OK;
             return _ErrorListener.Result;
         }
 
         public void ExecuteListeners(List<XSharpBaseListener> listeners)
         {
             Debug.Assert((listeners?.Count ?? 0) > 0, "List of listeners can not be empty");
-            if (!_ParseSuccessful)
-                throw new ArgumentException("Parsing was not successful");
+            CheckParseSuccessful();
 
-            var walker = new ParseTreeWalker();
             foreach (var listener in listeners)
-                walker.Walk(listener, _StartRule);
+                ParseTreeWalker.Default.Walk(listener, _StartRule);
         }
-
-        public (bool changed, string newSourceCode) ExecuteRewriters(List<XSharpBaseRewriter> rewriters)
-        {
-            Debug.Assert((rewriters?.Count ?? 0) > 0, "List of rewriters can not be empty");
-            if (!_ParseSuccessful)
-                throw new ArgumentException("Parsing was not successful");
-
-            var tokenRewriter = new TokenStreamRewriter(_Tokens);
-            var walker = new ParseTreeWalker();
-
-            foreach (var rewriter in rewriters)
-            {
-                rewriter.Initialize(tokenRewriter);
-                walker.Walk(rewriter, _StartRule);
-            }
-
-            var newSourceCode = tokenRewriter.GetText();
-            return (_SourceCode != newSourceCode, newSourceCode);
-        }
-
-        public bool ExecuteRewriters(List<XSharpBaseRewriter> rewriters, string newFilename = null)
-        {
-            var (changed, newSourceCode) = ExecuteRewriters(rewriters);
-            if (changed)
-            {
-                newFilename ??= _FileName;
-                File.WriteAllText(newFilename, newSourceCode);
-            }
-
-            return changed;
-        }
-
 
         #region Builders
 

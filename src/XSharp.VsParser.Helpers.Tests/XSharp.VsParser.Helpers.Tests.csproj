@@ -46,16 +46,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtendedXSharpBaseListenerTests.cs" />
+    <Compile Include="SourceTreeRewriteTests.cs" />
+    <Compile Include="SourceTreeTests.cs" />
     <Compile Include="ProjectHelperTests.cs" />
     <Compile Include="ParserHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestFileName.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XSharp.Parser.Helpers\XSharp.Parser.Helpers.csproj">
+    <ProjectReference Include="..\XSharp.VsParser.Helpers\XSharp.VsParser.Helpers.csproj">
       <Project>{52115e2e-383c-4420-bf18-21416f835bfa}</Project>
-      <Name>XSharp.Parser.Helpers</Name>
+      <Name>XSharp.VsParser.Helpers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
