@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace XSharp.Parser.Helpers.Parser
+namespace XSharp.VsParser.Helpers.Parser
 {
 
-    class GenericErrorListener : VsParser.IErrorListener
+    class GenericErrorListener : XSharp.Parser.VsParser.IErrorListener
     {
         public Result Result = new();
 

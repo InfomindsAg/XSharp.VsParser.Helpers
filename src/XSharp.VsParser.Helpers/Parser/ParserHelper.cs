@@ -9,9 +9,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml.Linq;
-using XSharp.Parser.Helpers.Parser;
+using XSharp.Parser;
 
-namespace XSharp.Parser.Helpers
+namespace XSharp.VsParser.Helpers.Parser
 {
     public class ParserHelper
     {
@@ -22,12 +22,13 @@ namespace XSharp.Parser.Helpers
 
         protected ITokenStream _Tokens;
         protected XSharpParserRuleContext _StartRule;
-        protected bool _ParseSuccessful;
         protected string _FileName;
+
+        public AbstractSyntaxTree SourceTree { get; internal set; }
 
         void CheckParseSuccessful()
         {
-            if (!_ParseSuccessful)
+            if (_StartRule == null)
                 throw new ArgumentException("Parsing was not successful");
         }
 
@@ -45,17 +46,19 @@ namespace XSharp.Parser.Helpers
             _SourceCode = null;
             _Tokens = null;
             _StartRule = null;
-            _ParseSuccessful = false;
             _FileName = null;
             _ErrorListener.Clear();
+
+            SourceTree = null;
         }
 
         public Result ParseFile(string fileName)
         {
-            _ErrorListener.Clear();
+            Clear();
+
             _SourceCode = File.ReadAllText(fileName);
 
-            var ok = VsParser.Parse(_SourceCode, fileName, _XSharpOptions, _ErrorListener, out _Tokens, out _StartRule);
+            var ok = XSharp.Parser.VsParser.Parse(_SourceCode, fileName, _XSharpOptions, _ErrorListener, out _Tokens, out _StartRule);
             if (!ok && _ErrorListener.Result.OK)
                 _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
 
@@ -67,7 +70,7 @@ namespace XSharp.Parser.Helpers
             else
                 _FileName = fileName;
 
-            _ParseSuccessful = _ErrorListener.Result.OK;
+            SourceTree = new AbstractSyntaxTree(_StartRule);
             return _ErrorListener.Result;
         }
 
@@ -76,9 +79,8 @@ namespace XSharp.Parser.Helpers
             Debug.Assert((listeners?.Count ?? 0) > 0, "List of listeners can not be empty");
             CheckParseSuccessful();
 
-            var walker = new ParseTreeWalker();
             foreach (var listener in listeners)
-                walker.Walk(listener, _StartRule);
+                ParseTreeWalker.Default.Walk(listener, _StartRule);
         }
 
         public (bool changed, string newSourceCode) ExecuteRewriters(List<XSharpBaseRewriter> rewriters)
@@ -87,12 +89,11 @@ namespace XSharp.Parser.Helpers
             CheckParseSuccessful();
 
             var tokenRewriter = new TokenStreamRewriter(_Tokens);
-            var walker = new ParseTreeWalker();
 
             foreach (var rewriter in rewriters)
             {
                 rewriter.Initialize(tokenRewriter);
-                walker.Walk(rewriter, _StartRule);
+                ParseTreeWalker.Default.Walk(rewriter, _StartRule);
             }
 
             var newSourceCode = tokenRewriter.GetText();
