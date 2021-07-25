@@ -53,7 +53,7 @@
     <Compile Include="TestFileName.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XSharp.Parser.Helpers\XSharp.VsParser.Helpers.csproj">
+    <ProjectReference Include="..\XSharp.VsParser.Helpers\XSharp.VsParser.Helpers.csproj">
       <Project>{52115e2e-383c-4420-bf18-21416f835bfa}</Project>
       <Name>XSharp.VsParser.Helpers</Name>
     </ProjectReference>
