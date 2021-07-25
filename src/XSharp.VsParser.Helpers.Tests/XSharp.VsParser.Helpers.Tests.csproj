@@ -46,7 +46,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtendedXSharpBaseListenerTests.cs" />
     <Compile Include="SourceTreeRewriteTests.cs" />
     <Compile Include="SourceTreeTests.cs" />
     <Compile Include="ProjectHelperTests.cs" />

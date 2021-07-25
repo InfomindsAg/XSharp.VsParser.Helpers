@@ -1,10 +1,9 @@
-﻿using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
-using LanguageService.SyntaxTree;
+﻿using LanguageService.SyntaxTree;
 using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.Xml.Linq;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
@@ -13,7 +12,9 @@ namespace XSharp.VsParser.Helpers.Parser
         readonly ParserHelper _ParserHelper;
         TokenStreamRewriter _TokenStreamRewriter = null;
 
-
+        /// <summary>
+        /// Get's a Rewriter that can be used to modify the SourceTree
+        /// </summary>
         public TokenStreamRewriter Rewriter
         {
             get => _TokenStreamRewriter ??= new TokenStreamRewriter(_ParserHelper._Tokens);
@@ -42,9 +43,7 @@ namespace XSharp.VsParser.Helpers.Parser
 
         public IEnumerator<IParseTree> GetEnumerator()
         {
-            if (_ParserHelper._StartRule == null)
-                throw new ArgumentException("Parsing was not successful");
-
+            _ParserHelper.CheckParseSuccessful();
             return GetEnumerator(_ParserHelper._StartRule);
         }
 
@@ -53,6 +52,23 @@ namespace XSharp.VsParser.Helpers.Parser
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Dumps the AST created by parsing as Yaml
+        /// </summary>
+        public string DumpYaml()
+        {
+            _ParserHelper.CheckParseSuccessful();
+            return _ParserHelper._StartRule.DumpYaml();
+        }
+
+        /// <summary>
+        /// Dumps the AST created by parsing as XDocument
+        /// </summary>
+        public XDocument DumpXml()
+        {
+            _ParserHelper.CheckParseSuccessful();
+            return _ParserHelper._StartRule.DumpXml();
+        }
 
     }
 }

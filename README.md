@@ -17,14 +17,15 @@ In order to use this Nuget, you must install a version of the XSharp Compiler an
 
 ### ParserHelper
 
-* Parses a x# file and exposes is SyntaxTree
-* SyntaxTree 
+* Parses a x# file and exposes it as SourceTree
+* SourceTree
   * Can be enumerated
-  * Exposes a Rewriter to change sourcecode
+  * Exposes a Rewriter to change the source code
+  * Can dump the tree as Xml or Yaml
 
 ### Extension Methods
 
 * WhereType Filter for SyntaxTree
 * FirstParentOrDefault to get a specific parent matching the type
 * ToValues Methods for Class, Method, ... to give easy access to important values
-* Various Replace... Methods to simplify source rewriting
+* Various ToIndex and Replace... Methods to simplify source rewriting
