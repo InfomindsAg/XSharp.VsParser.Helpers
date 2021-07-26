@@ -1,11 +1,9 @@
-﻿using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
-using LanguageService.SyntaxTree;
-using LanguageService.SyntaxTree.Tree;
+﻿using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
-using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
+using System.Linq;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
@@ -20,6 +18,9 @@ namespace XSharp.VsParser.Helpers.Parser
                     yield return returnItem;
         }
 
+        public static T FirstOrDefaultType<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
+            => enumerable.WhereType<T>().FirstOrDefault();
+
         public static T FirstParentOrDefault<T>(this IParseTree element) where T : IParseTree
         {
             element = element?.Parent;
@@ -30,8 +31,11 @@ namespace XSharp.VsParser.Helpers.Parser
                 element = element?.Parent;
             }
 
-            return default(T);
+            return default;
         }
+
+        public static IEnumerable<IParseTree> AsEnumerable(this IParseTree source)
+            => new ParseTreeEnumerable(source);
 
         /// <summary>
         /// Dumps the AST created by parsing as XDocument

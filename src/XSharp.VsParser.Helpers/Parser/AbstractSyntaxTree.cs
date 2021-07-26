@@ -1,23 +1,56 @@
-﻿using LanguageService.SyntaxTree;
+﻿using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
+using LanguageService.SyntaxTree;
 using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Xml.Linq;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
     public class AbstractSyntaxTree : IEnumerable<IParseTree>
     {
-        readonly ParserHelper _ParserHelper;
+        #region Private Fields
+
         TokenStreamRewriter _TokenStreamRewriter = null;
+        readonly string _SourceCode;
+        readonly ITokenStream _Tokens;
+        readonly XSharpParserRuleContext _StartRule;
+
+        #endregion
+
+        #region Private Helper Methods
+
+        void CheckParseSuccessful()
+        {
+            if (_StartRule == null)
+                throw new ArgumentException("Parsing was not successful");
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        public string FileName { get; private set; }
 
         /// <summary>
         /// Get's a Rewriter that can be used to modify the SourceTree
         /// </summary>
         public TokenStreamRewriter Rewriter
         {
-            get => _TokenStreamRewriter ??= new TokenStreamRewriter(_ParserHelper._Tokens);
+            get => _TokenStreamRewriter ??= new TokenStreamRewriter(_Tokens);
+        }
+
+        #endregion
+
+        internal AbstractSyntaxTree(string fileName, string sourceCode, ITokenStream tokens, XSharpParserRuleContext startRule)
+        {
+            _SourceCode = sourceCode;
+            _Tokens = tokens;
+            _StartRule = startRule;
+            FileName = fileName;
         }
 
         public void Clear()
@@ -25,26 +58,10 @@ namespace XSharp.VsParser.Helpers.Parser
             _TokenStreamRewriter = null;
         }
 
-        internal AbstractSyntaxTree(ParserHelper parserHelper)
-        {
-            _ParserHelper = parserHelper;
-        }
-
-        IEnumerator<IParseTree> GetEnumerator(IParseTree start)
-        {
-            yield return start;
-            for (int i = 0; i < start.ChildCount; i++)
-            {
-                var childEnumerator = GetEnumerator(start.GetChild(i));
-                while (childEnumerator.MoveNext())
-                    yield return childEnumerator.Current;
-            }
-        }
-
         public IEnumerator<IParseTree> GetEnumerator()
         {
-            _ParserHelper.CheckParseSuccessful();
-            return GetEnumerator(_ParserHelper._StartRule);
+            CheckParseSuccessful();
+            return new ParseTreeEnumerable(_StartRule).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -57,8 +74,8 @@ namespace XSharp.VsParser.Helpers.Parser
         /// </summary>
         public string DumpYaml()
         {
-            _ParserHelper.CheckParseSuccessful();
-            return _ParserHelper._StartRule.DumpYaml();
+            CheckParseSuccessful();
+            return _StartRule.DumpYaml();
         }
 
         /// <summary>
@@ -66,8 +83,32 @@ namespace XSharp.VsParser.Helpers.Parser
         /// </summary>
         public XDocument DumpXml()
         {
-            _ParserHelper.CheckParseSuccessful();
-            return _ParserHelper._StartRule.DumpXml();
+            CheckParseSuccessful();
+            return _StartRule.DumpXml();
+        }
+
+        public void SaveRewriteResult()
+            => SaveRewriteResult(FileName);
+
+        public void SaveRewriteResult(string newFileName)
+        {
+            if (_TokenStreamRewriter == null)
+                return;
+
+            var newSourceCode = _TokenStreamRewriter.GetText();
+            if (_SourceCode == newSourceCode)
+                return;
+
+            File.WriteAllText(newFileName, newSourceCode);
+        }
+
+        public void ExecuteListeners(List<XSharpBaseListener> listeners)
+        {
+            Debug.Assert((listeners?.Count ?? 0) > 0, "List of listeners can not be empty");
+            CheckParseSuccessful();
+
+            foreach (var listener in listeners)
+                ParseTreeWalker.Default.Walk(listener, _StartRule);
         }
 
     }

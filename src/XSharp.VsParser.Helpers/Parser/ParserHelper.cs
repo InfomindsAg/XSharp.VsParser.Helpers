@@ -13,21 +13,10 @@ namespace XSharp.VsParser.Helpers.Parser
 {
     public class ParserHelper
     {
-        GenericErrorListener _ErrorListener = new();
-        string _SourceCode;
-        XSharpParseOptions _XSharpOptions;
+        readonly GenericErrorListener _ErrorListener = new();
+        readonly XSharpParseOptions _XSharpOptions;
 
-        protected internal ITokenStream _Tokens;
-        protected internal XSharpParserRuleContext _StartRule;
-        protected string _FileName;
-
-        public AbstractSyntaxTree SourceTree { get; }
-
-        internal void CheckParseSuccessful()
-        {
-            if (_StartRule == null)
-                throw new ArgumentException("Parsing was not successful");
-        }
+        public AbstractSyntaxTree SourceTree { get; private set; }
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
         {
@@ -37,17 +26,13 @@ namespace XSharp.VsParser.Helpers.Parser
 
             _XSharpOptions = xsharpOptions;
 
-            SourceTree = new AbstractSyntaxTree(this);
+            SourceTree = null;
         }
 
         public void Clear()
         {
-            _SourceCode = null;
-            _Tokens = null;
-            _StartRule = null;
-            _FileName = null;
             _ErrorListener.Clear();
-            SourceTree.Clear();
+            SourceTree = null;
         }
 
         public Result ParseFile(string fileName)
@@ -57,36 +42,23 @@ namespace XSharp.VsParser.Helpers.Parser
         {
             Clear();
 
-            _SourceCode = sourceCode;
-
-            var ok = XSharp.Parser.VsParser.Parse(_SourceCode, fileName, _XSharpOptions, _ErrorListener, out _Tokens, out _StartRule);
+            var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, _ErrorListener, out var tokens, out var startRule);
             if (!ok && _ErrorListener.Result.OK)
                 _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
 
-            if (!_ErrorListener.Result.OK)
-            {
-                _Tokens = null;
-                _StartRule = null;
-            }
-            else
-                _FileName = fileName;
+            if (_ErrorListener.Result.OK)
+                SourceTree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
 
             return _ErrorListener.Result;
         }
 
-        public void ExecuteListeners(List<XSharpBaseListener> listeners)
-        {
-            Debug.Assert((listeners?.Count ?? 0) > 0, "List of listeners can not be empty");
-            CheckParseSuccessful();
-
-            foreach (var listener in listeners)
-                ParseTreeWalker.Default.Walk(listener, _StartRule);
-        }
+        public Result ParseRewriter()
+            => ParseText(SourceTree.Rewriter.GetText(), SourceTree.FileName);
 
         #region Builders
 
         public static ParserHelper BuildWithVoDefaultOptions()
-                 => new ParserHelper(XSharpParseOptions.FromVsValues(new List<string>
+                 => new(XSharpParseOptions.FromVsValues(new List<string>
                     {
                     @"i:c:\Program Files(x86)\XSharp\Include\",
                     "dialect:VO",
@@ -117,7 +89,7 @@ namespace XSharp.VsParser.Helpers.Parser
                     }));
 
         public static ParserHelper BuildWithOptionsList(List<string> options)
-            => new ParserHelper(XSharpParseOptions.FromVsValues(options));
+            => new(XSharpParseOptions.FromVsValues(options));
 
         #endregion
     }

@@ -21,7 +21,7 @@ namespace XSharp.Parser.Helpers.Tests
                 parser.SourceTree.Rewriter.ReplaceCallingConvention(item.Sig, "clipper");
             }
 
-            parser.ParseText(parser.SourceTree.Rewriter.GetText(), "dummy.prg");
+            parser.ParseRewriter();
             foreach (var item in parser.SourceTree.WhereType<MethodContext>())
             {
                 item.ToValues().Name.Should().EndWith("_XXX");
