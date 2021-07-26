@@ -9,7 +9,7 @@ namespace XSharp.Parser.Helpers.Tests
 {
     public class ProjectHelperTests
     {
-        static List<string> AllVoFlags = new()
+        static readonly List<string> AllVoFlags = new()
         {
             "az",
             "cs",
