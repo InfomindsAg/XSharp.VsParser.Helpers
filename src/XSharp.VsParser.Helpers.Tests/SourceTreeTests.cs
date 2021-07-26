@@ -54,5 +54,27 @@ namespace XSharp.Parser.Helpers.Tests
                     "StringBuilderExamples.AppendFormat",
                     "StringBuilderExamples.InsertAndRemove");
         }
+
+        [Fact]
+        public void AsEnumerableTest()
+        {
+            var parser = ParserHelper.BuildWithVoDefaultOptions();
+            var result = parser.ParseFile(CodeFile("StringBuilderExamples.prg"));
+
+            var firstClass = parser.SourceTree.FirstOrDefaultType<Class_Context>();
+
+            firstClass.AsEnumerable()
+                .WhereType<MethodContext>()
+                .Select(q => q.ToValues().Name)
+                .Should().BeEquivalentTo(
+                    "Execute",
+                    "ConcatenateNoLineBreaks",
+                    "ConcatenateWithLineBreaks",
+                    "FluentApi",
+                    "FluentApiMultiLine",
+                    "Clear",
+                    "AppendFormat",
+                    "InsertAndRemove");
+        }
     }
 }
