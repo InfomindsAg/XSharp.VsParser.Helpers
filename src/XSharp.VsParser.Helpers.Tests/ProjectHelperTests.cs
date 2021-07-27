@@ -56,5 +56,14 @@ namespace XSharp.Parser.Helpers.Tests
 
             options.Should().Contain(AllFlags(AllVoFlags, false));
         }
+
+        [Fact]
+        public void GetSourceFiles()
+        {
+            var projectHelper = new ProjectHelper(CodeFile("XSharpExamples.xsproj"));
+            var sourceFiles = projectHelper.GetSourceFiles();
+
+            sourceFiles.Should().BeEquivalentTo("Program.prg", "StringBuilderExamples.prg");
+        }
     }
 }
