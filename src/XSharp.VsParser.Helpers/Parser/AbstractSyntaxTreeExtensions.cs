@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
@@ -17,6 +18,9 @@ namespace XSharp.VsParser.Helpers.Parser
                 if (item is T returnItem)
                     yield return returnItem;
         }
+
+        public static IEnumerable<T> WhereType<T>(this IEnumerable<IParseTree> enumerable, Func<T, bool> predicate) where T : IParseTree
+            => enumerable.WhereType<T>().Where(predicate);
 
         public static T FirstOrDefaultType<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
             => enumerable.WhereType<T>().FirstOrDefault();

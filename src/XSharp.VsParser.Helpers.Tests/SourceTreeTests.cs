@@ -9,25 +9,40 @@ namespace XSharp.Parser.Helpers.Tests
 {
     public class SourceTreeTests
     {
-        [Fact]
-        public void SourceTreeEnumeratorTest()
+        ParserHelper Parse()
         {
             var parser = ParserHelper.BuildWithVoDefaultOptions();
             var result = parser.ParseFile(CodeFile("StringBuilderExamples.prg"));
+            result.Should().NotBeNull();
+            result.Errors.Should().BeEmpty();
 
-            parser.SourceTree
+            return parser;
+        }
+
+
+        [Fact]
+        public void SourceTreeEnumeratorTest()
+        {
+            Parse().SourceTree
                 .WhereType<MethodContext>()
                 .Select(q => q.ToValues().Name)
                 .Should().BeEquivalentTo("Execute", "ConcatenateNoLineBreaks", "ConcatenateWithLineBreaks", "FluentApi", "FluentApiMultiLine", "Clear", "AppendFormat", "InsertAndRemove");
         }
 
         [Fact]
+        public void WhereTypeWithPredicateTest()
+        {
+            Parse().SourceTree
+                .WhereType<MethodContext>(q => q.ToValues().Name == "Execute")
+                .Select(q => q.ToValues().Name)
+                .Should().BeEquivalentTo("Execute");
+        }
+
+
+        [Fact]
         public void FirstParentOrDefaultTest()
         {
-            var parser = ParserHelper.BuildWithVoDefaultOptions();
-            var result = parser.ParseFile(CodeFile("StringBuilderExamples.prg"));
-
-            parser.SourceTree
+            Parse().SourceTree
                 .WhereType<MethodContext>()
                 .Select(q => q.FirstParentOrDefault<Class_Context>().ToValues()?.Name).Distinct()
                 .Should().BeEquivalentTo("StringBuilderExamples");
@@ -36,12 +51,7 @@ namespace XSharp.Parser.Helpers.Tests
         [Fact]
         public void ToValueTests()
         {
-            var parser = ParserHelper.BuildWithVoDefaultOptions();
-            var result = parser.ParseFile(CodeFile("StringBuilderExamples.prg"));
-            result.Should().NotBeNull();
-            result.OK.Should().BeTrue();
-
-            parser.SourceTree
+            Parse().SourceTree
                 .WhereType<MethodContext>()
                 .Select(q => $"{q.FirstParentOrDefault<Class_Context>().ToValues().Name}.{q.ToValues().Name}")
                 .Should().BeEquivalentTo(

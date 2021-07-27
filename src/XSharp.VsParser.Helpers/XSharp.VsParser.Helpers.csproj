@@ -26,7 +26,7 @@
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);GetParserAssembly</TargetsForTfmSpecificBuildOutput>
     <PackageId>XSharp.VsParser.Helpers</PackageId>
-    <Version>2.8.1.12-2</Version>
+    <Version>2.8.1.15-3</Version>
     <Authors>Volkmar Rigo</Authors>
     <Company />
     <Product>XSharp.VsParser.Helpers</Product>
