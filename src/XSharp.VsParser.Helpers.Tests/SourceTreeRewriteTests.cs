@@ -13,7 +13,8 @@ namespace XSharp.Parser.Helpers.Tests
         public void SourceTreeEnumeratorTest()
         {
             var parser = ParserHelper.BuildWithVoDefaultOptions();
-            _ = parser.ParseFile(CodeFile("StringBuilderExamples.prg"));
+            var result = parser.ParseFile(CodeFile("StringBuilderExamples.prg"));
+            result.Errors.Should().BeEmpty();
 
             foreach (var item in parser.SourceTree.WhereType<MethodContext>())
             {
