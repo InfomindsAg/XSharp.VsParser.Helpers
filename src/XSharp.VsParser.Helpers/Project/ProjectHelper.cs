@@ -48,35 +48,26 @@ namespace XSharp.VsParser.Helpers.Project
             var root = _ProjectXml.Root;
             var options = new List<string>();
 
-            options.Add($"dialect:{GetProjectProperty("Dialect").ToLower()}");
+            void Add(string key, string value)
+            {
+                if (!string.IsNullOrEmpty(value))
+                    options.Add($"{key}:{value}");
+            }
+
+            Add("dialect", GetProjectProperty("Dialect")?.ToLower());
             options.AddRange(GetReferences().Select(x => $"r:{x}"));
-            options.Add($"ns:{GetProjectProperty("RootNamespace")}");
+            Add("ns", GetProjectProperty("RootNamespace"));
             options.AddRange(GetFlags());
 
-            var value = GetProjectProperty("StandardDefs");
-            if (value != null && value.Trim().Length > 0)
-            {
-                options.Add("stddefs:" + value);
-            }
-            value = GetProjectProperty("NoStandardDefs");
-            if (value != null && value.ToLower() == "true")
-            {
-                options.Add("nostddefs+");
-            }
-            else
-            {
-                options.Add("nostddefs-");
-            }
+            Add("stddefs", GetProjectProperty("StandardDefs")?.Trim());
+            options.Add($"nostddefs{(GetProjectProperty("NoStandardDefs")?.ToLower() == "true" ? "+" : "-")}");
 
             return options;
         }
 
 
         private string GetProjectProperty(string propertyName)
-        {
-            return _ProjectXml.Root.Element(_Ns + "PropertyGroup")
-                .Element(_Ns + propertyName)?.Value;
-        }
+            => _ProjectXml.Root.Element(_Ns + "PropertyGroup").Element(_Ns + propertyName)?.Value;
 
         private List<string> GetReferences()
         {
