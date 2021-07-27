@@ -2,11 +2,13 @@
 
 namespace XSharp.VsParser.Helpers.Values
 {
-    public class MethodContextValues
+    public class MethodContextValues : ContextValues<MethodContext>
     {
         // TODO: Extend with Parameters, Return-Type, Calling Convention, Parameters
 
         public string Name { get; internal set; }
+        public string ReturnType { get; internal set; }
+        public string CallingConvetion { get; internal set; }
 
         static internal MethodContextValues Build(MethodContext context)
         {
@@ -16,7 +18,10 @@ namespace XSharp.VsParser.Helpers.Values
             var signature = context.signature();
             return new MethodContextValues
             {
+                Context = context,
                 Name = signature.identifier()?.GetText(),
+                CallingConvetion = signature.CallingConvention?.GetText(),
+                ReturnType = signature.Type?.GetText(),
             };
         }
     }
