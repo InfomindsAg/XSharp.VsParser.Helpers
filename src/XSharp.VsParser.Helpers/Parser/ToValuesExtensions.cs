@@ -16,6 +16,10 @@ namespace XSharp.VsParser.Helpers.Parser
         public static MethodContextValues ToValues(this MethodContext context) => MethodContextValues.Build(context);
         public static IEnumerable<MethodContextValues> ToValues(this IEnumerable<MethodContext> enumerable) => enumerable.Select(MethodContextValues.Build);
 
+        public static SuperExpressionContextValues ToValues(this SuperExpressionContext context) => SuperExpressionContextValues.Build(context);
+        public static IEnumerable<SuperExpressionContextValues> ToValues(this IEnumerable<SuperExpressionContext> enumerable) => enumerable.Select(SuperExpressionContextValues.Build);
+
+
 
         // Todo: Add Conversions for Proc/Func, Properties, Access/Assign, ...
 
