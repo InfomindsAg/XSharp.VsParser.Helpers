@@ -26,11 +26,11 @@
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);GetParserAssembly</TargetsForTfmSpecificBuildOutput>
     <PackageId>XSharp.VsParser.Helpers</PackageId>
-    <Version>2.8.1.15-3</Version>
+    <Version>0.3.0.0</Version>
     <Authors>Volkmar Rigo</Authors>
     <Company />
     <Product>XSharp.VsParser.Helpers</Product>
-    <Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files.</Description>
+    <Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files. Based on XSharp.VsParser 2.8.1.15.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>XSharp;VsParser;Helper</PackageTags>
   </PropertyGroup>
