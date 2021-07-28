@@ -3,7 +3,7 @@ using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
 using Xunit;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
-using static XSharp.Parser.Helpers.Tests.TestFileName;
+using static XSharp.Parser.Helpers.Tests.HelperExtensions;
 
 namespace XSharp.Parser.Helpers.Tests
 {
