@@ -29,14 +29,14 @@ namespace XSharp.VsParser.Helpers.Parser
                 throw new ArgumentException("Parsing was not successful");
         }
 
-        void SaveRewriteResult(string newFileName, bool createBackup = false)
+        bool SaveRewriteResult(string newFileName, bool createBackup = false)
         {
             if (_TokenStreamRewriter == null)
-                return;
+                return false;
 
             var newSourceCode = _TokenStreamRewriter.GetText();
             if (_SourceCode == newSourceCode)
-                return;
+                return false;
 
             if (createBackup)
             {
@@ -47,6 +47,7 @@ namespace XSharp.VsParser.Helpers.Parser
             }
 
             File.WriteAllText(newFileName, newSourceCode);
+            return true;
         }
 
         #endregion
@@ -110,10 +111,20 @@ namespace XSharp.VsParser.Helpers.Parser
             return _StartRule.DumpXml();
         }
 
-        public void SaveRewriteResult(string newFileName)
+        /// <summary>
+        /// Saves the code as file with the specified filename, if it was changed trougth rewrites
+        /// </summary>
+        /// <param name="newFileName">The new filename for the file</param>
+        /// <returns>True, if the file was changed and therefor saved, otherwise false.</returns>
+        public bool SaveRewriteResult(string newFileName)
             => SaveRewriteResult(newFileName, false);
 
-        public void SaveRewriteResult(bool createBackup = false)
+        /// <summary>
+        /// Saves the code using original filename, if it was changed trougth rewrites. 
+        /// </summary>
+        /// <param name="createBackup">If true, a backup will be created before save the file. The file extension for the backup will be beforeRewrite</param>
+        /// <returns>True, if the file was changed and therefor saved, otherwise false.</returns>
+        public bool SaveRewriteResult(bool createBackup = false)
             => SaveRewriteResult(FileName, createBackup);
 
 
