@@ -29,6 +29,26 @@ namespace XSharp.VsParser.Helpers.Parser
                 throw new ArgumentException("Parsing was not successful");
         }
 
+        void SaveRewriteResult(string newFileName, bool createBackup = false)
+        {
+            if (_TokenStreamRewriter == null)
+                return;
+
+            var newSourceCode = _TokenStreamRewriter.GetText();
+            if (_SourceCode == newSourceCode)
+                return;
+
+            if (createBackup)
+            {
+                var backupName = Path.ChangeExtension(FileName, ".BeforeRewrite");
+                if (File.Exists(backupName))
+                    File.Delete(backupName);
+                File.Move(FileName, backupName);
+            }
+
+            File.WriteAllText(newFileName, newSourceCode);
+        }
+
         #endregion
 
         #region Public Properties
@@ -90,20 +110,12 @@ namespace XSharp.VsParser.Helpers.Parser
             return _StartRule.DumpXml();
         }
 
-        public void SaveRewriteResult()
-            => SaveRewriteResult(FileName);
-
         public void SaveRewriteResult(string newFileName)
-        {
-            if (_TokenStreamRewriter == null)
-                return;
+            => SaveRewriteResult(newFileName, false);
 
-            var newSourceCode = _TokenStreamRewriter.GetText();
-            if (_SourceCode == newSourceCode)
-                return;
+        public void SaveRewriteResult(bool createBackup = false)
+            => SaveRewriteResult(FileName, createBackup);
 
-            File.WriteAllText(newFileName, newSourceCode);
-        }
 
         public void ExecuteListeners(List<XSharpBaseListener> listeners)
         {

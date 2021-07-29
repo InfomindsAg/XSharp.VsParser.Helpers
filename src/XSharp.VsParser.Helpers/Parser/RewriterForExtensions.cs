@@ -133,5 +133,19 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #endregion
 
+        #region ReturnStmt
+
+        public static RewriterForContext<ReturnStmtContext> DeleteExpression(this RewriterForContext<ReturnStmtContext> rewriterFor)
+        {
+            var expr = rewriterFor.Context.Expr;
+            if ((expr?.ChildCount ?? 0) == 0)
+                return rewriterFor;
+
+            rewriterFor.Rewriter.Delete(expr.Start.ToIndex(), expr.Stop.ToIndex());
+            return rewriterFor;
+        }
+
+        #endregion
+
     }
 }
