@@ -93,10 +93,9 @@ namespace XSharp.VsParser.Helpers.Project
             foreach (var node in root.Element(_Ns + "PropertyGroup").Elements())
             {
                 string localName = node.Name.LocalName.ToLower();
-                bool value;
 
                 if (!flags.Contains(localName) ||
-                    !bool.TryParse(node.Value, out value))
+                    !bool.TryParse(node.Value, out bool value))
                 {
                     continue;
                 }
