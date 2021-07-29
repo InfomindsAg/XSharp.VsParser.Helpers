@@ -18,8 +18,9 @@ namespace XSharp.Parser.Helpers.Tests
 
             foreach (var item in parser.SourceTree.WhereType<MethodContext>())
             {
-                parser.SourceTree.Rewriter.ReplaceIdentifier(item.Sig.Id, item.ToValues().Name + "_XXX");
-                parser.SourceTree.Rewriter.ReplaceCallingConvention(item.Sig, "clipper");
+                parser.SourceTree.RewriterFor(item.Sig)
+                    .ReplaceMethodName(item.ToValues().Name + "_XXX")
+                    .ReplaceCallingConvention("clipper");
             }
 
             parser.ParseRewriter();
