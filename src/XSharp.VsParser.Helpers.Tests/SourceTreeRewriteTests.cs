@@ -3,7 +3,7 @@ using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
 using Xunit;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
-using static XSharp.Parser.Helpers.Tests.TestFileName;
+using static XSharp.Parser.Helpers.Tests.HelperExtensions;
 
 namespace XSharp.Parser.Helpers.Tests
 {
@@ -18,8 +18,9 @@ namespace XSharp.Parser.Helpers.Tests
 
             foreach (var item in parser.SourceTree.WhereType<MethodContext>())
             {
-                parser.SourceTree.Rewriter.ReplaceIdentifier(item.Sig.Id, item.ToValues().Name + "_XXX");
-                parser.SourceTree.Rewriter.ReplaceCallingConvention(item.Sig, "clipper");
+                parser.SourceTree.RewriterFor(item.Sig)
+                    .ReplaceMethodName(item.ToValues().Name + "_XXX")
+                    .ReplaceCallingConvention("clipper");
             }
 
             parser.ParseRewriter();

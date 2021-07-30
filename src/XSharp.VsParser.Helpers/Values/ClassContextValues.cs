@@ -2,7 +2,7 @@
 
 namespace XSharp.VsParser.Helpers.Values
 {
-    public class ClassContextValues
+    public class ClassContextValues : ContextValues<Class_Context>
     {
         // TODO: Extend with Implents, Modifiers, Attributes
 
@@ -16,8 +16,9 @@ namespace XSharp.VsParser.Helpers.Values
 
             return new ClassContextValues
             {
+                Context = context,
                 Name = context.identifier()?.GetText(),
-                Inherits = context.BaseType?.GetText()
+                Inherits = context.BaseType?.GetText(), 
             };
         }
     }

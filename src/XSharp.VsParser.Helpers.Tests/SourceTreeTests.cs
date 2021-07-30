@@ -3,27 +3,17 @@ using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
 using Xunit;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
-using static XSharp.Parser.Helpers.Tests.TestFileName;
+using static XSharp.Parser.Helpers.Tests.HelperExtensions;
 
 namespace XSharp.Parser.Helpers.Tests
 {
     public class SourceTreeTests
     {
-        ParserHelper Parse()
-        {
-            var parser = ParserHelper.BuildWithVoDefaultOptions();
-            var result = parser.ParseFile(CodeFile("StringBuilderExamples.prg"));
-            result.Should().NotBeNull();
-            result.Errors.Should().BeEmpty();
-
-            return parser;
-        }
-
 
         [Fact]
         public void SourceTreeEnumeratorTest()
         {
-            Parse().SourceTree
+            CodeFile("StringBuilderExamples.prg").ParseFile().SourceTree
                 .WhereType<MethodContext>()
                 .Select(q => q.ToValues().Name)
                 .Should().BeEquivalentTo("Execute", "ConcatenateNoLineBreaks", "ConcatenateWithLineBreaks", "FluentApi", "FluentApiMultiLine", "Clear", "AppendFormat", "InsertAndRemove");
@@ -32,7 +22,7 @@ namespace XSharp.Parser.Helpers.Tests
         [Fact]
         public void WhereTypeWithPredicateTest()
         {
-            Parse().SourceTree
+            CodeFile("StringBuilderExamples.prg").ParseFile().SourceTree
                 .WhereType<MethodContext>(q => q.ToValues().Name == "Execute")
                 .Select(q => q.ToValues().Name)
                 .Should().BeEquivalentTo("Execute");
@@ -42,7 +32,7 @@ namespace XSharp.Parser.Helpers.Tests
         [Fact]
         public void FirstParentOrDefaultTest()
         {
-            Parse().SourceTree
+            CodeFile("StringBuilderExamples.prg").ParseFile().SourceTree
                 .WhereType<MethodContext>()
                 .Select(q => q.FirstParentOrDefault<Class_Context>().ToValues()?.Name).Distinct()
                 .Should().BeEquivalentTo("StringBuilderExamples");
@@ -51,7 +41,7 @@ namespace XSharp.Parser.Helpers.Tests
         [Fact]
         public void ToValueTests()
         {
-            Parse().SourceTree
+            CodeFile("StringBuilderExamples.prg").ParseFile().SourceTree
                 .WhereType<MethodContext>()
                 .Select(q => $"{q.FirstParentOrDefault<Class_Context>().ToValues().Name}.{q.ToValues().Name}")
                 .Should().BeEquivalentTo(
@@ -68,10 +58,7 @@ namespace XSharp.Parser.Helpers.Tests
         [Fact]
         public void AsEnumerableTest()
         {
-            var parser = ParserHelper.BuildWithVoDefaultOptions();
-            var result = parser.ParseFile(CodeFile("StringBuilderExamples.prg"));
-
-            var firstClass = parser.SourceTree.FirstOrDefaultType<Class_Context>();
+            var firstClass = CodeFile("StringBuilderExamples.prg").ParseFile().SourceTree.FirstOrDefaultType<Class_Context>();
 
             firstClass.AsEnumerable()
                 .WhereType<MethodContext>()
