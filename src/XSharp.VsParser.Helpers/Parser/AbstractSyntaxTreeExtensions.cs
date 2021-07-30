@@ -20,8 +20,12 @@ namespace XSharp.VsParser.Helpers.Parser
         }
 
         public static IEnumerable<T> WhereType<T>(this IEnumerable<IParseTree> enumerable, Func<T, bool> predicate) where T : IParseTree
-            => enumerable.WhereType<T>().Where(predicate);
-
+        {
+            var result = enumerable.WhereType<T>();
+            if (predicate != null)
+                result = result.Where(predicate);
+            return result;
+        }
         public static T FirstOrDefaultType<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
             => enumerable.WhereType<T>().FirstOrDefault();
 
@@ -40,6 +44,12 @@ namespace XSharp.VsParser.Helpers.Parser
 
         public static IEnumerable<IParseTree> AsEnumerable(this IParseTree source)
             => new ParseTreeEnumerable(source);
+
+        public static IParseTree RelativePositionedChildInParentOrDefault(this IParseTree source, int relativePosition)
+        {
+            var list = source.Parent.AsEnumerable().ToList();
+            return list.ElementAtOrDefault(list.IndexOf(source) + relativePosition);
+        }
 
         /// <summary>
         /// Dumps the AST created by parsing as XDocument

@@ -2,9 +2,8 @@
 using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace XSharp.VsParser.Helpers.Parser
+namespace XSharp.VsParser.Helpers.Rewriter
 {
     public class RewriterForContext<T> where T : IParseTree
     {

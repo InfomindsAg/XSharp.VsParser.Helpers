@@ -52,6 +52,10 @@ namespace XSharp.VsParser.Helpers.Cache
 
         public CacheHelper(string cacheFileName, int applicationVersion = 0)
         {
+            BsonMapper.Global.TrimWhitespace = false;
+            BsonMapper.Global.EmptyStringToNull = false;
+            BsonMapper.Global.SerializeNullValues = true;
+
             if (string.IsNullOrEmpty(cacheFileName))
                 throw new ArgumentException($"{cacheFileName} can not be emtpy");
 
