@@ -20,8 +20,12 @@ namespace XSharp.VsParser.Helpers.Parser
         }
 
         public static IEnumerable<T> WhereType<T>(this IEnumerable<IParseTree> enumerable, Func<T, bool> predicate) where T : IParseTree
-            => enumerable.WhereType<T>().Where(predicate);
-
+        {
+            var result = enumerable.WhereType<T>();
+            if (predicate == null)
+                result = result.Where(predicate);
+            return result;
+        }
         public static T FirstOrDefaultType<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
             => enumerable.WhereType<T>().FirstOrDefault();
 
