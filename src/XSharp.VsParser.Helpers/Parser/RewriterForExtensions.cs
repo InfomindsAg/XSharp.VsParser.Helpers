@@ -13,7 +13,8 @@ namespace XSharp.VsParser.Helpers.Parser
 
         public static RewriterForContext<IdentifierContext> ReplaceIdentifier(this RewriterForContext<IdentifierContext> rewriterFor, string newIdentifier)
         {
-            rewriterFor.Rewriter.Replace(rewriterFor.Context.ToIndex(), newIdentifier);
+            if (!string.Equals(rewriterFor.Context?.GetText(), newIdentifier))
+                rewriterFor.Rewriter.Replace(rewriterFor.Context.ToIndex(), newIdentifier);
             return rewriterFor;
         }
 
@@ -76,14 +77,14 @@ namespace XSharp.VsParser.Helpers.Parser
 
         public static RewriterForContext<MethodContext> DeleteAllParameters(this RewriterForContext<MethodContext> rewriterFor)
         {
-            rewriterFor.DeleteAllParameters();
+            RewriterForSignature(rewriterFor).DeleteAllParameters();
             return rewriterFor;
         }
 
         public static RewriterForContext<MethodContext> ReplaceMethodName(this RewriterForContext<MethodContext> rewriterFor, string newMethodName)
         {
             RewriterForSignature(rewriterFor).ReplaceMethodName(newMethodName);
-                return rewriterFor;
+            return rewriterFor;
         }
 
         public static RewriterForContext<MethodContext> ReplaceReturnType(this RewriterForContext<MethodContext> rewriterFor, string newReturnType)
@@ -98,6 +99,13 @@ namespace XSharp.VsParser.Helpers.Parser
             return rewriterFor;
         }
 
+        public static RewriterForContext<MethodContext> AddOverride(this RewriterForContext<MethodContext> rewriterFor)
+        {
+            var modifiers = rewriterFor.Context.Modifiers;
+            if (modifiers == null || modifiers.OVERRIDE().Length == 0)
+                rewriterFor.Rewriter.InsertBefore(rewriterFor.Context.methodtype(0).Token.ToIndex(), "override ");
+            return rewriterFor;
+        }
 
         #endregion
 
@@ -142,6 +150,25 @@ namespace XSharp.VsParser.Helpers.Parser
                 return rewriterFor;
 
             rewriterFor.Rewriter.Delete(expr.Start.ToIndex(), expr.Stop.ToIndex());
+            return rewriterFor;
+        }
+
+        #endregion
+
+        #region StatementContext
+
+        public static RewriterForContext<StatementContext> ReplaceStatement(this RewriterForContext<StatementContext> rewriterFor, string newStatement)
+        {
+            if (!string.IsNullOrEmpty(newStatement) && !newStatement.EndsWith(Environment.NewLine))
+                newStatement += Environment.NewLine;
+
+            rewriterFor.Rewriter.Replace(rewriterFor.Context.start.ToIndex(), rewriterFor.Context.stop.ToIndex(), newStatement);
+            return rewriterFor;
+        }
+
+        public static RewriterForContext<StatementContext> DeleteStatement(this RewriterForContext<StatementContext> rewriterFor)
+        {
+            rewriterFor.Rewriter.Delete(rewriterFor.Context.start.ToIndex(), rewriterFor.Context.stop.ToIndex());
             return rewriterFor;
         }
 
