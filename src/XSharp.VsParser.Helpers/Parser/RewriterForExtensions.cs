@@ -1,7 +1,9 @@
 ﻿using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
 using LanguageService.SyntaxTree;
+using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
@@ -40,26 +42,44 @@ namespace XSharp.VsParser.Helpers.Parser
 
         public static RewriterForContext<SignatureContext> ReplaceReturnType(this RewriterForContext<SignatureContext> rewriterFor, string newReturnType)
         {
-            var returnContext = rewriterFor.Context.Type;
             if (string.IsNullOrEmpty(newReturnType))
-            {
-                if (returnContext != null)
-                    rewriterFor.Rewriter.Delete(returnContext.start.ToIndex(), returnContext.stop.ToIndex());
-                return rewriterFor;
-            }
+                throw new ArgumentException($"{nameof(newReturnType)} can not be empty");
 
-            if (!newReturnType.TrimStart().StartsWith("as", StringComparison.OrdinalIgnoreCase))
-                newReturnType = " as " + newReturnType;
-
+            var returnContext = rewriterFor.Context.Type;
             if (returnContext != null)
+            {
+                if (newReturnType.TrimStart().StartsWith("as ", StringComparison.OrdinalIgnoreCase))
+                    newReturnType = newReturnType.TrimStart().Substring(3).TrimStart();
                 rewriterFor.Rewriter.Replace(returnContext.start.ToIndex(), returnContext.stop.ToIndex(), newReturnType);
+            }
             else
+            {
+                if (!newReturnType.TrimStart().StartsWith("as ", StringComparison.OrdinalIgnoreCase))
+                    newReturnType = " as " + newReturnType;
                 rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.ParamList.Stop.ToIndex(), newReturnType);
+            }
+            return rewriterFor;
+        }
+
+        public static RewriterForContext<SignatureContext> DeleteReturnType(this RewriterForContext<SignatureContext> rewriterFor)
+        {
+            var returnContext = rewriterFor.Context.Type;
+            if (returnContext != null)
+            {
+                var previousChild = returnContext.RelativePositionedChildInParentOrDefault(-1);
+                if (previousChild is TerminalNodeImpl asTerminal && string.Equals(asTerminal.GetText(), "as", StringComparison.OrdinalIgnoreCase))
+                    rewriterFor.Rewriter.Delete(asTerminal.Symbol.ToIndex(), returnContext.stop.ToIndex());
+                else
+                    rewriterFor.Rewriter.Delete(returnContext.start.ToIndex(), returnContext.stop.ToIndex());
+            }
             return rewriterFor;
         }
 
         public static RewriterForContext<SignatureContext> ReplaceCallingConvention(this RewriterForContext<SignatureContext> rewriterFor, string newCallingConvention)
         {
+            if (string.IsNullOrEmpty(newCallingConvention))
+                throw new ArgumentException($"{nameof(newCallingConvention)} can not be empty");
+
             var callingConvention = rewriterFor.Context.callingconvention();
             if (callingConvention != null)
                 rewriterFor.Rewriter.Replace(callingConvention.Convention.ToIndex(), newCallingConvention);
@@ -67,6 +87,15 @@ namespace XSharp.VsParser.Helpers.Parser
                 rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.Stop.ToIndex(), " " + newCallingConvention);
             return rewriterFor;
         }
+
+        public static RewriterForContext<SignatureContext> DeleteCallingConvention(this RewriterForContext<SignatureContext> rewriterFor)
+        {
+            var callingConvention = rewriterFor.Context.callingconvention();
+            if (callingConvention != null)
+                rewriterFor.Rewriter.Delete(callingConvention.Convention.ToIndex());
+            return rewriterFor;
+        }
+
 
         #endregion
 
@@ -93,9 +122,21 @@ namespace XSharp.VsParser.Helpers.Parser
             return rewriterFor;
         }
 
+        public static RewriterForContext<MethodContext> DeleteReturnType(this RewriterForContext<MethodContext> rewriterFor)
+        {
+            RewriterForSignature(rewriterFor).DeleteReturnType();
+            return rewriterFor;
+        }
+
         public static RewriterForContext<MethodContext> ReplaceCallingConvention(this RewriterForContext<MethodContext> rewriterFor, string newCallingConvention)
         {
             RewriterForSignature(rewriterFor).ReplaceCallingConvention(newCallingConvention);
+            return rewriterFor;
+        }
+
+        public static RewriterForContext<MethodContext> DeleteCallingConvention(this RewriterForContext<MethodContext> rewriterFor)
+        {
+            RewriterForSignature(rewriterFor).DeleteCallingConvention();
             return rewriterFor;
         }
 
