@@ -128,6 +128,12 @@ namespace XSharp.VsParser.Helpers.Parser
         public bool SaveRewriteResult(bool createBackup = false)
             => SaveRewriteResult(FileName, createBackup);
 
+        /// <summary>
+        /// Returns the code changed trougth rewrites. 
+        /// </summary>
+        /// <returns>The rewritten code</returns>
+        public string GetRewriteResult()
+            => _TokenStreamRewriter.GetText();
 
         public void ExecuteListeners(List<XSharpBaseListener> listeners)
         {
