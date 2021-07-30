@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
+using XSharp.VsParser.Helpers.Rewriter;
 using Xunit;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 

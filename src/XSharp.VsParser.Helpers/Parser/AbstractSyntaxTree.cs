@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Linq;
+using XSharp.VsParser.Helpers.Rewriter;
 
 namespace XSharp.VsParser.Helpers.Parser
 {

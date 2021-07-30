@@ -3,6 +3,7 @@ using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
+using XSharp.VsParser.Helpers.Rewriter;
 
 namespace XSharp.Parser.Helpers.Tests.RewriteFor
 {
