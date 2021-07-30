@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheTests.cs" />
+    <Compile Include="RewriteFor\StatementContextTests.cs" />
+    <Compile Include="RewriteFor\RewriteForTests.cs" />
+    <Compile Include="RewriteFor\MethodContextTests.cs" />
     <Compile Include="SourceTreeRewriteTests.cs" />
     <Compile Include="SourceTreeTests.cs" />
     <Compile Include="ProjectHelperTests.cs" />

@@ -1,11 +1,8 @@
-﻿using FluentAssertions;
-using LanguageService.SyntaxTree.Tree;
-using System;
+﻿using System;
 using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
 using Xunit;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
-using static XSharp.Parser.Helpers.Tests.HelperExtensions;
 
 namespace XSharp.Parser.Helpers.Tests.RewriteFor
 {

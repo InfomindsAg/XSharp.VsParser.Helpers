@@ -39,6 +39,7 @@ namespace XSharp.Parser.Helpers.Tests
             return parser;
         }
 
-
+        public static string[] SplitLines(this string code)
+            => code.Split(new string[] { Environment.NewLine }, StringSplitOptions.None).Select(q => q.TrimEnd()).ToArray();
     }
 }
