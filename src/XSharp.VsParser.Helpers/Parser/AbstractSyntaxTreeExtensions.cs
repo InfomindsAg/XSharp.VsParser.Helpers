@@ -22,7 +22,7 @@ namespace XSharp.VsParser.Helpers.Parser
         public static IEnumerable<T> WhereType<T>(this IEnumerable<IParseTree> enumerable, Func<T, bool> predicate) where T : IParseTree
         {
             var result = enumerable.WhereType<T>();
-            if (predicate == null)
+            if (predicate != null)
                 result = result.Where(predicate);
             return result;
         }

@@ -133,7 +133,7 @@ namespace XSharp.VsParser.Helpers.Parser
         /// </summary>
         /// <returns>The rewritten code</returns>
         public string GetRewriteResult()
-            => _TokenStreamRewriter.GetText();
+            => _TokenStreamRewriter != null ? _TokenStreamRewriter.GetText() : _SourceCode;
 
         public void ExecuteListeners(List<XSharpBaseListener> listeners)
         {
