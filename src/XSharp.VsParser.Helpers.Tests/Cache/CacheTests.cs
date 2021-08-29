@@ -31,9 +31,8 @@ namespace XSharp.Parser.Helpers.Tests.Cache
                 using var cache = new CacheHelper(fileName);
                 {
                     var sourceCodeA = "aaaaaaaaa";
-                    DataA dataA;
 
-                    cache.TryGetValue("A", sourceCodeA, out dataA).Should().BeFalse();
+                    cache.TryGetValue("A", sourceCodeA, out DataA dataA).Should().BeFalse();
 
                     cache.Add("A", sourceCodeA, new DataA { Data = 1 });
 

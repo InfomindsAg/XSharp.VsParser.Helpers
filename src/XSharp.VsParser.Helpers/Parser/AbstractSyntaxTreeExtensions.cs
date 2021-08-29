@@ -26,6 +26,21 @@ namespace XSharp.VsParser.Helpers.Parser
                 result = result.Where(predicate);
             return result;
         }
+
+        public static IEnumerable<IParseTree> WhereTypeAndChildren<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
+        {
+            foreach (var item in enumerable.WhereType<T>())
+                foreach (var child in item.AsEnumerable())
+                    yield return child;
+        }
+
+        public static IEnumerable<IParseTree> WhereTypeAndChildren<T>(this IEnumerable<IParseTree> enumerable, Func<T, bool> predicate) where T : IParseTree
+        {
+            foreach (var item in enumerable.WhereType<T>(predicate))
+                foreach (var child in item.AsEnumerable())
+                    yield return child;
+        }
+
         public static T FirstOrDefaultType<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
             => enumerable.WhereType<T>().FirstOrDefault();
 
