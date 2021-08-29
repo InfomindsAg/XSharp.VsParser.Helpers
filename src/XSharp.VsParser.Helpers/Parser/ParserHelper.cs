@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Xml.Linq;
+using System.Linq;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
@@ -15,8 +15,14 @@ namespace XSharp.VsParser.Helpers.Parser
     {
         readonly GenericErrorListener _ErrorListener = new();
         readonly XSharpParseOptions _XSharpOptions;
+        private BufferedTokenStream _XSharpTokenStream;
 
-        public AbstractSyntaxTree SourceTree { get; private set; }
+        public AbstractSyntaxTree Tree { get; private set; }
+
+        [Obsolete("Replaced by Tree Property")]
+        public AbstractSyntaxTree SourceTree => Tree;
+
+        public List<IToken> Comments => _XSharpTokenStream?.GetTokens().Where(q => XSharpLexer.IsComment(q.Type)).ToList();
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
         {
@@ -26,13 +32,14 @@ namespace XSharp.VsParser.Helpers.Parser
 
             _XSharpOptions = xsharpOptions;
 
-            SourceTree = null;
+            Tree = null;
         }
 
         public void Clear()
         {
             _ErrorListener.Clear();
-            SourceTree = null;
+            Tree = null;
+            _XSharpTokenStream = null;
         }
 
         public Result ParseFile(string fileName)
@@ -42,18 +49,27 @@ namespace XSharp.VsParser.Helpers.Parser
         {
             Clear();
 
-            var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, _ErrorListener, out var tokens, out var startRule);
-            if (!ok && _ErrorListener.Result.OK)
-                _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
-
-            if (_ErrorListener.Result.OK)
-                SourceTree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
+            try
+            {
+                var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, _ErrorListener, out var tokens, out var startRule);
+                if (!ok && _ErrorListener.Result.OK)
+                    _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
+                if (_ErrorListener.Result.OK)
+                {
+                    Tree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
+                    _XSharpTokenStream = tokens as BufferedTokenStream;
+                }
+            }
+            catch (Exception ex)
+            {
+                _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Exception: " + ex.Message, Line = 0 });
+            }
 
             return _ErrorListener.Result;
         }
 
         public Result ParseRewriter()
-            => ParseText(SourceTree.Rewriter.GetText(), SourceTree.FileName);
+            => ParseText(Tree.Rewriter.GetText(), Tree.FileName);
 
         #region Builders
 
