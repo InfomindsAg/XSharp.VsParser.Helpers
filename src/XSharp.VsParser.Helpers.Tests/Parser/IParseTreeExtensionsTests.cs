@@ -8,7 +8,7 @@ using XSharp.Parser.Helpers.Tests.TestHelpers;
 
 namespace XSharp.Parser.Helpers.Tests.Parser
 {
-    public class AbstractSyntaxTreeExtensionsTests
+    public class IParseTreeExtensionsTests
     {
 
         [Fact]

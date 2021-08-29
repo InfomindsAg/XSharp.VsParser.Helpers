@@ -46,7 +46,7 @@ return nil");
             var code = WrapInClass(@"method Dummy() as string strict
 return nil");
 
-            GetFirst(code).ToValues().CallingConvetion.Should().Be("strict");
+            GetFirst(code).ToValues().CallingConvention.Should().Be("strict");
         }
     }
 }

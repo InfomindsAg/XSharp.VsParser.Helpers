@@ -1,10 +1,15 @@
-﻿using XSharp.VsParser.Helpers.Parser;
-using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
+﻿using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Parser.Values
 {
+    /// <summary>
+    /// Values class for a ReturnStmtContext instance
+    /// </summary>
     public class ReturnStmtContextValues : ContextValues<ReturnStmtContext>
     {
+        /// <summary>
+        /// The return expression as text
+        /// </summary>
         public string ExpressionText { get; internal set; }
 
         static internal ReturnStmtContextValues Build(ReturnStmtContext context)

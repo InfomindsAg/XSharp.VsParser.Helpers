@@ -12,6 +12,32 @@ namespace XSharp.Parser.Helpers.Tests.Rewriter
     {
 
         [Fact]
+        public void ChangeParamNameTest()
+        {
+            var code = WrapInClass(@"method Dummy(valid as usual) as void strict
+return nil");
+
+            var expected = WrapInClass(@"method Dummy(isValid as usual) as void strict
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceParameterName("isValid"));
+        }
+
+        [Fact]
+        public void ChangeParamNameUntypedTest()
+        {
+            var code = WrapInClass(@"method Dummy(valid)
+return nil");
+
+            var expected = WrapInClass(@"method Dummy(isValid)
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceParameterName("isValid"));
+        }
+
+
+
+        [Fact]
         public void ChangeParamDataTypeTypedTest()
         {
             var code = WrapInClass(@"method Dummy(isValid as usual) as void strict

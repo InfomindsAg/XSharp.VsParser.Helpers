@@ -7,11 +7,18 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Rewriter
 {
-    public static class RewriterForSuperExtensions
+    /// <summary>
+    /// RewriterForSuperExpression Extensions
+    /// </summary>
+    public static class RewriterForSuperExpressionExtensions
     {
 
-        #region SuperExpression
-
+        /// <summary>
+        /// Replaces the name of method called in the super expression with a new method name
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="newMethodName">The new method name</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SuperExpressionContext> ReplaceSuperCallMethodName(this RewriterForContext<SuperExpressionContext> rewriterFor, string newMethodName)
         {
             var accessMemberContext = rewriterFor.Context.FirstParentOrDefault<AccessMemberContext>().AsEnumerable();
@@ -20,13 +27,16 @@ namespace XSharp.VsParser.Helpers.Rewriter
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Deletes all agruments of the method call in the super expression
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SuperExpressionContext> DeleteAllArguments(this RewriterForContext<SuperExpressionContext> rewriterFor)
         {
             rewriterFor.RewriterFor(rewriterFor.Context.FirstParentOrDefault<MethodCallContext>()).DeleteAllArguments();
             return rewriterFor;
         }
-
-        #endregion
 
     }
 }

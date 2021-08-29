@@ -14,6 +14,12 @@ namespace XSharp.VsParser.Helpers.Parser
     {
         const string NewList = "$NewLine";
 
+        /// <summary>
+        /// Filters an enumeration of IParseTree elements (an Abstract Syntax Tree) based on a context type
+        /// </summary>
+        /// <typeparam name="T">The context type (ex: MethodContext, Class_Context, ...)</typeparam>
+        /// <param name="enumerable">An IEnumerable to filter</param>
+        /// <returns>An IEnumerable that contains elements from the input sequence that match the context type</returns>
         public static IEnumerable<T> WhereType<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
         {
             foreach (var item in enumerable)
@@ -21,6 +27,13 @@ namespace XSharp.VsParser.Helpers.Parser
                     yield return returnItem;
         }
 
+        /// <summary>
+        /// Filters an enumeration of IParseTree elements (an Abstract Syntax Tree) based on a context type and and a specified condition
+        /// </summary>
+        /// <typeparam name="T">The context type (ex: MethodContext, Class_Context, ...)</typeparam>
+        /// <param name="enumerable">An IEnumerable to filter</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <returns>An IEnumerable that contains elements from the input sequence that match the context type and satisfy the condition</returns>
         public static IEnumerable<T> WhereType<T>(this IEnumerable<IParseTree> enumerable, Func<T, bool> predicate) where T : IParseTree
         {
             var result = enumerable.WhereType<T>();
@@ -29,6 +42,12 @@ namespace XSharp.VsParser.Helpers.Parser
             return result;
         }
 
+        /// <summary>
+        /// Filters an enumeration of IParseTree elements (an Abstract Syntax Tree) based on a context type
+        /// </summary>
+        /// <typeparam name="T">The context type (ex: MethodContext, Class_Context, ...)</typeparam>
+        /// <param name="enumerable">An IEnumerable to filter</param>
+        /// <returns>An IEnumerable that contains elements and their children from the input sequence that match the context type</returns>
         public static IEnumerable<IParseTree> WhereTypeAndChildren<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
         {
             foreach (var item in enumerable.WhereType<T>())
@@ -36,6 +55,13 @@ namespace XSharp.VsParser.Helpers.Parser
                     yield return child;
         }
 
+        /// <summary>
+        /// Filters an enumeration of IParseTree elements (an Abstract Syntax Tree) based on a context type and and a specified condition
+        /// </summary>
+        /// <typeparam name="T">The context type (ex: MethodContext, Class_Context, ...)</typeparam>
+        /// <param name="enumerable">An IEnumerable to filter</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <returns>An IEnumerable that contains elements and their children from the input sequence that match the context type and satisfy the condition</returns>
         public static IEnumerable<IParseTree> WhereTypeAndChildren<T>(this IEnumerable<IParseTree> enumerable, Func<T, bool> predicate) where T : IParseTree
         {
             foreach (var item in enumerable.WhereType<T>(predicate))
@@ -43,9 +69,21 @@ namespace XSharp.VsParser.Helpers.Parser
                     yield return child;
         }
 
+        /// <summary>
+        /// Returns the first element of a sequence based on a context type, or null if no element is found.
+        /// </summary>
+        /// <typeparam name="T">The context type (ex: MethodContext, Class_Context, ...)</typeparam>
+        /// <param name="enumerable">An IEnumerable to return the first element of</param>
+        /// <returns>The first element from the input sequence that match the context type or null  if no element is found</returns>
         public static T FirstOrDefaultType<T>(this IEnumerable<IParseTree> enumerable) where T : IParseTree
             => enumerable.WhereType<T>().FirstOrDefault();
 
+        /// <summary>
+        /// Returns the first parent element element of an element based on a context type, or null if no element is found.
+        /// </summary>
+        /// <typeparam name="T">The context type (ex: MethodContext, Class_Context, ...)</typeparam>
+        /// <param name="element">The start element</param>
+        /// <returns>The first parent element of the element, that match the context type or null if no element is found</returns>
         public static T FirstParentOrDefault<T>(this IParseTree element) where T : IParseTree
         {
             element = element?.Parent;
@@ -59,13 +97,24 @@ namespace XSharp.VsParser.Helpers.Parser
             return default;
         }
 
-        public static IEnumerable<IParseTree> AsEnumerable(this IParseTree source)
-            => new ParseTreeEnumerable(source);
+        /// <summary>
+        /// Returns an IEnumerable of the element and all it's children
+        /// </summary>
+        /// <param name="element">The start element</param>
+        /// <returns>Returns an IEnumerable of the element and all it's children</returns>
+        public static IEnumerable<IParseTree> AsEnumerable(this IParseTree element)
+            => new ParseTreeEnumerable(element);
 
-        public static IParseTree RelativePositionedChildInParentOrDefault(this IParseTree source, int relativePosition)
+        /// <summary>
+        /// Returns an element relative positioned of the current element
+        /// </summary>
+        /// <param name="element">The start element</param>
+        /// <param name="relativePosition">The relative position of the requested element</param>
+        /// <returns>The relative positioned element or null</returns>
+        public static IParseTree RelativePositionedChildInParentOrDefault(this IParseTree element, int relativePosition)
         {
-            var list = source.Parent.AsEnumerable().ToList();
-            return list.ElementAtOrDefault(list.IndexOf(source) + relativePosition);
+            var list = element.Parent.AsEnumerable().ToList();
+            return list.ElementAtOrDefault(list.IndexOf(element) + relativePosition);
         }
 
         /// <summary>

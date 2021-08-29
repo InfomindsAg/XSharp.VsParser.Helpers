@@ -7,6 +7,9 @@ using System.Text;
 
 namespace XSharp.VsParser.Helpers.Cache
 {
+    /// <summary>
+    /// The CacheHelper class can be used to cache data generated based on parsed source code. The cache returns cached data, as long as the hash for the source code stays the same. A LiteDB Database is used for Storage
+    /// </summary>
     public class CacheHelper : IDisposable
     {
         class Version
@@ -50,6 +53,11 @@ namespace XSharp.VsParser.Helpers.Cache
 
         static uint GetHash(string sourceCode) => XXHash.XXH32(Encoding.UTF8.GetBytes(sourceCode));
 
+        /// <summary>
+        /// Creates a new CacheHelper instance
+        /// </summary>
+        /// <param name="cacheFileName">The fileName for the cache file</param>
+        /// <param name="applicationVersion">The applicationVersion is used to version the cache-content. If the version stored in the cacheFile is different, the cache will be automatically deleted.</param>
         public CacheHelper(string cacheFileName, int applicationVersion = 0)
         {
             BsonMapper.Global.TrimWhitespace = false;
@@ -68,6 +76,9 @@ namespace XSharp.VsParser.Helpers.Cache
                 Drop();
         }
 
+        /// <summary>
+        /// Deletes the cache file
+        /// </summary>
         public void Drop()
         {
             DB.Dispose();
@@ -75,6 +86,14 @@ namespace XSharp.VsParser.Helpers.Cache
             OpenDb();
         }
 
+        /// <summary>
+        /// Tries to get the cached data for a fileName/souceCode. The data is only returned, if the sourceCode was not changed.
+        /// </summary>
+        /// <typeparam name="T">The type of the cache data. Use only serializable data types!</typeparam>
+        /// <param name="fileName">The fileName of the source file</param>
+        /// <param name="sourceCode">The file content (to chech if the source file changed)</param>
+        /// <param name="result">The cached data</param>
+        /// <returns>True, if the cache contained data for the fileName and the source code was not changed. Otherwise false.</returns>
         public bool TryGetValue<T>(string fileName, string sourceCode, out T result) where T : class
         {
             result = default;
@@ -94,6 +113,13 @@ namespace XSharp.VsParser.Helpers.Cache
             return true;
         }
 
+        /// <summary>
+        /// Tries to get the cached data for a fileName/souceCode. The data is only returned, if the sourceCode was not changed.
+        /// </summary>
+        /// <typeparam name="T">The type of the cache data. Use only serializable data types!</typeparam>
+        /// <param name="fileName">The fileName of the source file</param>
+        /// <param name="result">The cached data</param>
+        /// <returns>True, if the cache contained data for the fileName and the source code was not changed. Otherwise false.</returns>
         public bool TryGetValue<T>(string fileName, out T result) where T : class
         {
             result = null;
@@ -103,6 +129,13 @@ namespace XSharp.VsParser.Helpers.Cache
             return TryGetValue(fileName, File.ReadAllText(fileName), out result);
         }
 
+        /// <summary>
+        /// Adds cached data for a fileName/souceCode to the cache.
+        /// </summary>
+        /// <typeparam name="T">The type of the cache data. Use only serializable data types!</typeparam>
+        /// <param name="fileName">The fileName of the source file</param>
+        /// <param name="sourceCode">The file content (to chech if the source file changed)</param>
+        /// <param name="data">The cached data</param>
         public void Add<T>(string fileName, string sourceCode, T data) where T : class
         {
             var id = GetKeyValue(fileName);
@@ -122,6 +155,9 @@ namespace XSharp.VsParser.Helpers.Cache
             }
         }
 
+        /// <summary>
+        /// Disposes the object
+        /// </summary>
         public void Dispose()
         {
             if (DB != null)

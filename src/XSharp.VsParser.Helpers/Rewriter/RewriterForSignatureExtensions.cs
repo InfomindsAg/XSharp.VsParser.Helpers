@@ -7,16 +7,28 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Rewriter
 {
-    public static class RewriterForMethodAndSignatureExtensions
+    /// <summary>
+    /// RewriterForIdentifier Extensions
+    /// </summary>
+    public static class RewriterForSignatureExtensions
     {
-        #region Signature
-
+        /// <summary>
+        /// Replaces the name of the signature with a new name
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="newMethodName">The new method names</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> ReplaceMethodName(this RewriterForContext<SignatureContext> rewriterFor, string newMethodName)
         {
             new RewriterForContext<IdentifierContext>(rewriterFor.Rewriter, rewriterFor.Context.Id).ReplaceIdentifier(newMethodName);
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Delates all the parameters of the signature
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> DeleteAllParameters(this RewriterForContext<SignatureContext> rewriterFor)
         {
             var paramList = rewriterFor.Context?.ParamList;
@@ -27,6 +39,12 @@ namespace XSharp.VsParser.Helpers.Rewriter
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Replaces the return type of the signature
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="newReturnType">The new return type</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> ReplaceReturnType(this RewriterForContext<SignatureContext> rewriterFor, string newReturnType)
         {
             if (string.IsNullOrEmpty(newReturnType))
@@ -48,6 +66,11 @@ namespace XSharp.VsParser.Helpers.Rewriter
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Deletes the return type of the method
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> DeleteReturnType(this RewriterForContext<SignatureContext> rewriterFor)
         {
             var returnContext = rewriterFor.Context.Type;
@@ -62,6 +85,12 @@ namespace XSharp.VsParser.Helpers.Rewriter
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Replaces the calling convention of the method 
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="newCallingConvention">The new calling convention</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> ReplaceCallingConvention(this RewriterForContext<SignatureContext> rewriterFor, string newCallingConvention)
         {
             if (string.IsNullOrEmpty(newCallingConvention))
@@ -75,6 +104,11 @@ namespace XSharp.VsParser.Helpers.Rewriter
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Deletes the calling convention
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> DeleteCallingConvention(this RewriterForContext<SignatureContext> rewriterFor)
         {
             var callingConvention = rewriterFor.Context.callingconvention();
@@ -82,60 +116,6 @@ namespace XSharp.VsParser.Helpers.Rewriter
                 rewriterFor.Rewriter.Delete(callingConvention.Convention.ToIndex());
             return rewriterFor;
         }
-
-
-        #endregion
-
-        #region MethodContext
-
-        static RewriterForContext<SignatureContext> RewriterForSignature(RewriterForContext<MethodContext> rewriterFor)
-            => rewriterFor.RewriterFor(rewriterFor.Context.Sig);
-
-        public static RewriterForContext<MethodContext> DeleteAllParameters(this RewriterForContext<MethodContext> rewriterFor)
-        {
-            RewriterForSignature(rewriterFor).DeleteAllParameters();
-            return rewriterFor;
-        }
-
-        public static RewriterForContext<MethodContext> ReplaceMethodName(this RewriterForContext<MethodContext> rewriterFor, string newMethodName)
-        {
-            RewriterForSignature(rewriterFor).ReplaceMethodName(newMethodName);
-            return rewriterFor;
-        }
-
-        public static RewriterForContext<MethodContext> ReplaceReturnType(this RewriterForContext<MethodContext> rewriterFor, string newReturnType)
-        {
-            RewriterForSignature(rewriterFor).ReplaceReturnType(newReturnType);
-            return rewriterFor;
-        }
-
-        public static RewriterForContext<MethodContext> DeleteReturnType(this RewriterForContext<MethodContext> rewriterFor)
-        {
-            RewriterForSignature(rewriterFor).DeleteReturnType();
-            return rewriterFor;
-        }
-
-        public static RewriterForContext<MethodContext> ReplaceCallingConvention(this RewriterForContext<MethodContext> rewriterFor, string newCallingConvention)
-        {
-            RewriterForSignature(rewriterFor).ReplaceCallingConvention(newCallingConvention);
-            return rewriterFor;
-        }
-
-        public static RewriterForContext<MethodContext> DeleteCallingConvention(this RewriterForContext<MethodContext> rewriterFor)
-        {
-            RewriterForSignature(rewriterFor).DeleteCallingConvention();
-            return rewriterFor;
-        }
-
-        public static RewriterForContext<MethodContext> AddOverride(this RewriterForContext<MethodContext> rewriterFor)
-        {
-            var modifiers = rewriterFor.Context.Modifiers;
-            if (modifiers == null || modifiers.OVERRIDE().Length == 0)
-                rewriterFor.Rewriter.InsertBefore(rewriterFor.Context.methodtype(0).Token.ToIndex(), "override ");
-            return rewriterFor;
-        }
-
-        #endregion
 
     }
 }

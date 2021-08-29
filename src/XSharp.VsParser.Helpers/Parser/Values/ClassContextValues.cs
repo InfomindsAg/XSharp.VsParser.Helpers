@@ -2,11 +2,21 @@
 
 namespace XSharp.VsParser.Helpers.Parser.Values
 {
+    /// <summary>
+    /// Values class for a Class_Context instance
+    /// </summary>
     public class ClassContextValues : ContextValues<Class_Context>
     {
         // TODO: Extend with Implents, Modifiers, Attributes
 
+        /// <summary>
+        /// The class name
+        /// </summary>
         public string Name { get; internal set; }
+
+        /// <summary>
+        /// The base class for the class
+        /// </summary>
         public string Inherits { get; internal set; }
 
         static internal ClassContextValues Build(Class_Context context)

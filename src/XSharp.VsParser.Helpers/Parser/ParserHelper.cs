@@ -1,27 +1,36 @@
 ﻿using LanguageService.CodeAnalysis.XSharp;
 using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
 using LanguageService.SyntaxTree;
-using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Linq;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
+    /// <summary>
+    /// The ParserHelper class. Use the BuildWith... Static methods to instantiate the class
+    /// </summary>
     public class ParserHelper
     {
         readonly GenericErrorListener _ErrorListener = new();
         readonly XSharpParseOptions _XSharpOptions;
         private BufferedTokenStream _XSharpTokenStream;
 
+        /// <summary>
+        /// The Abstract Syntax Tree. Will be initialized by parsing a file.
+        /// </summary>
         public AbstractSyntaxTree Tree { get; private set; }
 
+        /// <summary>
+        /// Obsolte
+        /// </summary>
         [Obsolete("Replaced by Tree Property")]
         public AbstractSyntaxTree SourceTree => Tree;
 
+        /// <summary>
+        /// A list of the comments. Will be initialized by parsing a file.
+        /// </summary>
         public List<IToken> Comments => _XSharpTokenStream?.GetTokens().Where(q => XSharpLexer.IsComment(q.Type)).ToList();
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
@@ -35,6 +44,9 @@ namespace XSharp.VsParser.Helpers.Parser
             Tree = null;
         }
 
+        /// <summary>
+        /// Clears the ParserHelper
+        /// </summary>
         public void Clear()
         {
             _ErrorListener.Clear();
@@ -42,9 +54,20 @@ namespace XSharp.VsParser.Helpers.Parser
             _XSharpTokenStream = null;
         }
 
+        /// <summary>
+        /// Loads and parses a file
+        /// </summary>
+        /// <param name="fileName">The fileName</param>
+        /// <returns>A result instance</returns>
         public Result ParseFile(string fileName)
             => ParseText(File.ReadAllText(fileName), fileName);
 
+        /// <summary>
+        /// Parses the sourceCode 
+        /// </summary>
+        /// <param name="sourceCode">The sourceCode</param>
+        /// <param name="fileName">The fileName of the file, that contains the sourceCode</param>
+        /// <returns>A result instance</returns>
         public Result ParseText(string sourceCode, string fileName)
         {
             Clear();
@@ -68,11 +91,19 @@ namespace XSharp.VsParser.Helpers.Parser
             return _ErrorListener.Result;
         }
 
+        /// <summary>
+        /// Re-Parses the tree to include rewrites
+        /// </summary>
+        /// <returns></returns>
         public Result ParseRewriter()
             => ParseText(Tree.Rewriter.GetText(), Tree.FileName);
 
         #region Builders
 
+        /// <summary>
+        /// Creates a new instance of the ParserHelper, using the default Vo Options
+        /// </summary>
+        /// <returns>A new ParserHelper instance</returns>
         public static ParserHelper BuildWithVoDefaultOptions()
                  => new(XSharpParseOptions.FromVsValues(new List<string>
                     {
@@ -104,6 +135,10 @@ namespace XSharp.VsParser.Helpers.Parser
                     "vo16-",
                     }));
 
+        /// <summary>
+        /// Creates a new instance of the ParserHelper, using the options in the list
+        /// </summary>
+        /// <returns>A new ParserHelper instance</returns>
         public static ParserHelper BuildWithOptionsList(List<string> options)
             => new(XSharpParseOptions.FromVsValues(options));
 

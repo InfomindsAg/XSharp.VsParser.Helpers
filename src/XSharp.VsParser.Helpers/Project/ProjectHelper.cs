@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
 namespace XSharp.VsParser.Helpers.Project
 {
+    /// <summary>
+    /// The ProjectHelper Class
+    /// </summary>
     public class ProjectHelper
     {
         private readonly string _FilePath;
         private readonly XDocument _ProjectXml;
         private readonly XNamespace _Ns;
 
-
+        /// <summary>
+        /// Creates a new instance of the ProjectHelper class for a XSharp project file
+        /// </summary>
+        /// <param name="filePath">The fileName of an XSharp project file</param>
         public ProjectHelper(string filePath)
         {
             _FilePath = filePath;
