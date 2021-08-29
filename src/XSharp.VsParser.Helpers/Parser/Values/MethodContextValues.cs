@@ -40,7 +40,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
                 Name = signature.identifier()?.GetText(),
                 CallingConvention = signature.CallingConvention?.GetText(),
                 ReturnType = signature.Type?.GetText(),
-                Parameters = (signature.parameterList()?.AsEnumerable().WhereType<ParameterContext>().ToValues() ?? Enumerable.Empty<ParameterContextValues>()).ToArray() ,
+                Parameters = (signature.parameterList()?.AsEnumerable().WhereType<ParameterContext>().ToValues() ?? Enumerable.Empty<ParameterContextValues>()).ToArray(),
             };
         }
     }

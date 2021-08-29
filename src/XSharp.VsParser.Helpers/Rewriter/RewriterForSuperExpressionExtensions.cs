@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
-using XSharp.VsParser.Helpers.Rewriter;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Rewriter

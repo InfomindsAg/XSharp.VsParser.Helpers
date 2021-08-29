@@ -1,5 +1,4 @@
 ﻿using LanguageService.SyntaxTree.Tree;
-using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Parser.Values
 {

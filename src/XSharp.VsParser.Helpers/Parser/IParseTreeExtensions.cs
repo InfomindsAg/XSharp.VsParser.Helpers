@@ -1,9 +1,9 @@
 ﻿using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using System.Linq;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
@@ -170,7 +170,7 @@ namespace XSharp.VsParser.Helpers.Parser
                 if (text.Contains("\n"))
                 {
                     sb.AppendLine(" |-");
-                    foreach (var line in text.Replace("\r", "").Split('\n'))
+                    foreach (var line in text.Replace("\r", string.Empty).Split('\n'))
                         sb.AppendLine(new string(' ', indent * 2) + line);
                 }
                 else

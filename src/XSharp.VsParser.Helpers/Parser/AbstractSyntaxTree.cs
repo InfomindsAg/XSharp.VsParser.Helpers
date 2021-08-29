@@ -118,7 +118,7 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <param name="context">The context</param>
         /// <returns>A RewriterForContext object</returns>
         public RewriterForContext<T> RewriterFor<T>(T context) where T : IParseTree
-            =>new(Rewriter, context);
+            => new(Rewriter, context);
 
         /// <summary>
         /// Dumps the AST created by parsing as Yaml

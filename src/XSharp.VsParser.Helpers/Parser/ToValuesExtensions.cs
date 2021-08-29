@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using XSharp.VsParser.Helpers.Parser.Values;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 

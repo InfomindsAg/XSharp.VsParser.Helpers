@@ -28,7 +28,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
             {
                 Context = context,
                 Name = context.identifier()?.GetText(),
-                Inherits = context.BaseType?.GetText(), 
+                Inherits = context.BaseType?.GetText(),
             };
         }
     }
