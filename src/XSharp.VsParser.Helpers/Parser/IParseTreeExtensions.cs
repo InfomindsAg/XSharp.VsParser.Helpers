@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
-    public static class AbstractSyntaxTreeExtensions
+    /// <summary>
+    /// Extensions for IParseTree
+    /// </summary>
+    public static class IParseTreeExtensions
     {
         const string NewList = "$NewLine";
 

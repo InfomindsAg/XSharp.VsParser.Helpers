@@ -22,7 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\XSharp.Parser.Helpers.Tests.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,7 +57,7 @@
     <Compile Include="Rewriter\StatementContextTests.cs" />
     <Compile Include="TestHelpers\TestsForBase.cs" />
     <Compile Include="Rewriter\MethodContextTests.cs" />
-    <Compile Include="Parser\AbstractSyntaxTreeExtensionsTests.cs" />
+    <Compile Include="Parser\IParseTreeExtensionsTests.cs" />
     <Compile Include="Project\ProjectHelperTests.cs" />
     <Compile Include="Parser\ParserHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,24 +84,24 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="_UnitTestData\CodeFiles\Program.prg">
+    <None Include="_UnitTestData\CodeFiles\Program.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="_UnitTestData\CodeFiles\StringBuilderExamples.prg">
+    </None>
+    <None Include="_UnitTestData\CodeFiles\StringBuilderExamples.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="_UnitTestData\CodeFiles\XSharpExamples.xsproj">
+    </None>
+    <None Include="_UnitTestData\CodeFiles\XSharpExamples.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="_UnitTestData\ProjectFiles\Program.prg">
+    </None>
+    <None Include="_UnitTestData\ProjectFiles\Program.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsFalse.xsproj">
+    </None>
+    <None Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsFalse.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsTrue.xsproj">
+    </None>
+    <None Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsTrue.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
