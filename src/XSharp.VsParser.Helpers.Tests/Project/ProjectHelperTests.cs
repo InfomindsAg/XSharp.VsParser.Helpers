@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using XSharp.VsParser.Helpers.Project;
 using Xunit;
-using static XSharp.Parser.Helpers.Tests.HelperExtensions;
+using static XSharp.Parser.Helpers.Tests.TestHelpers.TestHelperExtensions;
 
-namespace XSharp.Parser.Helpers.Tests
+namespace XSharp.Parser.Helpers.Tests.Project
 {
     public class ProjectHelperTests
     {

@@ -5,9 +5,9 @@ using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
 using XSharp.VsParser.Helpers.Rewriter;
 
-namespace XSharp.Parser.Helpers.Tests.RewriteFor
+namespace XSharp.Parser.Helpers.Tests.TestHelpers
 {
-    public class RewriteForTests<T> where T : IParseTree
+    public class TestsFor<T> where T : IParseTree
     {
         protected string WrapInClass(string code)
     => $@"class dtaDummy
@@ -28,13 +28,19 @@ end class";
         protected void Rewrite(string code, string expected, Action<RewriterForContext<T>> rewriteAction)
         {
             var parser = code.ParseText();
-            foreach (var item in parser.SourceTree.WhereType<T>())
-                rewriteAction(parser.SourceTree.RewriterFor(item));
+            foreach (var item in parser.Tree.WhereType<T>())
+                rewriteAction(parser.Tree.RewriterFor(item));
 
-            var resultLines = parser.SourceTree.Rewriter.GetText().SplitLines();
+            var resultLines = parser.Tree.Rewriter.GetText().SplitLines();
             var expectedLines = expected.SplitLines();
             for (var i = 0; i < resultLines.Length; i++)
                 resultLines[i].Should().Be(expectedLines.ElementAtOrDefault(i), $"Line {i}");
+        }
+
+        protected T GetFirst(string code)
+        {
+            var parser = code.ParseText();
+            return parser.Tree.FirstOrDefaultType<T>();
         }
     }
 }

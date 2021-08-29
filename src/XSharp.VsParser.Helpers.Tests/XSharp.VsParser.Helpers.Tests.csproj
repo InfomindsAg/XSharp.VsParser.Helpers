@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\XSharp.Parser.Helpers.Tests.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,17 +47,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CacheTests.cs" />
-    <Compile Include="RewriteFor\StatementContextTests.cs" />
-    <Compile Include="RewriteFor\RewriteForTests.cs" />
-    <Compile Include="RewriteFor\MethodContextTests.cs" />
-    <Compile Include="SourceTreeRewriteTests.cs" />
-    <Compile Include="SourceTreeTests.cs" />
-    <Compile Include="ProjectHelperTests.cs" />
-    <Compile Include="ParserHelperTests.cs" />
+    <Compile Include="Cache\CacheTests.cs" />
+    <Compile Include="Parser\ToValue\ClassContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\ParameterContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\ReturnStmtExpressionToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\SuperExpressionToValuesTests.cs" />
+    <Compile Include="Rewriter\ParameterContextTests.cs" />
+    <Compile Include="Rewriter\StatementContextTests.cs" />
+    <Compile Include="TestHelpers\TestsForBase.cs" />
+    <Compile Include="Rewriter\MethodContextTests.cs" />
+    <Compile Include="Parser\AbstractSyntaxTreeExtensionsTests.cs" />
+    <Compile Include="Project\ProjectHelperTests.cs" />
+    <Compile Include="Parser\ParserHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HelperExtensions.cs" />
-    <Compile Include="ToValuesTests.cs" />
+    <Compile Include="TestHelpers\TestHelperExtensions.cs" />
+    <Compile Include="Parser\ToValue\MethodContextToValuesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XSharp.VsParser.Helpers\XSharp.VsParser.Helpers.csproj">
@@ -78,22 +83,22 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="UnitTestData\CodeFiles\Program.prg">
+    <Content Include="_UnitTestData\CodeFiles\Program.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="UnitTestData\CodeFiles\StringBuilderExamples.prg">
+    <Content Include="_UnitTestData\CodeFiles\StringBuilderExamples.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="UnitTestData\CodeFiles\XSharpExamples.xsproj">
+    <Content Include="_UnitTestData\CodeFiles\XSharpExamples.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="UnitTestData\ProjectFiles\Program.prg">
+    <Content Include="_UnitTestData\ProjectFiles\Program.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="UnitTestData\ProjectFiles\XSharpVoAllFlagsFalse.xsproj">
+    <Content Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsFalse.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="UnitTestData\ProjectFiles\XSharpVoAllFlagsTrue.xsproj">
+    <Content Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsTrue.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

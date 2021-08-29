@@ -1,6 +1,6 @@
 ﻿using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
-namespace XSharp.VsParser.Helpers.Values
+namespace XSharp.VsParser.Helpers.Parser.Values
 {
     public class ClassContextValues : ContextValues<Class_Context>
     {

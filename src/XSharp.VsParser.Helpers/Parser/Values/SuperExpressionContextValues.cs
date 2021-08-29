@@ -1,7 +1,7 @@
 ﻿using XSharp.VsParser.Helpers.Parser;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
-namespace XSharp.VsParser.Helpers.Values
+namespace XSharp.VsParser.Helpers.Parser.Values
 {
     public class SuperExpressionContextValues : ContextValues<SuperExpressionContext>
     {

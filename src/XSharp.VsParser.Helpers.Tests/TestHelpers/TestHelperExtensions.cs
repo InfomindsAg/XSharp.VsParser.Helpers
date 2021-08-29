@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
 
-namespace XSharp.Parser.Helpers.Tests
+namespace XSharp.Parser.Helpers.Tests.TestHelpers
 {
-    static class HelperExtensions
+    static class TestHelperExtensions
     {
         public static string UnitTestData(string fileName)
-            => Path.Combine("UnitTestData", fileName);
+            => Path.Combine("_UnitTestData", fileName);
 
         public static string CodeFile(string fileName)
             => UnitTestData(Path.Combine("CodeFiles", fileName));

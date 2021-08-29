@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using XSharp.VsParser.Helpers.Cache;
 using Xunit;
 
-namespace XSharp.Parser.Helpers.Tests
+namespace XSharp.Parser.Helpers.Tests.Cache
 {
     public class CacheTests
     {
