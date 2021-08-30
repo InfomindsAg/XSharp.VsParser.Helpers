@@ -27,13 +27,25 @@ namespace XSharp.VsParser.Helpers.Rewriter
         }
 
         /// <summary>
-        /// Delates all the parameters of the method
+        /// Deletes all the parameters of the method
         /// </summary>
         /// <param name="rewriterFor">The rewriterFor instance</param>
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<MethodContext> DeleteAllParameters(this RewriterForContext<MethodContext> rewriterFor)
         {
             RewriterForSignature(rewriterFor).DeleteAllParameters();
+            return rewriterFor;
+        }
+
+        /// <summary>
+        /// Adds a new parameters at the end of the parameterlist
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="newParameter">The new parameter</param>
+        /// <returns>The rewriterFor instance</returns>
+        public static RewriterForContext<MethodContext> AddParameter(this RewriterForContext<MethodContext> rewriterFor, string newParameter)
+        {
+            RewriterForSignature(rewriterFor).AddParameter(newParameter);
             return rewriterFor;
         }
 

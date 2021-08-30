@@ -94,5 +94,41 @@ return nil");
             Rewrite(code, expected, r => r.DeleteCallingConvention());
         }
 
+        [Fact]
+        public void AddParameterEmptyTest()
+        {
+            var code = WrapInClass(@"method Dummy()
+return nil");
+
+            var expected = WrapInClass(@"method Dummy(newParam)
+return nil");
+
+            Rewrite(code, expected, r => r.AddParameter("newParam"));
+        }
+
+        [Fact]
+        public void AddParameterTypedEmptyTest()
+        {
+            var code = WrapInClass(@"method Dummy()
+return nil");
+
+            var expected = WrapInClass(@"method Dummy(newParam as string)
+return nil");
+
+            Rewrite(code, expected, r => r.AddParameter("newParam as string"));
+        }
+
+        [Fact]
+        public void AddParameterNotEmptyTest()
+        {
+            var code = WrapInClass(@"method Dummy(firstParam as string)
+return nil");
+
+            var expected = WrapInClass(@"method Dummy(firstParam as string, newParam as string)
+return nil");
+
+            Rewrite(code, expected, r => r.AddParameter("newParam as string"));
+        }
+
     }
 }
