@@ -101,7 +101,28 @@ namespace XSharp.VsParser.Helpers.Parser
         public static IEnumerable<ReturnStmtContextValues> ToValues(this IEnumerable<ReturnStmtContext> enumerable) => enumerable.Select(ReturnStmtContextValues.Build);
 
         #endregion
-        // Todo: Add Conversions for Proc/Func, Properties, Access/Assign, ...
+
+        #region MethodContext
+
+        /// <summary>
+        /// Converts a FuncprocContext instance to a FuncprocContextValues instance
+        /// </summary>
+        /// <param name="context">A FuncprocContext instance</param>
+        /// <returns>A FuncprocContextValues instance</returns>
+        public static FuncprocContextValues ToValues(this FuncprocContext context) => FuncprocContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of FuncprocContext instances to a sequence of FuncprocContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of FuncprocContext instances</param>
+        /// <returns>A sequence of FuncprocContextValues instances</returns>
+        public static IEnumerable<FuncprocContextValues> ToValues(this IEnumerable<FuncprocContext> enumerable) => enumerable.Select(FuncprocContextValues.Build);
+
+        #endregion
+
+
+        
+        // Todo: Add Conversions for Properties, Access/Assign, ...
 
 
     }

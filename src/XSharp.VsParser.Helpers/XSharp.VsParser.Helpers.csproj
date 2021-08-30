@@ -31,7 +31,7 @@
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);GetParserAssembly</TargetsForTfmSpecificBuildOutput>
     <PackageId>XSharp.VsParser.Helpers</PackageId>
-    <Version>0.4.0.0</Version>
+    <Version>0.4.0.1</Version>
     <Authors>Volkmar Rigo</Authors>
     <Company />
     <Product>XSharp.VsParser.Helpers</Product>
@@ -39,14 +39,14 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>XSharp;VsParser;Helper</PackageTags>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Projects\XSharp\XSharp.VsParser.Helpers\src\XSharp.VsParser.Helpers\XSharp.VsParser.Helpers.xml</DocumentationFile>
+  <PropertyGroup>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <Target Name="GetParserAssembly">
     <ItemGroup>
       <BuildOutputInPackage Include="$(OutputPath)XSharp.VSParser.dll" />
-    </ItemGroup>
+	</ItemGroup>
   </Target>
 
 </Project>

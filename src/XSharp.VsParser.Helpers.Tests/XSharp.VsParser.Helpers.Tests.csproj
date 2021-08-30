@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Cache\CacheTests.cs" />
     <Compile Include="Parser\ToValue\ClassContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\FuncprocContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ParameterContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ReturnStmtExpressionToValuesTests.cs" />
     <Compile Include="Parser\ToValue\SuperExpressionToValuesTests.cs" />
