@@ -6,6 +6,7 @@ using XSharp.VsParser.Helpers.Parser;
 using Xunit;
 using static XSharp.Parser.Helpers.Tests.TestHelpers.TestHelperExtensions;
 using XSharp.Parser.Helpers.Tests.TestHelpers;
+using System.Text;
 
 namespace XSharp.Parser.Helpers.Tests.Parser
 {
@@ -36,13 +37,14 @@ BlockComment
 end class".ParseText();
 
             parser.Comments.Select(q => q.Text).Should().BeEquivalentTo(
-                "///<summary>", 
-                "///XMLHelp", 
-                "///</summary>", 
-                "// SingleLineComment", 
+                "///<summary>",
+                "///XMLHelp",
+                "///</summary>",
+                "// SingleLineComment",
                 @"/*
 BlockComment
 */");
         }
+
     }
 }

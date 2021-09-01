@@ -48,6 +48,24 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #endregion
 
+        #region SignatureContext
+
+        /// <summary>
+        /// Converts a SignatureContext instance to a SignatureContextValues instance
+        /// </summary>
+        /// <param name="context">A SignatureContext instance</param>
+        /// <returns>A SignatureContextValues instance</returns>
+        public static SignatureContextValues ToValues(this SignatureContext context) => SignatureContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of SignatureContext instances to a sequence of SignatureContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of SignatureContext instances</param>
+        /// <returns>A sequence of SignatureContextValues instances</returns>
+        public static IEnumerable<SignatureContextValues> ToValues(this IEnumerable<SignatureContext> enumerable) => enumerable.Select(SignatureContextValues.Build);
+
+        #endregion
+
         #region ParameterContext
 
         /// <summary>

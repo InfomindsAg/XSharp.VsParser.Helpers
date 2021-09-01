@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using XSharp.VsParser.Helpers.Parser.Values.Interfaces;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Parser.Values
@@ -6,41 +7,42 @@ namespace XSharp.VsParser.Helpers.Parser.Values
     /// <summary>
     /// Values class for a MethodContext instance
     /// </summary>
-    public class MethodContextValues : ContextValues<MethodContext>
+    public class MethodContextValues : ContextValues<MethodContext>, ISignatureContextValues
     {
+        /// <summary>
+        /// The method signature values
+        /// </summary>
+        public SignatureContextValues Signature { get; internal set; }
+
         /// <summary>
         /// The method name
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name => Signature.Name;
 
         /// <summary>
         /// The return tyoe
         /// </summary>
-        public string ReturnType { get; internal set; }
+        public string ReturnType => Signature.ReturnType;
 
         /// <summary>
         /// The CallingConvention
         /// </summary>
-        public string CallingConvention { get; internal set; }
+        public string CallingConvention => Signature.CallingConvention;
 
         /// <summary>
         /// An array with the parameter values
         /// </summary>
-        public ParameterContextValues[] Parameters { get; internal set; }
+        public ParameterContextValues[] Parameters => Signature.Parameters;
 
         static internal MethodContextValues Build(MethodContext context)
         {
             if (context == null)
                 return null;
 
-            var signature = context.signature();
             return new MethodContextValues
             {
                 Context = context,
-                Name = signature.identifier()?.GetText(),
-                CallingConvention = signature.CallingConvention?.GetText(),
-                ReturnType = signature.Type?.GetText(),
-                Parameters = (signature.parameterList()?.AsEnumerable().WhereType<ParameterContext>().ToValues() ?? Enumerable.Empty<ParameterContextValues>()).ToArray(),
+                Signature = SignatureContextValues.Build(context.signature())
             };
         }
     }

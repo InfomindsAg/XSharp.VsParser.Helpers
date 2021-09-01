@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using XSharp.VsParser.Helpers.Parser.Values.Interfaces;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Parser.Values
@@ -23,32 +24,37 @@ namespace XSharp.VsParser.Helpers.Parser.Values
     /// <summary>
     /// Values class for a FuncprocContext instance
     /// </summary>
-    public class FuncprocContextValues : ContextValues<FuncprocContext>
+    public class FuncprocContextValues : ContextValues<FuncprocContext>, ISignatureContextValues
     {
         /// <summary>
         /// The type of the Context (Function/Procedure)
         /// </summary>
-        public ProcFuncType ProcFuncType { get; set; }
+        public ProcFuncType ProcFuncType { get; internal set; }
+
+        /// <summary>
+        /// The type of the Context (Function/Procedure)
+        /// </summary>
+        public SignatureContextValues Signature { get; internal set; }
 
         /// <summary>
         /// The method name
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name => Signature.Name;
 
         /// <summary>
         /// The return tyoe
         /// </summary>
-        public string ReturnType { get; internal set; }
+        public string ReturnType => Signature.ReturnType;
 
         /// <summary>
         /// The CallingConvention
         /// </summary>
-        public string CallingConvention { get; internal set; }
+        public string CallingConvention => Signature.CallingConvention;
 
         /// <summary>
         /// An array with the parameter values
         /// </summary>
-        public ParameterContextValues[] Parameters { get; internal set; }
+        public ParameterContextValues[] Parameters => Signature.Parameters;
 
         static internal FuncprocContextValues Build(FuncprocContext context)
         {
@@ -57,15 +63,11 @@ namespace XSharp.VsParser.Helpers.Parser.Values
 
             var defType = (context.funcproctype().Any(q => q.PROCEDURE() != null)) ? ProcFuncType.Procedure : ProcFuncType.Function;
 
-            var signature = context.signature();
             return new FuncprocContextValues
             {
                 ProcFuncType = defType,
                 Context = context,
-                Name = signature.identifier()?.GetText(),
-                CallingConvention = signature.CallingConvention?.GetText(),
-                ReturnType = signature.Type?.GetText(),
-                Parameters = (signature.parameterList()?.AsEnumerable().WhereType<ParameterContext>().ToValues() ?? Enumerable.Empty<ParameterContextValues>()).ToArray(),
+                Signature = SignatureContextValues.Build(context.signature())
             };
         }
     }
