@@ -23,10 +23,20 @@ namespace XSharp.VsParser.Helpers.Parser
         public AbstractSyntaxTree Tree { get; private set; }
 
         /// <summary>
-        /// Obsolte
+        /// Obsolete
         /// </summary>
         [Obsolete("Replaced by Tree Property")]
         public AbstractSyntaxTree SourceTree => Tree;
+
+        /// <summary>
+        /// The source code, that was parsed
+        /// </summary>
+        public string SourceCode { get; private set; }
+
+        /// <summary>
+        /// The source code lines, that was parsed 
+        /// </summary>
+        public string[] SourceCodeLines => SourceCode?.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 
         /// <summary>
         /// A list of the comments. Will be initialized by parsing a file.
@@ -52,6 +62,7 @@ namespace XSharp.VsParser.Helpers.Parser
             _ErrorListener.Clear();
             Tree = null;
             _XSharpTokenStream = null;
+            SourceCode = null;
         }
 
         /// <summary>
@@ -81,6 +92,7 @@ namespace XSharp.VsParser.Helpers.Parser
                 {
                     Tree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
                     _XSharpTokenStream = tokens as BufferedTokenStream;
+                    SourceCode = sourceCode;
                 }
             }
             catch (Exception ex)
