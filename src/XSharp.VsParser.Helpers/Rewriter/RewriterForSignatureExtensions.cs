@@ -12,6 +12,9 @@ namespace XSharp.VsParser.Helpers.Rewriter
     /// </summary>
     public static class RewriterForSignatureExtensions
     {
+        static RewriterForContext<ParameterListContext> RewriterForParameterList(RewriterForContext<SignatureContext> rewriterFor)
+                    => rewriterFor.RewriterFor(rewriterFor.Context?.ParamList);
+
         /// <summary>
         /// Replaces the name of the signature with a new name
         /// </summary>
@@ -31,11 +34,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> DeleteAllParameters(this RewriterForContext<SignatureContext> rewriterFor)
         {
-            var paramList = rewriterFor.Context?.ParamList;
-            if ((paramList?._Params?.Count ?? 0) == 0)
-                return rewriterFor;
-
-            rewriterFor.Rewriter.Replace(paramList.Start.ToIndex(), paramList.Stop.ToIndex(), "()");
+            RewriterForParameterList(rewriterFor).DeleteAllParameters();
             return rewriterFor;
         }
 
@@ -47,9 +46,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> AddParameter(this RewriterForContext<SignatureContext> rewriterFor, string newParameter)
         {
-            var paramList = rewriterFor.Context?.ParamList;
-            var separator = paramList.AsEnumerable().FirstOrDefaultType<ParameterContext>() != null ? ", " : "";
-            rewriterFor.Rewriter.Replace(paramList.Stop.ToIndex(), paramList.Stop.ToIndex(), separator + newParameter + ")");
+            RewriterForParameterList(rewriterFor).AddParameter(newParameter);
             return rewriterFor;
         }
 
@@ -107,14 +104,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> ReplaceCallingConvention(this RewriterForContext<SignatureContext> rewriterFor, string newCallingConvention)
         {
-            if (string.IsNullOrEmpty(newCallingConvention))
-                throw new ArgumentException($"{nameof(newCallingConvention)} can not be empty");
-
-            var callingConvention = rewriterFor.Context.callingconvention();
-            if (callingConvention != null)
-                rewriterFor.Rewriter.Replace(callingConvention.Convention.ToIndex(), newCallingConvention);
-            else
-                rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.Stop.ToIndex(), " " + newCallingConvention);
+            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), rewriterFor.Context.Stop);
             return rewriterFor;
         }
 
@@ -125,9 +115,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> DeleteCallingConvention(this RewriterForContext<SignatureContext> rewriterFor)
         {
-            var callingConvention = rewriterFor.Context.callingconvention();
-            if (callingConvention != null)
-                rewriterFor.Rewriter.Delete(callingConvention.Convention.ToIndex());
+            InternalRewriterHelper.DeleteCallingConvention(rewriterFor.Rewriter, rewriterFor.Context.callingconvention());
             return rewriterFor;
         }
 
