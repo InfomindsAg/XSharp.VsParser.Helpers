@@ -66,6 +66,24 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #endregion
 
+        #region ConstructorContext
+
+        /// <summary>
+        /// Converts a ConstructorContext instance to a ConstructorContextValues instance
+        /// </summary>
+        /// <param name="context">A ConstructorContext instance</param>
+        /// <returns>A ConstructorContextValues instance</returns>
+        public static ConstructorContextValues ToValues(this ConstructorContext context) => ConstructorContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of ConstructorContext instances to a sequence of ConstructorContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of ConstructorContext instances</param>
+        /// <returns>A sequence of ConstructorContextValues instances</returns>
+        public static IEnumerable<ConstructorContextValues> ToValues(this IEnumerable<ConstructorContext> enumerable) => enumerable.Select(ConstructorContextValues.Build);
+
+        #endregion
+
         #region ParameterContext
 
         /// <summary>
