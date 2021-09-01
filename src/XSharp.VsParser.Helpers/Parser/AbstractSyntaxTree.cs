@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Xml.Linq;
 using XSharp.VsParser.Helpers.Rewriter;
 
@@ -34,6 +35,25 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #region Private Helper Methods
 
+        Encoding GetFileEncoding(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                using (var fileStream = new FileStream(fileName, FileMode.Open))
+                {
+                    if (fileStream.Length > 3)
+                    {
+                        var bits = new byte[3];
+                        fileStream.Read(bits, 0, 3);
+
+                        var utf8Bom = (bits[0] == 0xEF && bits[1] == 0xBB && bits[2] == 0xBF);
+                        return new UTF8Encoding(utf8Bom);
+                    }
+                }
+            }
+            return Encoding.UTF8;
+        }
+
         void CheckParseSuccessful()
         {
             if (_StartRule == null)
@@ -57,7 +77,7 @@ namespace XSharp.VsParser.Helpers.Parser
                 File.Move(FileName, backupName);
             }
 
-            File.WriteAllText(newFileName, newSourceCode);
+            File.WriteAllText(newFileName, newSourceCode, GetFileEncoding(newFileName));
             return true;
         }
 
