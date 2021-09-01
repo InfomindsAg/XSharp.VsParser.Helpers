@@ -55,6 +55,8 @@
     <Compile Include="Parser\ToValue\ParameterContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ReturnStmtExpressionToValuesTests.cs" />
     <Compile Include="Parser\ToValue\SuperExpressionToValuesTests.cs" />
+    <Compile Include="Rewriter\ConstructorContextTests.cs" />
+    <Compile Include="Rewriter\FuncprocContextTests.cs" />
     <Compile Include="Rewriter\ParameterContextTests.cs" />
     <Compile Include="Rewriter\StatementContextTests.cs" />
     <Compile Include="TestHelpers\TestsForBase.cs" />
