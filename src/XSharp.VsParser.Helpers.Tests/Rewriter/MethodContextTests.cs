@@ -59,6 +59,18 @@ return nil");
         }
 
         [Fact]
+        public void ReplaceAssignNoReturnTypeWithUsualTest()
+        {
+            var code = WrapInClass(@"access Dummy
+return nil");
+
+            var expected = WrapInClass(@"access Dummy as usual
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceReturnType("usual"));
+        }
+
+        [Fact]
         public void DeleteReturnTypeTest()
         {
             var code = WrapInClass(@"method Dummy() as void
@@ -77,6 +89,18 @@ return nil");
 return nil");
 
             var expected = WrapInClass(@"method Dummy() as void clipper
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceCallingConvention("clipper"));
+        }
+
+        [Fact]
+        public void ReplaceCallingConventionAccessTest()
+        {
+            var code = WrapInClass(@"access Dummy
+return nil");
+
+            var expected = WrapInClass(@"access Dummy clipper
 return nil");
 
             Rewrite(code, expected, r => r.ReplaceCallingConvention("clipper"));
