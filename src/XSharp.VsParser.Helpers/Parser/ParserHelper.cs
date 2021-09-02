@@ -108,7 +108,12 @@ namespace XSharp.VsParser.Helpers.Parser
         /// </summary>
         /// <returns></returns>
         public Result ParseRewriter()
-            => ParseText(Tree.Rewriter.GetText(), Tree.FileName);
+        { 
+            var result = ParseText(Tree.GetRewriteResult(), Tree.FileName);
+            if (result.OK)
+                Tree.ResetRewriter();
+            return result;
+        }
 
         #region Builders
 

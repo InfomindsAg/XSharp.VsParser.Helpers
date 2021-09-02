@@ -78,6 +78,7 @@ namespace XSharp.VsParser.Helpers.Parser
             }
 
             File.WriteAllText(newFileName, newSourceCode, GetFileEncoding(newFileName));
+            ResetRewriter();
             return true;
         }
 
@@ -180,6 +181,12 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <returns>The rewritten code</returns>
         public string GetRewriteResult()
             => _TokenStreamRewriter != null ? _TokenStreamRewriter.GetText() : _SourceCode;
+
+        /// <summary>
+        /// Resets the rewriter
+        /// </summary>
+        public void ResetRewriter()
+            => _TokenStreamRewriter = null;
 
         /// <summary>
         /// Executes a list of XSharpBaseListener instances on the AbstractSyntaxTree
