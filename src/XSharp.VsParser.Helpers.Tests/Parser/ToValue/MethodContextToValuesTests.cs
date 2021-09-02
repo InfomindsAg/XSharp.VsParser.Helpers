@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using XSharp.Parser.Helpers.Tests.TestHelpers;
 using XSharp.VsParser.Helpers.Parser;
+using XSharp.VsParser.Helpers.Parser.Values;
 using Xunit;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
@@ -48,5 +49,33 @@ return nil");
 
             GetFirst(code).ToValues().CallingConvention.Should().Be("strict");
         }
+
+        [Fact]
+        public void TypeMethodTest()
+        {
+            var code = WrapInClass(@"method Dummy() as string strict
+return nil");
+
+            GetFirst(code).ToValues().MethodType.Should().Be(MethodType.Method);
+        }
+
+        [Fact]
+        public void TypeAccessTest()
+        {
+            var code = WrapInClass(@"access Dummy as string strict
+return nil");
+
+            GetFirst(code).ToValues().MethodType.Should().Be(MethodType.Access);
+        }
+
+        [Fact]
+        public void TypeAssignTest()
+        {
+            var code = WrapInClass(@"assign Dummy(value as string) as void strict
+return");
+
+            GetFirst(code).ToValues().MethodType.Should().Be(MethodType.Assign);
+        }
+
     }
 }

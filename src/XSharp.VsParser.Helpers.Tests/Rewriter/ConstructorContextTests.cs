@@ -71,5 +71,27 @@ return nil");
             Rewrite(code, expected, r => r.AddParameter("newParam as string"));
         }
 
+        [Fact]
+        public void ConventionPlaygroundTest()
+        {
+            var code = @"class IndexFilterLandesbezeichnungen inherit IndexFilterSQL
+
+CONSTRUCTOR(oDB)
+SUPER(oDB)
+return
+end class"
+;
+
+            var expected = @"class IndexFilterLandesbezeichnungen inherit IndexFilterSQL
+
+CONSTRUCTOR(oDB) clipper
+SUPER(oDB)
+return
+end class"
+;
+
+            Rewrite(code, expected, r => r.ReplaceCallingConvention("clipper"));
+        }
+
     }
 }

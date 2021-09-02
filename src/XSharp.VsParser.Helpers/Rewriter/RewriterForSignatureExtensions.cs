@@ -72,7 +72,10 @@ namespace XSharp.VsParser.Helpers.Rewriter
             {
                 if (!newReturnType.TrimStart().StartsWith("as ", StringComparison.OrdinalIgnoreCase))
                     newReturnType = " as " + newReturnType;
-                rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.ParamList.Stop.ToIndex(), newReturnType);
+                if (rewriterFor.Context.ParamList != null)
+                    rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.ParamList.Stop.ToIndex(), newReturnType);
+                else
+                    rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.Id.Stop.ToIndex(), newReturnType);
             }
             return rewriterFor;
         }

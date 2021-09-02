@@ -46,7 +46,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<ConstructorContext> ReplaceCallingConvention(this RewriterForContext<ConstructorContext> rewriterFor, string newCallingConvention)
         {
-            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), rewriterFor.Context.Stop);
+            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), rewriterFor.Context.ParamList.Stop);
             return rewriterFor;
         }
 
