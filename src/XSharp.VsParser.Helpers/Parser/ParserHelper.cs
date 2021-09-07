@@ -13,9 +13,39 @@ namespace XSharp.VsParser.Helpers.Parser
     /// </summary>
     public class ParserHelper
     {
+        class LineInfo
+        {
+            public int Line { get; set; }
+            public int Start { get; set; }
+            public int End { get; set; }
+        }
+
         readonly GenericErrorListener _ErrorListener = new();
         readonly XSharpParseOptions _XSharpOptions;
         private BufferedTokenStream _XSharpTokenStream;
+        private List<LineInfo> _Lines;
+
+        List<LineInfo> BuildLineInfo()
+        {
+            if (string.IsNullOrEmpty(SourceCode))
+                return null;
+
+            var line = 1;
+            var result = new List<LineInfo>() { };
+            var start = 0;
+            do
+            {
+                var end = SourceCode.IndexOf('\n', start);
+                if (end == -1)
+                    end = SourceCode.Length;
+                result.Add(new LineInfo { Start = start, End = end, Line = line });
+                line++;
+                start = end + 1;
+            } while (start < SourceCode.Length);
+
+            return result;
+        }
+
 
         /// <summary>
         /// The Abstract Syntax Tree. Will be initialized by parsing a file.
@@ -41,7 +71,7 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <summary>
         /// A list of the comments. Will be initialized by parsing a file.
         /// </summary>
-        public List<IToken> Comments => _XSharpTokenStream?.GetTokens().Where(q => XSharpLexer.IsComment(q.Type)).ToList();
+        public IReadOnlyList<Comment> Comments { get; private set; }
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
         {
@@ -55,6 +85,32 @@ namespace XSharp.VsParser.Helpers.Parser
         }
 
         /// <summary>
+        /// Calculates the line and column based on an absolute position in source code
+        /// </summary>
+        /// <param name="positionInSourceCode">The absolute position in source code</param>
+        /// <returns>The line and column (1 based)</returns>
+        public (int Line, int Column) GetLineAndColumn(int positionInSourceCode)
+        {
+            var line = _Lines.LastOrDefault(q => q.Start <= positionInSourceCode && positionInSourceCode <= q.End);
+            if (line == null)
+                throw new ArgumentException("Invalid positionInSourceCode");
+
+            return (line.Line, positionInSourceCode - line.Start + 1);
+        }
+
+        /// <summary>
+        /// Calculates the start and end line and column for a token
+        /// </summary>
+        /// <param name="token">The token</param>
+        /// <returns>The start and end line and column (1 based)</returns>
+        public (int StartLine, int StartColumn, int EndLine, int EndColumn) GetTokenPosition(IToken token)
+        {
+            var (startLine, startColumn) = GetLineAndColumn(token.StartIndex);
+            var (endLine, endColumn) = GetLineAndColumn(token.StopIndex);
+            return (startLine, startColumn, endLine, endColumn);
+        }
+
+        /// <summary>
         /// Clears the ParserHelper
         /// </summary>
         public void Clear()
@@ -62,7 +118,9 @@ namespace XSharp.VsParser.Helpers.Parser
             _ErrorListener.Clear();
             Tree = null;
             _XSharpTokenStream = null;
+            _Lines = null;
             SourceCode = null;
+            Comments = null;
         }
 
         /// <summary>
@@ -93,6 +151,9 @@ namespace XSharp.VsParser.Helpers.Parser
                     Tree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
                     _XSharpTokenStream = tokens as BufferedTokenStream;
                     SourceCode = sourceCode;
+                    _Lines = BuildLineInfo();
+                    Comments = _XSharpTokenStream?.GetTokens().Where(q => XSharpLexer.IsComment(q.Type)).Select(q => Comment.Build(q, this)).ToList();
+
                 }
             }
             catch (Exception ex)

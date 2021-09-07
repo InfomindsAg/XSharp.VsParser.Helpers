@@ -6,7 +6,6 @@ using XSharp.VsParser.Helpers.Parser;
 using Xunit;
 using static XSharp.Parser.Helpers.Tests.TestHelpers.TestHelperExtensions;
 using XSharp.Parser.Helpers.Tests.TestHelpers;
-using System.Text;
 
 namespace XSharp.Parser.Helpers.Tests.Parser
 {
@@ -26,24 +25,23 @@ namespace XSharp.Parser.Helpers.Tests.Parser
         [Fact]
         public void CommentsTest()
         {
-            var parser = @"
-///<summary>
+            var parser = @"///<summary>
 ///XMLHelp
 ///</summary>
 class Test inherit BaseTest // SingleLineComment
-/*
-BlockComment
-*/
+  /*
+  BlockComment
+  */
 end class".ParseText();
 
-            parser.Comments.Select(q => q.Text).Should().BeEquivalentTo(
-                "///<summary>",
-                "///XMLHelp",
-                "///</summary>",
-                "// SingleLineComment",
-                @"/*
-BlockComment
-*/");
+            parser.Comments.Should().BeEquivalentTo(
+                new { Text = "///<summary>", StartLine = 1, StartColumn = 1, EndLine = 1, EndColumn = 12},
+                new { Text = "///XMLHelp", StartLine = 2, StartColumn = 1, EndLine = 2, EndColumn = 10 },
+                new { Text = "///</summary>", StartLine = 3, StartColumn = 1, EndLine = 3, EndColumn = 13 },
+                new { Text = "// SingleLineComment", StartLine = 4, StartColumn = 29, EndLine = 4, EndColumn = 48 },
+                new { Text = @"/*
+  BlockComment
+  */", StartLine = 5, StartColumn = 3, EndLine = 7, EndColumn = 4 });
         }
 
     }
