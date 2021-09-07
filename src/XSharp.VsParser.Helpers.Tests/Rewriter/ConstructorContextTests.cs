@@ -24,6 +24,18 @@ return nil");
         }
 
         [Fact]
+        public void ReplaceCallingConventionNoParamListTest()
+        {
+            var code = WrapInClass(@"Constructor strict
+return nil");
+
+            var expected = WrapInClass(@"Constructor clipper
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceCallingConvention("clipper"));
+        }
+
+        [Fact]
         public void DeleteCallingConventionTest()
         {
             var code = WrapInClass(@"Constructor () strict

@@ -10,6 +10,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
 {
     static class InternalRewriterHelper
     {
+
         public static void ReplaceCallingConvention(TokenStreamRewriter rewriter, string newCallingConvention, CallingconventionContext callingConvention, IToken insertAfterToken)
         {
             if (string.IsNullOrEmpty(newCallingConvention))
@@ -18,7 +19,11 @@ namespace XSharp.VsParser.Helpers.Rewriter
             if (callingConvention != null)
                 rewriter.Replace(callingConvention.Convention.ToIndex(), newCallingConvention);
             else
+            {
+                if (insertAfterToken == null)
+                    throw new ArgumentException($"{nameof(insertAfterToken)} can not be null");
                 rewriter.InsertAfter(insertAfterToken.ToIndex(), " " + newCallingConvention);
+            }
         }
 
         public static void DeleteCallingConvention(TokenStreamRewriter rewriter, CallingconventionContext callingConvention)

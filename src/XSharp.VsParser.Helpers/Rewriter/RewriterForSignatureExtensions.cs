@@ -1,4 +1,5 @@
-﻿using LanguageService.SyntaxTree.Tree;
+﻿using LanguageService.SyntaxTree;
+using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,7 +108,9 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<SignatureContext> ReplaceCallingConvention(this RewriterForContext<SignatureContext> rewriterFor, string newCallingConvention)
         {
-            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), rewriterFor.Context.Stop);
+            var sig = rewriterFor.Context;
+            var lastToken = sig._ConstraintsClauses?.LastOrDefault()?.Stop ?? sig.Type?.Stop ?? sig.ParamList?.Stop ?? sig.TypeParameters?.Stop ?? sig.Id?.Stop;
+            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), lastToken);
             return rewriterFor;
         }
 
