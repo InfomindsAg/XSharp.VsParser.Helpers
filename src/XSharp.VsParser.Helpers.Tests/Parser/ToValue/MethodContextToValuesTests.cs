@@ -60,6 +60,24 @@ return nil");
         }
 
         [Fact]
+        public void NoModifiersTest()
+        {
+            var code = WrapInClass(@"method Dummy() as string strict
+return nil");
+
+            GetFirst(code).ToValues().Modifiers.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ProtectedOverrideModifiersTest()
+        {
+            var code = WrapInClass(@"protected override method Dummy() as string strict
+return nil");
+
+            GetFirst(code).ToValues().Modifiers.Should().BeEquivalentTo("protected", "override");
+        }
+
+        [Fact]
         public void TypeAccessTest()
         {
             var code = WrapInClass(@"access Dummy as string strict

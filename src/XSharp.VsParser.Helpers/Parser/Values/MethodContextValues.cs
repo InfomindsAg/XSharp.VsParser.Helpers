@@ -35,11 +35,15 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         /// </summary>
         public SignatureContextValues Signature { get; internal set; }
 
-
         /// <summary>
         /// The type
         /// </summary>
         public MethodType MethodType { get; private set; }
+
+        /// <summary>
+        /// The type
+        /// </summary>
+        public string[] Modifiers { get; private set; }
 
         /// <summary>
         /// The method name
@@ -71,10 +75,12 @@ namespace XSharp.VsParser.Helpers.Parser.Values
                 methodType = MethodType.Assign;
             else if (context.methodtype().Any(q => q.ACCESS() != null))
                 methodType = MethodType.Access;
+
             return new MethodContextValues
             {
                 Context = context,
                 MethodType = methodType,
+                Modifiers = (context.Modifiers?._Tokens?.Select(q => q.Text) ?? Enumerable.Empty<string>()).ToArray(),
                 Signature = SignatureContextValues.Build(context.signature())
             };
         }
