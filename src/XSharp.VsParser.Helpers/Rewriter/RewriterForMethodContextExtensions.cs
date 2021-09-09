@@ -96,15 +96,61 @@ namespace XSharp.VsParser.Helpers.Rewriter
         }
 
         /// <summary>
-        /// Add Override to the method
+        /// Adds a modifier to the method
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="modifiers">The rewriterFor instance</param>
+        /// <returns>The rewriterFor instance</returns>
+        public static RewriterForContext<MethodContext> AddModifiers(this RewriterForContext<MethodContext> rewriterFor, string modifiers)
+        {
+            if (string.IsNullOrEmpty(modifiers))
+                throw new ArgumentException("Modifier can not be emtpy");
+
+            foreach (var modifier in modifiers.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries))
+                rewriterFor.DeleteModifier(modifier);
+
+            rewriterFor.Rewriter.InsertBefore(rewriterFor.Context.methodtype(0).Token.ToIndex(), modifiers + " ");
+
+            return rewriterFor;
+        }
+
+        /// <summary>
+        /// Deletes the specified modifier for the method
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="modifier">The modifier, that should be deleted</param>
+        /// <returns>The rewriterFor instance</returns>
+        public static RewriterForContext<MethodContext> DeleteModifier(this RewriterForContext<MethodContext> rewriterFor, string modifier)
+        {
+            var currentModifiers = rewriterFor.Context.Modifiers;
+            if (currentModifiers != null)
+            {
+                var token = currentModifiers._Tokens?.FirstOrDefault(q => modifier.Equals(q.Text, StringComparison.OrdinalIgnoreCase));
+                if (token != null)
+                {
+                    
+                    if (token == currentModifiers._Tokens.Last())
+                        rewriterFor.Rewriter.Delete(token.ToIndex(), rewriterFor.Context.methodtype(0).Start.ToIndex() - 1);
+                    else
+                    {
+                        var tokenIndex = currentModifiers._Tokens.IndexOf(token);
+                        rewriterFor.Rewriter.Delete(token.ToIndex(), currentModifiers._Tokens[tokenIndex + 1].ToIndex() - 1);
+                    }
+                }
+            }
+            return rewriterFor;
+        }
+
+        /// <summary>
+        /// Deletes all the method modifiers
         /// </summary>
         /// <param name="rewriterFor">The rewriterFor instance</param>
         /// <returns>The rewriterFor instance</returns>
-        public static RewriterForContext<MethodContext> AddOverride(this RewriterForContext<MethodContext> rewriterFor)
+        public static RewriterForContext<MethodContext> DeleteAllModifiers(this RewriterForContext<MethodContext> rewriterFor)
         {
-            var modifiers = rewriterFor.Context.Modifiers;
-            if (modifiers == null || modifiers.OVERRIDE().Length == 0)
-                rewriterFor.Rewriter.InsertBefore(rewriterFor.Context.methodtype(0).Token.ToIndex(), "override ");
+            var currentModifiers = rewriterFor.Context.Modifiers;
+            if (currentModifiers != null && currentModifiers._Tokens?.Any() == true)
+                rewriterFor.Rewriter.Delete(currentModifiers.Start.ToIndex(), rewriterFor.Context.methodtype(0).Start.ToIndex() - 1);
             return rewriterFor;
         }
     }
