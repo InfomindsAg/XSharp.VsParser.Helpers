@@ -61,6 +61,44 @@ return nil");
             Rewrite(code, expected, r => r.ReplaceParameterDataType("logic"));
         }
 
+        [Fact]
+        public void ChangeParamWithTypeAddDefaultTest()
+        {
+            var code = WrapInClass(@"method Dummy(isValid as usual) as void strict
+return nil");
+
+            var expected = WrapInClass(@"method Dummy(isValid := nil as usual) as void strict
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceParameterDefaultValue("nil"));
+        }
+
+        [Fact]
+        public void ChangeParamAddDefaultTest()
+        {
+            var code = WrapInClass(@"method Dummy(isValid) as void strict
+return nil");
+
+            var expected = WrapInClass(@"method Dummy(isValid := nil) as void strict
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceParameterDefaultValue("nil"));
+        }
+
+
+        [Fact]
+        public void ChangeParamDefaultTest()
+        {
+            var code = WrapInClass(@"method Dummy(isValid := false as logic) as void strict
+return nil");
+
+            var expected = WrapInClass(@"method Dummy(isValid := true as logic) as void strict
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceParameterDefaultValue("true"));
+        }
+
+
 
         [Fact]
         public void ChangeParamDataTypeUnypedTest()
