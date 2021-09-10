@@ -11,7 +11,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
     static class InternalRewriterHelper
     {
 
-        public static void ReplaceCallingConvention(TokenStreamRewriter rewriter, string newCallingConvention, CallingconventionContext callingConvention, IToken insertAfterToken)
+        public static void ReplaceCallingConvention(TokenStreamRewriter rewriter, string newCallingConvention, CallingconventionContext callingConvention, int insertAfterTokenIndex)
         {
             if (string.IsNullOrEmpty(newCallingConvention))
                 throw new ArgumentException($"{nameof(newCallingConvention)} can not be empty");
@@ -20,9 +20,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
                 rewriter.Replace(callingConvention.Convention.ToIndex(), newCallingConvention);
             else
             {
-                if (insertAfterToken == null)
-                    throw new ArgumentException($"{nameof(insertAfterToken)} can not be null");
-                rewriter.InsertAfter(insertAfterToken.ToIndex(), " " + newCallingConvention);
+                rewriter.InsertAfter(insertAfterTokenIndex, " " + newCallingConvention);
             }
         }
 

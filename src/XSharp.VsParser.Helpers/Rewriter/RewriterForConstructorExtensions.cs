@@ -48,7 +48,8 @@ namespace XSharp.VsParser.Helpers.Rewriter
         {
             var con = rewriterFor.Context;
             var lastToken = con.ParamList?.Stop ?? con.identifier()?.Stop;
-            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), lastToken);
+            var index = lastToken?.ToIndex() ?? con.c1.ToIndex(); 
+            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), index);
             return rewriterFor;
         }
 

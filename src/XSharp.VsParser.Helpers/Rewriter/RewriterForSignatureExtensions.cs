@@ -110,7 +110,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         {
             var sig = rewriterFor.Context;
             var lastToken = sig._ConstraintsClauses?.LastOrDefault()?.Stop ?? sig.Type?.Stop ?? sig.ParamList?.Stop ?? sig.TypeParameters?.Stop ?? sig.Id?.Stop;
-            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), lastToken);
+            InternalRewriterHelper.ReplaceCallingConvention(rewriterFor.Rewriter, newCallingConvention, rewriterFor.Context.callingconvention(), lastToken.ToIndex());
             return rewriterFor;
         }
 
