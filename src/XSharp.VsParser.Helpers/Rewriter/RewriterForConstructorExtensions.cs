@@ -22,19 +22,22 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<ConstructorContext> DeleteAllParameters(this RewriterForContext<ConstructorContext> rewriterFor)
         {
-            RewriterFoParameterList(rewriterFor).DeleteAllParameters();
+            InternalRewriterHelper.DeleteAllParameters(rewriterFor.Rewriter, rewriterFor.Context.ParamList);
             return rewriterFor;
         }
 
         /// <summary>
-        /// Adds a new parameters at the end of the parameterlist
+        /// Replaces the existing parameters with new parameters
         /// </summary>
         /// <param name="rewriterFor">The rewriterFor instance</param>
-        /// <param name="newParameter">The new parameter</param>
+        /// <param name="newParameters">The new parameters</param>
         /// <returns>The rewriterFor instance</returns>
-        public static RewriterForContext<ConstructorContext> AddParameter(this RewriterForContext<ConstructorContext> rewriterFor, string newParameter)
+        public static RewriterForContext<ConstructorContext> ReplaceParameters(this RewriterForContext<ConstructorContext> rewriterFor, string newParameters)
         {
-            RewriterFoParameterList(rewriterFor).AddParameter(newParameter);
+            var con = rewriterFor.Context;
+            var lastToken = con.identifier()?.Stop;
+            var index = lastToken?.ToIndex() ?? con.c1.ToIndex();
+            InternalRewriterHelper.ReplaceParameters(rewriterFor.Rewriter, newParameters, rewriterFor.Context.ParamList, index);
             return rewriterFor;
         }
 

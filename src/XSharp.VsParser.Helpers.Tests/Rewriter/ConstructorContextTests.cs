@@ -69,7 +69,19 @@ return nil");
             var expected = WrapInClass(@"Constructor (newParam)
 return nil");
 
-            Rewrite(code, expected, r => r.AddParameter("newParam"));
+            Rewrite(code, expected, r => r.ReplaceParameters("newParam"));
+        }
+
+        [Fact]
+        public void AddParameterNoParamListTest()
+        {
+            var code = WrapInClass(@"Constructor
+return nil");
+
+            var expected = WrapInClass(@"Constructor(newParam)
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceParameters("newParam"));
         }
 
         [Fact]
@@ -81,7 +93,7 @@ return nil");
             var expected = WrapInClass(@"Constructor (newParam as string)
 return nil");
 
-            Rewrite(code, expected, r => r.AddParameter("newParam as string"));
+            Rewrite(code, expected, r => r.ReplaceParameters("newParam as string"));
         }
 
         [Fact]
@@ -93,7 +105,7 @@ return nil");
             var expected = WrapInClass(@"Constructor (firstParam as string, newParam as string)
 return nil");
 
-            Rewrite(code, expected, r => r.AddParameter("newParam as string"));
+            Rewrite(code, expected, r => r.ReplaceParameters("firstParam as string, newParam as string"));
         }
 
         [Fact]

@@ -19,15 +19,30 @@ namespace XSharp.VsParser.Helpers.Rewriter
             if (callingConvention != null)
                 rewriter.Replace(callingConvention.Convention.ToIndex(), newCallingConvention);
             else
-            {
                 rewriter.InsertAfter(insertAfterTokenIndex, " " + newCallingConvention);
-            }
         }
 
         public static void DeleteCallingConvention(TokenStreamRewriter rewriter, CallingconventionContext callingConvention)
         {
             if (callingConvention != null)
                 rewriter.Delete(callingConvention.Convention.ToIndex());
+        }
+
+
+        public static void DeleteAllParameters(TokenStreamRewriter rewriter, ParameterListContext paramList)
+        {
+            if ((paramList?._Params?.Count ?? 0) > 0)
+                rewriter.Replace(paramList.Start.ToIndex(), paramList.Stop.ToIndex(), "()");
+        }
+
+        public static void ReplaceParameters(TokenStreamRewriter rewriter, string newParameters, ParameterListContext paramList, int insertAfterTokenIndex)
+        {
+            newParameters = $"({newParameters})";
+
+            if (paramList != null)
+                rewriter.Replace(paramList.Start.ToIndex(), paramList.Stop.ToIndex(), newParameters);
+            else
+                rewriter.InsertAfter(insertAfterTokenIndex, newParameters);
         }
     }
 }

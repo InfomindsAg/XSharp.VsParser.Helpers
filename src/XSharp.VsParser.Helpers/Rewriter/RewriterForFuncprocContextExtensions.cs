@@ -38,14 +38,14 @@ namespace XSharp.VsParser.Helpers.Rewriter
         }
 
         /// <summary>
-        /// Adds a new parameters at the end of the parameterlist
+        /// Replaces the existing parameters with new parameters
         /// </summary>
         /// <param name="rewriterFor">The rewriterFor instance</param>
-        /// <param name="newParameter">The new parameter</param>
+        /// <param name="newParameters">The new parameters</param>
         /// <returns>The rewriterFor instance</returns>
-        public static RewriterForContext<FuncprocContext> AddParameter(this RewriterForContext<FuncprocContext> rewriterFor, string newParameter)
+        public static RewriterForContext<FuncprocContext> AddParameter(this RewriterForContext<FuncprocContext> rewriterFor, string newParameters)
         {
-            RewriterForSignature(rewriterFor).AddParameter(newParameter);
+            RewriterForSignature(rewriterFor).ReplaceParameter(newParameters);
             return rewriterFor;
         }
 

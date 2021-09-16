@@ -35,8 +35,6 @@ return nil");
             Rewrite(code, expected, r => r.ReplaceParameterName("isValid"));
         }
 
-
-
         [Fact]
         public void ChangeParamDataTypeTypedTest()
         {
@@ -122,6 +120,18 @@ return nil");
 return nil");
 
             Rewrite(code, expected, r => r.ReplaceParameterDataType("logic"));
+        }
+
+        [Fact]
+        public void ReplaceAssignParamTypeTest()
+        {
+            var code = WrapInClass(@"assign KeyDisplayString (value)
+return nil");
+
+            var expected = WrapInClass(@"assign KeyDisplayString (value as string)
+return nil");
+
+            Rewrite(code, expected, r => r.ReplaceParameterDataType("string"));
         }
 
     }
