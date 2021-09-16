@@ -65,15 +65,10 @@ namespace XSharp.VsParser.Helpers.Rewriter
 
             var returnContext = rewriterFor.Context.Type;
             if (returnContext != null)
-            {
-                if (newReturnType.TrimStart().StartsWith("as ", StringComparison.OrdinalIgnoreCase))
-                    newReturnType = newReturnType.TrimStart().Substring(3).TrimStart();
-                rewriterFor.Rewriter.Replace(returnContext.start.ToIndex(), returnContext.stop.ToIndex(), newReturnType);
-            }
+                rewriterFor.Rewriter.Replace(returnContext.start.ToIndex(), returnContext.stop.ToIndex(), InternalRewriterHelper.RemoveAsFromType(newReturnType));
             else
             {
-                if (!newReturnType.TrimStart().StartsWith("as ", StringComparison.OrdinalIgnoreCase))
-                    newReturnType = " as " + newReturnType;
+                newReturnType = " " + InternalRewriterHelper.AddAsToType(newReturnType);
                 if (rewriterFor.Context.ParamList != null)
                     rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.ParamList.Stop.ToIndex(), newReturnType);
                 else

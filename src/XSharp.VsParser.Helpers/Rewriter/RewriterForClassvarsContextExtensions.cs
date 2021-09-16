@@ -9,7 +9,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
     /// <summary>
     /// RewriterForPropertyContext Extensions
     /// </summary>
-    public static class RewriterForPropertyContextExtensions
+    public static class RewriterForClassvarsContextExtensions
     {
 
         /// <summary>
@@ -18,16 +18,17 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <param name="rewriterFor">The rewriterFor instance</param>
         /// <param name="newType">The new return type</param>
         /// <returns>The rewriterFor instance</returns>
-        public static RewriterForContext<PropertyContext> ReplaceType(this RewriterForContext<PropertyContext> rewriterFor, string newType)
+        public static RewriterForContext<ClassvarsContext> ReplaceType(this RewriterForContext<ClassvarsContext> rewriterFor, string newType)
         {
             if (string.IsNullOrEmpty(newType))
                 throw new ArgumentException($"{nameof(newType)} can not be empty");
 
-            var typeContext = rewriterFor.Context.Type;
+            var classVarList = rewriterFor.Context.classVarList();
+            var typeContext = classVarList.DataType;
             if (typeContext != null)
                 rewriterFor.Rewriter.Replace(typeContext.start.ToIndex(), typeContext.stop.ToIndex(), InternalRewriterHelper.RemoveAsFromType(newType));
             else
-                rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.Id.Stop.ToIndex(), " " + InternalRewriterHelper.AddAsToType(newType));
+                rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.classVarList().stop.ToIndex(), " " + InternalRewriterHelper.AddAsToType(newType));
             return rewriterFor;
         }
     }

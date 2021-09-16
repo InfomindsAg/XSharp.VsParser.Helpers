@@ -44,5 +44,20 @@ namespace XSharp.VsParser.Helpers.Rewriter
             else
                 rewriter.InsertAfter(insertAfterTokenIndex, newParameters);
         }
+
+        public static string RemoveAsFromType(string type)
+        {
+            if (type.TrimStart().StartsWith("as ", StringComparison.OrdinalIgnoreCase))
+                return type.TrimStart().Substring(3).TrimStart();
+
+            return type;
+        }
+
+        public static string AddAsToType(string type)
+        {
+            if (!type.TrimStart().StartsWith("as ", StringComparison.OrdinalIgnoreCase))
+                return $"as {type}";
+            return type;
+        }
     }
 }
