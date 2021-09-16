@@ -58,6 +58,7 @@
     <Compile Include="Rewriter\ConstructorContextTests.cs" />
     <Compile Include="Rewriter\FuncprocContextTests.cs" />
     <Compile Include="Rewriter\ParameterContextTests.cs" />
+    <Compile Include="Rewriter\LocalvarContextTests.cs" />
     <Compile Include="Rewriter\StatementContextTests.cs" />
     <Compile Include="TestHelpers\TestsForBase.cs" />
     <Compile Include="Rewriter\MethodContextTests.cs" />
