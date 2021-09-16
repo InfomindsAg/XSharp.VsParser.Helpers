@@ -24,11 +24,16 @@ namespace XSharp.VsParser.Helpers.Parser
             public int Line { get; set; }
 
             /// <summary>
+            /// The source code position for the message
+            /// </summary>
+            public int Position { get; set; }
+
+            /// <summary>
             /// Converts the Item to a stirng
             /// </summary>
             /// <returns></returns>
             public override string ToString()
-                => $"{Message} - Line: {Line}";
+                => $"{Message} - Postion: {Position}";
         }
 
         /// <summary>
