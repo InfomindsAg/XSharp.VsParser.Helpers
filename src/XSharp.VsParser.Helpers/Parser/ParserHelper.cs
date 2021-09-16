@@ -43,6 +43,9 @@ namespace XSharp.VsParser.Helpers.Parser
                 start = end + 1;
             } while (start < SourceCode.Length);
 
+            // Additional line for the last newline
+            result.Add(new LineInfo { Start = start, End = start, Line = line });
+
             return result;
         }
 
@@ -71,7 +74,13 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <summary>
         /// A list of the comments. Will be initialized by parsing a file.
         /// </summary>
-        public IReadOnlyList<Comment> Comments { get; private set; }
+        public IReadOnlyList<TokenValues> Comments { get; private set; }
+
+        /// <summary>
+        /// A list of the Tokens. Will be initialized by parsing a file.
+        /// </summary>
+        public IReadOnlyList<TokenValues> Tokens { get; private set; }
+
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
         {
@@ -121,6 +130,7 @@ namespace XSharp.VsParser.Helpers.Parser
             _Lines = null;
             SourceCode = null;
             Comments = null;
+            Tokens = null;
         }
 
         /// <summary>
@@ -152,8 +162,8 @@ namespace XSharp.VsParser.Helpers.Parser
                     _XSharpTokenStream = tokens as BufferedTokenStream;
                     SourceCode = sourceCode;
                     _Lines = BuildLineInfo();
-                    Comments = _XSharpTokenStream?.GetTokens().Where(q => XSharpLexer.IsComment(q.Type)).Select(q => Comment.Build(q, this)).ToList();
-
+                    Tokens = _XSharpTokenStream?.GetTokens().Select(q => TokenValues.Build(q, this)).ToList();
+                    Comments = Tokens.Where(q => q.Type == TokenType.Comment).ToList();
                 }
             }
             catch (Exception ex)

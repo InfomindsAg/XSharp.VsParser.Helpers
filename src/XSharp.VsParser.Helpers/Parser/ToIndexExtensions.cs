@@ -30,6 +30,15 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <param name="id">An IdentifierContext</param>
         /// <returns>The OriginalTokenIndex</returns>
         public static int ToIndex(this IdentifierContext id)
-            => ToIndex(id?.Token);
+        {
+            if (id == null)
+                throw new ArgumentException("id can not be null");
+            if (id.Token != null)
+                return ToIndex(id.Token);
+            if (id.XsToken?.Token != null)
+                return ToIndex(id.XsToken?.Token);
+
+            throw new ArgumentException("Can not convert ID to Index");
+        }
     }
 }

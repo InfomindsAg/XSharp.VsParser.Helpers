@@ -7,13 +7,12 @@ namespace XSharp.VsParser.Helpers.Parser
     /// <summary>
     /// Comment
     /// </summary>
-    public class Comment
+    public class TokenValues
     {
         /// <summary>
         /// The Context, from which the values were extracted
         /// </summary>
         public IToken Context { get; internal set; }
-
 
         /// <summary>
         /// The comment text
@@ -23,32 +22,38 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <summary>
         /// The line where the comment starts (1-based)
         /// </summary>
-        public int StartLine { get; set; }
+        public int StartLine { get; internal set; }
         /// <summary>
         /// The line where the comment ends (1-based)
         /// </summary>
-        public int EndLine { get; set; }
+        public int EndLine { get; internal set; }
 
         /// <summary>
         /// The column in the line where the comment starts (1-based)
         /// </summary>
-        public int StartColumn { get; set; }
+        public int StartColumn { get; internal set; }
 
         /// <summary>
         /// The column in the line where the comment ends (1-based)
         /// </summary>
-        public int EndColumn { get; set; }
+        public int EndColumn { get; internal set; }
 
-        static internal Comment Build(IToken context, ParserHelper parserHelper)
+        /// <summary>
+        /// The Token Type
+        /// </summary>
+        public TokenType Type { get; internal set; }
+
+        static internal TokenValues Build(IToken context, ParserHelper parserHelper)
         {
             if (context == null)
                 return null;
 
             var pos = parserHelper.GetTokenPosition(context);
 
-            return new Comment
+            return new TokenValues
             {
                 Context = context,
+                Type = context.GetTokenType(),
                 Text = context.Text,
                 StartLine = pos.StartLine,
                 StartColumn = pos.StartColumn,
