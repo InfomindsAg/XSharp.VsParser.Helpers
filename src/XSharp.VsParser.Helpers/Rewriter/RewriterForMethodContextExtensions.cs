@@ -43,9 +43,9 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <param name="rewriterFor">The rewriterFor instance</param>
         /// <param name="newParameters">The new parameters</param>
         /// <returns>The rewriterFor instance</returns>
-        public static RewriterForContext<MethodContext> ReplaceParameter(this RewriterForContext<MethodContext> rewriterFor, string newParameters)
+        public static RewriterForContext<MethodContext> ReplaceParameters(this RewriterForContext<MethodContext> rewriterFor, string newParameters)
         {
-            RewriterForSignature(rewriterFor).ReplaceParameter(newParameters);
+            RewriterForSignature(rewriterFor).ReplaceParameters(newParameters);
             return rewriterFor;
         }
 

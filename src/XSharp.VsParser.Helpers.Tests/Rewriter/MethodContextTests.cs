@@ -167,7 +167,7 @@ return nil");
         }
 
         [Fact]
-        public void AddParameterEmptyTest()
+        public void ReplaceParametersEmptyTest()
         {
             var code = WrapInClass(@"method Dummy()
 return nil");
@@ -175,11 +175,11 @@ return nil");
             var expected = WrapInClass(@"method Dummy(newParam)
 return nil");
 
-            Rewrite(code, expected, r => r.ReplaceParameter("newParam"));
+            Rewrite(code, expected, r => r.ReplaceParameters("newParam"));
         }
 
         [Fact]
-        public void AddParameterTypedEmptyTest()
+        public void ReplaceParametersTypedEmptyTest()
         {
             var code = WrapInClass(@"method Dummy()
 return nil");
@@ -187,11 +187,11 @@ return nil");
             var expected = WrapInClass(@"method Dummy(newParam as string)
 return nil");
 
-            Rewrite(code, expected, r => r.ReplaceParameter("newParam as string"));
+            Rewrite(code, expected, r => r.ReplaceParameters("newParam as string"));
         }
 
         [Fact]
-        public void AddParameterTypedNoParamListTest()
+        public void ReplaceParametersTypedNoParamListTest()
         {
             var code = WrapInClass(@"method Dummy
 return nil");
@@ -199,11 +199,11 @@ return nil");
             var expected = WrapInClass(@"method Dummy(newParam as string)
 return nil");
 
-            Rewrite(code, expected, r => r.ReplaceParameter("newParam as string"));
+            Rewrite(code, expected, r => r.ReplaceParameters("newParam as string"));
         }
 
         [Fact]
-        public void AddParameterNotEmptyTest()
+        public void ReplaceParametersNotEmptyTest()
         {
             var code = WrapInClass(@"method Dummy(firstParam as string)
 return nil");
@@ -211,7 +211,7 @@ return nil");
             var expected = WrapInClass(@"method Dummy(firstParam as string, newParam as string)
 return nil");
 
-            Rewrite(code, expected, r => r.ReplaceParameter("firstParam as string, newParam as string"));
+            Rewrite(code, expected, r => r.ReplaceParameters("firstParam as string, newParam as string"));
         }
 
         [Fact]
@@ -223,7 +223,7 @@ return nil");
             var expected = WrapInClass(@"method Dummy(firstParam as string, newParam1 as string, newParam2 as string)
 return nil");
 
-            Rewrite(code, expected, r => r.ReplaceParameter("firstParam as string, newParam1 as string, newParam2 as string"));
+            Rewrite(code, expected, r => r.ReplaceParameters("firstParam as string, newParam1 as string, newParam2 as string"));
         }
 
         [Fact]
@@ -235,7 +235,7 @@ return nil");
             var expected = WrapInClass(@"method Dummy(newParam1 as string, newParam2 as string)
 return nil");
 
-            Rewrite(code, expected, r => r.ReplaceParameter("newParam1 as string, newParam2 as string"));
+            Rewrite(code, expected, r => r.ReplaceParameters("newParam1 as string, newParam2 as string"));
         }
     }
 }

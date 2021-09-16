@@ -61,7 +61,7 @@ return nil");
         }
 
         [Fact]
-        public void AddParameterEmptyTest()
+        public void ReplaceParametersEmptyTest()
         {
             var code = WrapInClass(@"Constructor ()
 return nil");
@@ -73,7 +73,7 @@ return nil");
         }
 
         [Fact]
-        public void AddParameterNoParamListTest()
+        public void ReplaceParametersNoParamListTest()
         {
             var code = WrapInClass(@"Constructor
 return nil");
@@ -85,7 +85,7 @@ return nil");
         }
 
         [Fact]
-        public void AddParameterTypedEmptyTest()
+        public void ReplaceParametersTypedEmptyTest()
         {
             var code = WrapInClass(@"Constructor ()
 return nil");
@@ -97,7 +97,7 @@ return nil");
         }
 
         [Fact]
-        public void AddParameterNotEmptyTest()
+        public void ReplaceParametersNotEmptyTest()
         {
             var code = WrapInClass(@"Constructor (firstParam as string)
 return nil");
