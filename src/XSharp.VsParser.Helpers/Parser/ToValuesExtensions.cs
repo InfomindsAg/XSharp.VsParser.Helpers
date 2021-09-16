@@ -228,6 +228,24 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #endregion
 
+        #region ClassVarListContext
+
+        /// <summary>
+        /// Converts a ClassVarListContext instance to a ClassVarListContextValues instance
+        /// </summary>
+        /// <param name="context">A ClassVarListContext instance</param>
+        /// <returns>A ClassVarListContextValues instance</returns>
+        public static ClassVarListContextValues ToValues(this ClassVarListContext context) => ClassVarListContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of ClassVarListContext instances to a sequence of ClassVarListContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of ClassVarListContext instances</param>
+        /// <returns>A sequence of ClassVarListContextValuesFuncprocContextValues instances</returns>
+        public static IEnumerable<ClassVarListContextValues> ToValues(this IEnumerable<ClassVarListContext> enumerable) => enumerable.Select(ClassVarListContextValues.Build);
+
+        #endregion
+
     }
 
 

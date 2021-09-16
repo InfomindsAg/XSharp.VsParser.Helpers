@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheTests.cs" />
+    <Compile Include="Parser\ToValue\ClassVarListContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ClassvarsContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ClassContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\FuncprocContextToValuesTests.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Parser\ToValue\ReturnStmtExpressionToValuesTests.cs" />
     <Compile Include="Parser\ToValue\LocalvarToValuesTests.cs" />
     <Compile Include="Parser\ToValue\SuperExpressionToValuesTests.cs" />
+    <Compile Include="Rewriter\ClassVarListContextTests.cs" />
     <Compile Include="Rewriter\ConstructorContextTests.cs" />
     <Compile Include="Rewriter\FuncprocContextTests.cs" />
     <Compile Include="Rewriter\ParameterContextTests.cs" />
