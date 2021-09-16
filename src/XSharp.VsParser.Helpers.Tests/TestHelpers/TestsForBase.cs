@@ -14,6 +14,11 @@ namespace XSharp.Parser.Helpers.Tests.TestHelpers
 {code}
 end class";
 
+        protected string WrapInInterface(string code)
+    => $@"interface dtaDummy
+{code}
+end interface";
+
         protected string WrapInMethod(string code)
         {
             if (!string.IsNullOrEmpty(code))
