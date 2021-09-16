@@ -8,7 +8,7 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 namespace XSharp.VsParser.Helpers.Rewriter
 {
     /// <summary>
-    /// RewriterForIdentifier Extensions
+    /// RewriterForConstructor Extensions
     /// </summary>
     public static class RewriterForConstructorExtensions
     {

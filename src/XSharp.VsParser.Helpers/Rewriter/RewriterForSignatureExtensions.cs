@@ -9,7 +9,7 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 namespace XSharp.VsParser.Helpers.Rewriter
 {
     /// <summary>
-    /// RewriterForIdentifier Extensions
+    /// RewriterForSignature Extensions
     /// </summary>
     public static class RewriterForSignatureExtensions
     {

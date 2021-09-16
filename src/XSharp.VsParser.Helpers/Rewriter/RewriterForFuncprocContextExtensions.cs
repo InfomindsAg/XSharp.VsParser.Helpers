@@ -7,7 +7,7 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 namespace XSharp.VsParser.Helpers.Rewriter
 {
     /// <summary>
-    /// RewriterForMethodContext Extensions
+    /// RewriterForFuncprocContext Extensions
     /// </summary>
     public static class RewriterForFuncprocContextExtensions
     {
