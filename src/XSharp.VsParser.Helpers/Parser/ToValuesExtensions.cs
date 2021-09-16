@@ -156,10 +156,77 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #endregion
 
+        #region PropertyContext
 
-        
-        // Todo: Add Conversions for Properties, Access/Assign, ...
+        /// <summary>
+        /// Converts a PropertyContext instance to a PropertyContextValues instance
+        /// </summary>
+        /// <param name="context">A PropertyContext instance</param>
+        /// <returns>A PropertyContextValues instance</returns>
+        public static PropertyContextValues ToValues(this PropertyContext context) => PropertyContextValues.Build(context);
 
+        /// <summary>
+        /// Converts a sequence of PropertyContext instances to a sequence of PropertyContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of PropertyContext instances</param>
+        /// <returns>A sequence of PropertyFuncprocContextValues instances</returns>
+        public static IEnumerable<PropertyContextValues> ToValues(this IEnumerable<PropertyContext> enumerable) => enumerable.Select(PropertyContextValues.Build);
+
+        #endregion
+
+        #region LocalvarContext
+
+        /// <summary>
+        /// Converts a LocalvarContext instance to a LocalvarContextValues instance
+        /// </summary>
+        /// <param name="context">A LocalvarContext instance</param>
+        /// <returns>A LocalvarContextValues instance</returns>
+        public static LocalvarContextValues ToValues(this LocalvarContext context) => LocalvarContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of LocalvarContext instances to a sequence of LocalvarContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of LocalvarContext instances</param>
+        /// <returns>A sequence of LocalvarFuncprocContextValues instances</returns>
+        public static IEnumerable<LocalvarContextValues> ToValues(this IEnumerable<LocalvarContext> enumerable) => enumerable.Select(LocalvarContextValues.Build);
+
+        #endregion
+
+        #region CommonLocalDeclContext
+
+        /// <summary>
+        /// Converts a CommonLocalDeclContext instance to a CommonLocalDeclContextValues instance
+        /// </summary>
+        /// <param name="context">A CommonLocalDeclContext instance</param>
+        /// <returns>A CommonLocalDeclContextValues instance</returns>
+        public static CommonLocalDeclContextValues ToValues(this CommonLocalDeclContext context) => CommonLocalDeclContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of CommonLocalDeclContext instances to a sequence of CommonLocalDeclContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of CommonLocalDeclContext instances</param>
+        /// <returns>A sequence of CommonLocalDeclFuncprocContextValues instances</returns>
+        public static IEnumerable<CommonLocalDeclContextValues> ToValues(this IEnumerable<CommonLocalDeclContext> enumerable) => enumerable.Select(CommonLocalDeclContextValues.Build);
+
+        #endregion
+
+        #region ClassvarsContext
+
+        /// <summary>
+        /// Converts a ClassvarsContext instance to a ClassvarsContextValues instance
+        /// </summary>
+        /// <param name="context">A ClassvarsContext instance</param>
+        /// <returns>A ClassvarsContextValues instance</returns>
+        public static ClassvarsContextValues ToValues(this ClassvarsContext context) => ClassvarsContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of ClassvarsContext instances to a sequence of ClassvarsContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of ClassvarsContext instances</param>
+        /// <returns>A sequence of ClassvarsFuncprocContextValues instances</returns>
+        public static IEnumerable<ClassvarsContextValues> ToValues(this IEnumerable<ClassvarsContext> enumerable) => enumerable.Select(ClassvarsContextValues.Build);
+
+        #endregion
 
     }
 

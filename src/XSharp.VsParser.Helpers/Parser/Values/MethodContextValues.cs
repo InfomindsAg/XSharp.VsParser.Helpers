@@ -41,7 +41,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         public MethodType MethodType { get; private set; }
 
         /// <summary>
-        /// The type
+        /// The modifiers
         /// </summary>
         public string[] Modifiers { get; private set; }
 
@@ -51,7 +51,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         public string Name => Signature.Name;
 
         /// <summary>
-        /// The return tyoe
+        /// The return type
         /// </summary>
         public string ReturnType => Signature.ReturnType;
 
