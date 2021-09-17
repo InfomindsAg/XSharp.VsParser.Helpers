@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using XSharp.VsParser.Helpers.Project;
 using Xunit;
@@ -65,5 +66,17 @@ namespace XSharp.Parser.Helpers.Tests.Project
 
             sourceFiles.Should().BeEquivalentTo("Program.prg", "StringBuilderExamples.prg");
         }
+
+        [Fact]
+        public void GetSourceFilesFullPath()
+        {
+            var fileName = CodeFile("XSharpExamples.xsproj");
+            var path = Path.GetDirectoryName(fileName);
+            var projectHelper = new ProjectHelper(fileName);
+            var sourceFiles = projectHelper.GetSourceFiles(true);
+
+            sourceFiles.Should().BeEquivalentTo(Path.Combine(path, "Program.prg"), Path.Combine(path, "StringBuilderExamples.prg"));
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -31,15 +32,23 @@ namespace XSharp.VsParser.Helpers.Project
         /// <returns>
         /// A list of source files.
         /// </returns>
-        public List<string> GetSourceFiles()
+        public List<string> GetSourceFiles(bool fullPath = false)
         {
             var root = _ProjectXml.Root;
             var result = new List<string>();
 
-            return root.Descendants(_Ns + "Compile")
+            var files = root.Descendants(_Ns + "Compile")
                 .Select(q => q.Attribute("Include")?.Value)
-                .Where(q => !string.IsNullOrEmpty(q))
-                .ToList();
+                .Where(q => !string.IsNullOrEmpty(q));
+
+            if (fullPath)
+            {
+                var basePath = Path.GetDirectoryName(_FilePath);
+                if (!string.IsNullOrEmpty(basePath))
+                    files = files.Select(q => Path.Combine(basePath, q));
+            }
+
+            return files.ToList();
         }
 
         /// <summary>
