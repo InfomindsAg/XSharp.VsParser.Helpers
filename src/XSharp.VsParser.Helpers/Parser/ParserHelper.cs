@@ -20,7 +20,6 @@ namespace XSharp.VsParser.Helpers.Parser
             public int End { get; set; }
         }
 
-        readonly GenericErrorListener _ErrorListener = new();
         readonly XSharpParseOptions _XSharpOptions;
         private BufferedTokenStream _XSharpTokenStream;
         private List<LineInfo> _Lines;
@@ -124,7 +123,6 @@ namespace XSharp.VsParser.Helpers.Parser
         /// </summary>
         public void Clear()
         {
-            _ErrorListener.Clear();
             Tree = null;
             _XSharpTokenStream = null;
             _Lines = null;
@@ -150,28 +148,39 @@ namespace XSharp.VsParser.Helpers.Parser
         public Result ParseText(string sourceCode, string fileName)
         {
             Clear();
+            var errorListener = new GenericErrorListener();
 
             try
             {
-                var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, _ErrorListener, out var tokens, out var startRule);
-                if (!ok && _ErrorListener.Result.OK)
-                    _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
-                if (_ErrorListener.Result.OK)
+                for (int retry = 0; retry < 3; retry++)
                 {
-                    Tree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
-                    _XSharpTokenStream = tokens as BufferedTokenStream;
-                    SourceCode = sourceCode;
-                    _Lines = BuildLineInfo();
-                    Tokens = _XSharpTokenStream?.GetTokens().Select(q => TokenValues.Build(q, this)).ToList();
-                    Comments = Tokens.Where(q => q.Type == TokenType.Comment).ToList();
+                    errorListener.Clear();
+                    var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, errorListener, out var tokens, out var startRule);
+                    if (!ok && errorListener.Result.OK)
+                        errorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
+
+                    // Workaround for known issue. Sometimes a "Include file not found" is found.
+                    if (!errorListener.Result.OK && errorListener.Result.Errors.Any(q => q.Message.Contains("Include file not found")))
+                        continue;
+
+                    if (errorListener.Result.OK)
+                    {
+                        Tree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
+                        _XSharpTokenStream = tokens as BufferedTokenStream;
+                        SourceCode = sourceCode;
+                        _Lines = BuildLineInfo();
+                        Tokens = _XSharpTokenStream?.GetTokens().Select(q => TokenValues.Build(q, this)).ToList();
+                        Comments = Tokens.Where(q => q.Type == TokenType.Comment).ToList();
+                    }
+                    break;
                 }
             }
             catch (Exception ex)
             {
-                _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Exception: " + ex.Message, Line = 0 });
+                errorListener.Result.Errors.Add(new Result.Item { Message = "Exception: " + ex.Message, Line = 0 });
             }
 
-            return _ErrorListener.Result;
+            return errorListener.Result;
         }
 
         /// <summary>
@@ -179,7 +188,7 @@ namespace XSharp.VsParser.Helpers.Parser
         /// </summary>
         /// <returns></returns>
         public Result ParseRewriter()
-        { 
+        {
             var result = ParseText(Tree.GetRewriteResult(), Tree.FileName);
             if (result.OK)
                 Tree.ResetRewriter();
