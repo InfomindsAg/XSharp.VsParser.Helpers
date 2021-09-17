@@ -18,7 +18,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         /// <summary>
         /// The return type
         /// </summary>
-        public string Type { get; private set; }
+        public string Type { get; internal set; }
 
         /// <summary>
         /// The initialisation expression

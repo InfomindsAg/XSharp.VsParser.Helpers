@@ -15,26 +15,28 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         /// </summary>
         public LocalvarContextValues[] Variables { get; private set; }
 
-        /// <summary>
-        /// True, if all the variables get the type of the last variable
-        /// </summary>
-        public bool IsGroupType { get; private set; }
-
         static internal CommonLocalDeclContextValues Build(CommonLocalDeclContext context)
         {
             if (context == null)
                 return null;
 
             var variables = context.AsEnumerable().WhereType<LocalvarContext>().ToValues().ToArray();
-            var isGroupType = !string.IsNullOrEmpty(variables.LastOrDefault()?.Type);
             if (variables.Length > 1)
-                isGroupType = isGroupType && variables.Take(variables.Length - 1).All(q => string.IsNullOrEmpty(q.Type));
+            {
+                string lastType = null;
+                foreach (var item in variables.Reverse())
+                {
+                    if (!string.IsNullOrEmpty(item.Type))
+                        lastType = item.Type;
+                    else
+                        item.Type = lastType ;
+                }
+            }
 
             return new CommonLocalDeclContextValues
             {
                 Context = context,
                 Variables = variables,
-                IsGroupType = isGroupType
             };
         }
     }

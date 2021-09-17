@@ -16,7 +16,7 @@ namespace XSharp.Parser.Helpers.Tests.Parser.ToValue
         {
             var code = WrapInMethod(@"local dummy");
 
-            GetFirst(code).ToValues().IsGroupType.Should().Be(false);
+            GetFirst(code).ToValues().Variables.Select(q => q.Type).Should().BeEquivalentTo(new string[] { null });
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace XSharp.Parser.Helpers.Tests.Parser.ToValue
         {
             var code = WrapInMethod(@"local dummy1, dummy2");
 
-            GetFirst(code).ToValues().IsGroupType.Should().Be(false);
+            GetFirst(code).ToValues().Variables.Select(q => q.Type).Should().BeEquivalentTo(new string[] { null, null });
         }
 
 
@@ -33,7 +33,7 @@ namespace XSharp.Parser.Helpers.Tests.Parser.ToValue
         {
             var code = WrapInMethod(@"local dummy as string");
 
-            GetFirst(code).ToValues().IsGroupType.Should().Be(true);
+            GetFirst(code).ToValues().Variables.Select(q => q.Type).Should().BeEquivalentTo(new string[] { "string" });
         }
 
         [Fact]
@@ -41,9 +41,16 @@ namespace XSharp.Parser.Helpers.Tests.Parser.ToValue
         {
             var code = WrapInMethod(@"local dummy1, dummy2 as string");
 
-            GetFirst(code).ToValues().IsGroupType.Should().Be(true);
+            GetFirst(code).ToValues().Variables.Select(q => q.Type).Should().BeEquivalentTo(new string[] { "string", "string" });
         }
 
+        [Fact]
+        public void ComplexWithTypeTest()
+        {
+            var code = WrapInMethod(@"local lOk as logic, nAnzRec as dword, nOK, nError as dword, cWarnungen, cText as string");
+
+            GetFirst(code).ToValues().Variables.Select(q => q.Type).Should().BeEquivalentTo(new string[] { "logic", "dword", "dword", "dword", "string", "string" });
+        }
 
     }
 }
