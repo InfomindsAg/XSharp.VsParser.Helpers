@@ -12,9 +12,6 @@ namespace XSharp.VsParser.Helpers.Rewriter
     /// </summary>
     public static class RewriterForConstructorExtensions
     {
-        static RewriterForContext<ParameterListContext> RewriterFoParameterList(RewriterForContext<ConstructorContext> rewriterFor)
-                    => rewriterFor.RewriterFor(rewriterFor.Context?.ParamList);
-
         /// <summary>
         /// Deletes all the parameters of the construcor
         /// </summary>

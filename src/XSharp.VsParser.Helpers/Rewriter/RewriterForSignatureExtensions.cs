@@ -13,9 +13,6 @@ namespace XSharp.VsParser.Helpers.Rewriter
     /// </summary>
     public static class RewriterForSignatureExtensions
     {
-        static RewriterForContext<ParameterListContext> RewriterForParameterList(RewriterForContext<SignatureContext> rewriterFor)
-                    => rewriterFor.RewriterFor(rewriterFor.Context?.ParamList);
-
         /// <summary>
         /// Replaces the name of the signature with a new name
         /// </summary>
