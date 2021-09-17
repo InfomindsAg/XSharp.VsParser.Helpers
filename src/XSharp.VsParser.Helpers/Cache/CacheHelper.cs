@@ -34,7 +34,18 @@ namespace XSharp.VsParser.Helpers.Cache
 
         void OpenDb()
         {
-            DB = new LiteDatabase(_CacheFileName);
+            try
+            {
+                DB = new LiteDatabase(_CacheFileName);
+            }
+            catch
+            {
+                var logFileName = Path.Combine(Path.GetDirectoryName(_CacheFileName), Path.GetFileNameWithoutExtension(_CacheFileName) + "-log" + Path.GetExtension(_CacheFileName));
+                if (File.Exists(logFileName))
+                    File.Delete(logFileName);
+                DB = new LiteDatabase(_CacheFileName);
+            }
+
             if (DB.GetCollection<Version>().Count() == 0)
                 DB.GetCollection<Version>().Insert(new Version() { ApplicationVersion = _ApplicationVersion });
         }
