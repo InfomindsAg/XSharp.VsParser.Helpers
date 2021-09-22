@@ -48,6 +48,17 @@ namespace XSharp.VsParser.Helpers.Parser
             return result;
         }
 
+        string[] BuildSourceCodeLines()
+        {
+            if (string.IsNullOrEmpty(SourceCode))
+                return new string[0];
+
+            var result = SourceCode.Split(new string[] { "\n" }, StringSplitOptions.None);
+            if (result.Length > 0 && result[0].EndsWith("\r"))
+                result = result.Select(q => q.TrimEnd('\r')).ToArray();
+            return result;
+        }
+
 
         /// <summary>
         /// The Abstract Syntax Tree. Will be initialized by parsing a file.
@@ -68,7 +79,7 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <summary>
         /// The source code lines, that was parsed 
         /// </summary>
-        public string[] SourceCodeLines => SourceCode?.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+        public string[] SourceCodeLines { get; private set; } 
 
         /// <summary>
         /// A list of the comments. Will be initialized by parsing a file.
@@ -127,6 +138,7 @@ namespace XSharp.VsParser.Helpers.Parser
             _XSharpTokenStream = null;
             _Lines = null;
             SourceCode = null;
+            SourceCodeLines = new string[0];
             Comments = null;
             Tokens = null;
         }
@@ -168,6 +180,7 @@ namespace XSharp.VsParser.Helpers.Parser
                         Tree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
                         _XSharpTokenStream = tokens as BufferedTokenStream;
                         SourceCode = sourceCode;
+                        SourceCodeLines = BuildSourceCodeLines();
                         _Lines = BuildLineInfo();
                         Tokens = _XSharpTokenStream?.GetTokens().Select(q => TokenValues.Build(q, this)).ToList();
                         Comments = Tokens.Where(q => q.Type == TokenType.Comment).ToList();

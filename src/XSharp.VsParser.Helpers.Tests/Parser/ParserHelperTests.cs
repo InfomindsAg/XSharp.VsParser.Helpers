@@ -36,7 +36,7 @@ class Test inherit BaseTest // SingleLineComment
 end class".ParseText();
 
             parser.Comments.Should().BeEquivalentTo(
-                new { Text = "///<summary>", StartLine = 1, StartColumn = 1, EndLine = 1, EndColumn = 12},
+                new { Text = "///<summary>", StartLine = 1, StartColumn = 1, EndLine = 1, EndColumn = 12 },
                 new { Text = "///XMLHelp", StartLine = 2, StartColumn = 1, EndLine = 2, EndColumn = 10 },
                 new { Text = "///</summary>", StartLine = 3, StartColumn = 1, EndLine = 3, EndColumn = 13 },
                 new { Text = "// SingleLineComment", StartLine = 4, StartColumn = 29, EndLine = 4, EndColumn = 48 },
@@ -66,5 +66,17 @@ end class".ParseText();
             });
         }
 
+        [Fact]
+        public void LinesTest()
+        {
+            var lines = new List<string> { "class dummy", "method test()", "return nil", "end class" };
+            var code = string.Join(Environment.NewLine, lines);
+
+            code.ParseText().SourceCodeLines.Should().BeEquivalentTo(lines);
+
+            code = string.Join("\n", lines);
+
+            code.ParseText().SourceCodeLines.Should().BeEquivalentTo(lines);
+        }
     }
 }
