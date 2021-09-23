@@ -16,7 +16,7 @@ namespace XSharp.VsParser.Helpers.Cache
         {
             public static string DefaultID = "Version";
             public string Id { get; set; } = DefaultID;
-            public int ApplicationVersion { get; set; } = 0;
+            public string ApplicationVersionStr { get; set; } = "";
         }
 
         class CacheItem<T>
@@ -28,26 +28,29 @@ namespace XSharp.VsParser.Helpers.Cache
 
         readonly string _CacheFileName;
 
-        LiteDatabase DB;
-        readonly int _ApplicationVersion;
+        LiteDatabase _DB;
+        readonly string _ApplicationVersionStr;
 
 
         void OpenDb()
         {
             try
             {
-                DB = new LiteDatabase(_CacheFileName);
+                _DB = new LiteDatabase(_CacheFileName);
             }
             catch
             {
                 var logFileName = Path.Combine(Path.GetDirectoryName(_CacheFileName), Path.GetFileNameWithoutExtension(_CacheFileName) + "-log" + Path.GetExtension(_CacheFileName));
                 if (File.Exists(logFileName))
                     File.Delete(logFileName);
-                DB = new LiteDatabase(_CacheFileName);
+                _DB = new LiteDatabase(_CacheFileName);
             }
 
-            if (DB.GetCollection<Version>().Count() == 0)
-                DB.GetCollection<Version>().Insert(new Version() { ApplicationVersion = _ApplicationVersion });
+            if (_DB.GetCollection<Version>().Count() == 0)
+            {
+                _DB.GetCollection<Version>().Insert(new Version() { ApplicationVersionStr = _ApplicationVersionStr });
+                _DB.Commit();
+            }
         }
 
         BsonValue GetKeyValue(string fileName)
@@ -59,7 +62,7 @@ namespace XSharp.VsParser.Helpers.Cache
 
         ILiteCollection<CacheItem<T>> GetCollection<T>() where T : class
         {
-            return DB.GetCollection<CacheItem<T>>(typeof(T).Name);
+            return _DB.GetCollection<CacheItem<T>>(typeof(T).Name);
         }
 
         static uint GetHash(string sourceCode) => XXHash.XXH32(Encoding.UTF8.GetBytes(sourceCode));
@@ -68,8 +71,8 @@ namespace XSharp.VsParser.Helpers.Cache
         /// Creates a new CacheHelper instance
         /// </summary>
         /// <param name="cacheFileName">The fileName for the cache file</param>
-        /// <param name="applicationVersion">The applicationVersion is used to version the cache-content. If the version stored in the cacheFile is different, the cache will be automatically deleted.</param>
-        public CacheHelper(string cacheFileName, int applicationVersion = 0)
+        /// <param name="applicationVersionStr">The applicationVersion is used to version the cache-content. If the version stored in the cacheFile is different, the cache will be automatically deleted.</param>
+        public CacheHelper(string cacheFileName, string applicationVersionStr = null)
         {
             BsonMapper.Global.TrimWhitespace = false;
             BsonMapper.Global.EmptyStringToNull = false;
@@ -79,11 +82,15 @@ namespace XSharp.VsParser.Helpers.Cache
                 throw new ArgumentException($"{cacheFileName} can not be emtpy");
 
             _CacheFileName = cacheFileName;
-            _ApplicationVersion = applicationVersion;
+
+            if (applicationVersionStr?.Length > 50)
+                _ApplicationVersionStr = GetHash(applicationVersionStr).ToString();
+            else
+                _ApplicationVersionStr = applicationVersionStr ?? "";
 
             OpenDb();
 
-            if (DB.GetCollection<Version>().FindById(Version.DefaultID)?.ApplicationVersion != applicationVersion)
+            if (_DB.GetCollection<Version>().FindById(Version.DefaultID)?.ApplicationVersionStr != _ApplicationVersionStr)
                 Drop();
         }
 
@@ -92,7 +99,7 @@ namespace XSharp.VsParser.Helpers.Cache
         /// </summary>
         public void Drop()
         {
-            DB.Dispose();
+            _DB.Dispose();
             File.Delete(_CacheFileName);
             OpenDb();
         }
@@ -118,6 +125,7 @@ namespace XSharp.VsParser.Helpers.Cache
             if (item.Hash != hash)
             {
                 collection.Delete(id);
+                _DB.Commit();
                 return false;
             }
             result = item.Data;
@@ -164,6 +172,7 @@ namespace XSharp.VsParser.Helpers.Cache
                 item.Data = data;
                 collection.Update(item);
             }
+            _DB.Commit();
         }
 
         /// <summary>
@@ -171,8 +180,8 @@ namespace XSharp.VsParser.Helpers.Cache
         /// </summary>
         public void Dispose()
         {
-            if (DB != null)
-                DB.Dispose();
+            if (_DB != null)
+                _DB.Dispose();
         }
     }
 }
