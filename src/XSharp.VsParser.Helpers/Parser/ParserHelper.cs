@@ -23,6 +23,8 @@ namespace XSharp.VsParser.Helpers.Parser
         readonly XSharpParseOptions _XSharpOptions;
         private BufferedTokenStream _XSharpTokenStream;
         private List<LineInfo> _Lines;
+        private List<TokenValues> _Tokens;
+        private List<TokenValues> _Comments;
 
         List<LineInfo> BuildLineInfo()
         {
@@ -48,6 +50,12 @@ namespace XSharp.VsParser.Helpers.Parser
             return result;
         }
 
+        static bool IsLineMatch(LineInfo lineInfo, int positionInSourceCode) 
+            => lineInfo.Start <= positionInSourceCode && positionInSourceCode <= lineInfo.End;
+
+        static (int Line, int Column) ToLineColumn(LineInfo lineInfo, int positionInSourceCode)
+            => (lineInfo.Line, positionInSourceCode - lineInfo.Start + 1);
+
         string[] BuildSourceCodeLines()
         {
             if (string.IsNullOrEmpty(SourceCode))
@@ -60,6 +68,42 @@ namespace XSharp.VsParser.Helpers.Parser
         }
 
 
+        List<TokenValues> BuildTokens()
+        {
+            if (_XSharpTokenStream == null)
+                return null;
+
+            _Lines ??= BuildLineInfo();
+
+            var lineIndex = 0;
+            (int Line, int Column) GetLineAndColumnOptimized(int positionInSourceCode)
+            {
+                while (lineIndex < _Lines.Count && !IsLineMatch(_Lines[lineIndex], positionInSourceCode))
+                    lineIndex++;
+                if (lineIndex < _Lines.Count)
+                    return ToLineColumn(_Lines[lineIndex], positionInSourceCode);
+                throw new ArgumentException("Invalid positionInSourceCode");
+            }
+
+            var result = new List<TokenValues>();
+            foreach (IToken token in _XSharpTokenStream.GetTokens())
+            {
+                var start = GetLineAndColumnOptimized(token.StartIndex);
+                var stop = GetLineAndColumnOptimized(token.StopIndex);
+                result.Add(new TokenValues
+                {
+                    Context = token,
+                    Type = token.GetTokenType(),
+                    Text = token.Text,
+                    StartLine = start.Line,
+                    StartColumn = start.Column,
+                    EndLine = stop.Line,
+                    EndColumn = stop.Column,
+                });
+            }
+
+            return result;
+        }
         /// <summary>
         /// The Abstract Syntax Tree. Will be initialized by parsing a file.
         /// </summary>
@@ -79,18 +123,17 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <summary>
         /// The source code lines, that was parsed 
         /// </summary>
-        public string[] SourceCodeLines { get; private set; } 
+        public string[] SourceCodeLines { get; private set; }
 
         /// <summary>
         /// A list of the comments. Will be initialized by parsing a file.
         /// </summary>
-        public IReadOnlyList<TokenValues> Comments { get; private set; }
+        public IReadOnlyList<TokenValues> Comments => _Comments ??= Tokens.Where(q => q.Type == TokenType.Comment).ToList();
 
         /// <summary>
         /// A list of the Tokens. Will be initialized by parsing a file.
         /// </summary>
-        public IReadOnlyList<TokenValues> Tokens { get; private set; }
-
+        public IReadOnlyList<TokenValues> Tokens => _Tokens ??= BuildTokens();
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
         {
@@ -110,11 +153,12 @@ namespace XSharp.VsParser.Helpers.Parser
         /// <returns>The line and column (1 based)</returns>
         public (int Line, int Column) GetLineAndColumn(int positionInSourceCode)
         {
-            var line = _Lines.LastOrDefault(q => q.Start <= positionInSourceCode && positionInSourceCode <= q.End);
+            _Lines ??= BuildLineInfo();
+            var line = _Lines.LastOrDefault(q => IsLineMatch(q, positionInSourceCode));
             if (line == null)
                 throw new ArgumentException("Invalid positionInSourceCode");
 
-            return (line.Line, positionInSourceCode - line.Start + 1);
+            return ToLineColumn(line, positionInSourceCode);
         }
 
         /// <summary>
@@ -137,10 +181,10 @@ namespace XSharp.VsParser.Helpers.Parser
             Tree = null;
             _XSharpTokenStream = null;
             _Lines = null;
+            _Tokens = null;
+            _Comments = null;
             SourceCode = null;
             SourceCodeLines = new string[0];
-            Comments = null;
-            Tokens = null;
         }
 
         /// <summary>
@@ -181,9 +225,6 @@ namespace XSharp.VsParser.Helpers.Parser
                         _XSharpTokenStream = tokens as BufferedTokenStream;
                         SourceCode = sourceCode;
                         SourceCodeLines = BuildSourceCodeLines();
-                        _Lines = BuildLineInfo();
-                        Tokens = _XSharpTokenStream?.GetTokens().Select(q => TokenValues.Build(q, this)).ToList();
-                        Comments = Tokens.Where(q => q.Type == TokenType.Comment).ToList();
                     }
                     break;
                 }

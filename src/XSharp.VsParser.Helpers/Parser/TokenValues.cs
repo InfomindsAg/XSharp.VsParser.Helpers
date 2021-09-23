@@ -42,24 +42,5 @@ namespace XSharp.VsParser.Helpers.Parser
         /// The Token Type
         /// </summary>
         public TokenType Type { get; internal set; }
-
-        static internal TokenValues Build(IToken context, ParserHelper parserHelper)
-        {
-            if (context == null)
-                return null;
-
-            var pos = parserHelper.GetTokenPosition(context);
-
-            return new TokenValues
-            {
-                Context = context,
-                Type = context.GetTokenType(),
-                Text = context.Text,
-                StartLine = pos.StartLine,
-                StartColumn = pos.StartColumn,
-                EndLine = pos.EndLine,
-                EndColumn = pos.EndColumn,
-            };
-        }
     }
 }
