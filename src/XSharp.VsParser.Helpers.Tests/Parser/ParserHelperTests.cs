@@ -78,5 +78,49 @@ end class".ParseText();
 
             code.ParseText().SourceCodeLines.Should().BeEquivalentTo(lines);
         }
+
+
+        [Fact]
+        public void EmptyRewriteNoChangesTest()
+        {
+            var code = @"///<summary>
+///XMLHelp
+///</summary>
+class Test inherit BaseTest // SingleLineComment
+  /*
+  BlockComment
+  */
+end class";
+            var parser = code.ParseText();
+
+            parser.Tree.Rewriter.GetText().Should().Be(code);
+        }
+
+        [Fact]
+        public void EmptyRewriteChangesException1Test()
+        {
+            var parser = @"class Test
+method Dummy() as string
+  return """""""" // this breaks the rewrite
+
+end class".ParseText();
+            Action emptyRewrite = () => parser.Tree.Rewriter.GetText();
+
+            emptyRewrite.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void EmptyRewriteChangesException2Test()
+        {
+            var parser = @"class Test
+method Dummy() as string
+  return '''' // this breaks the rewrite
+
+end class".ParseText();
+            Action emptyRewrite = () => parser.Tree.Rewriter.GetText();
+
+            emptyRewrite.Should().Throw<InvalidOperationException>();
+        }
+
     }
 }

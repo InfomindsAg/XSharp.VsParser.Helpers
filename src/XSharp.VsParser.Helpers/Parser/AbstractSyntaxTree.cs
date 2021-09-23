@@ -96,7 +96,19 @@ namespace XSharp.VsParser.Helpers.Parser
         /// </summary>
         public TokenStreamRewriter Rewriter
         {
-            get => _TokenStreamRewriter ??= new TokenStreamRewriter(_Tokens);
+            get
+            {
+                if (_TokenStreamRewriter == null)
+                {
+                    _TokenStreamRewriter = new TokenStreamRewriter(_Tokens);
+                    var trimChars = new char[] { '\uFEFF', '\u200B', ' ' };
+                    // Ensure that the rewriter doesn't change break code. (Example " "" " => " " "
+                    if (_SourceCode.Trim(trimChars) != _TokenStreamRewriter.GetText().Trim(trimChars))
+                        throw new InvalidOperationException("Emtpy Rewriter created unexprected changes to the code!");
+                }
+
+                return _TokenStreamRewriter;
+            }
         }
 
         #endregion
