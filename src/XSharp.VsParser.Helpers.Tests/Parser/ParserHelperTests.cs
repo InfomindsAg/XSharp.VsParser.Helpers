@@ -122,5 +122,16 @@ end class".ParseText();
             emptyRewrite.Should().Throw<InvalidOperationException>();
         }
 
+
+        [Fact]
+        public void DummyTestForSpecificFile()
+        {
+            var fileName = @"";
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var parser = fileName.ParseFile();
+                parser.Tokens.Count.Should().BeGreaterThan(0);
+            }
+        }
     }
 }

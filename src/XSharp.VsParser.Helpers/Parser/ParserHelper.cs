@@ -82,7 +82,8 @@ namespace XSharp.VsParser.Helpers.Parser
                     lineIndex++;
                 if (lineIndex < _Lines.Count)
                     return ToLineColumn(_Lines[lineIndex], positionInSourceCode);
-                throw new ArgumentException("Invalid positionInSourceCode");
+
+                return GetLineAndColumn(positionInSourceCode);
             }
 
             var result = new List<TokenValues>();
