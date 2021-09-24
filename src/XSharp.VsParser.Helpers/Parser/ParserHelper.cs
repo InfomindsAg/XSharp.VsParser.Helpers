@@ -67,7 +67,6 @@ namespace XSharp.VsParser.Helpers.Parser
             return result;
         }
 
-
         List<TokenValues> BuildTokens()
         {
             if (_XSharpTokenStream == null)
@@ -87,7 +86,7 @@ namespace XSharp.VsParser.Helpers.Parser
             }
 
             var result = new List<TokenValues>();
-            foreach (IToken token in _XSharpTokenStream.GetTokens())
+            foreach (IToken token in _XSharpTokenStream.GetTokens().Where(q => q.Type != -1))
             {
                 var start = GetLineAndColumnOptimized(token.StartIndex);
                 var stop = GetLineAndColumnOptimized(token.StopIndex);

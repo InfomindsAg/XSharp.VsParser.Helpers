@@ -130,7 +130,7 @@ end class".ParseText();
             if (!string.IsNullOrEmpty(fileName))
             {
                 var parser = fileName.ParseFile();
-                parser.Tokens.Count.Should().BeGreaterThan(0);
+                parser.Tokens.Count.Should().BeGreaterOrEqualTo(0);
             }
         }
     }
