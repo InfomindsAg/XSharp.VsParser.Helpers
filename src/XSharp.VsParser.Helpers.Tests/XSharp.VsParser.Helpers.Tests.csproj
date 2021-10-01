@@ -55,6 +55,7 @@
     <Compile Include="Parser\ToValue\FuncprocContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ConstructorContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\CommonLocalDeclContextValuesTests.cs" />
+    <Compile Include="Parser\ToValue\AssignmentExpressionToValuesTests.cs" />
     <Compile Include="Parser\ToValue\PropertyToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ParameterContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ReturnStmtExpressionToValuesTests.cs" />

@@ -264,6 +264,23 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #endregion
 
+        #region AssignmentExpressionContext
+
+        /// <summary>
+        /// Converts a AssignmentExpressionContext instance to a AssignmentExpressionContextValues instance
+        /// </summary>
+        /// <param name="context">A AssignmentExpressionContext instance</param>
+        /// <returns>A AssignmentExpressionContextValues instance</returns>
+        public static AssignmentExpressionContextValues ToValues(this AssignmentExpressionContext context) => AssignmentExpressionContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of AssignmentExpressionContext instances to a sequence of AssignmentExpressionContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of AssignmentExpressionContext instances</param>
+        /// <returns>A sequence of AssignmentExpressionContextValues instances</returns>
+        public static IEnumerable<AssignmentExpressionContextValues> ToValues(this IEnumerable<AssignmentExpressionContext> enumerable) => enumerable.Select(AssignmentExpressionContextValues.Build);
+
+        #endregion
     }
 
 
