@@ -36,7 +36,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         {
             var accessMember = rewriterFor.Context.Expr?.AsEnumerable().FirstOrDefaultType<AccessMemberContext>();
             if (accessMember != null && accessMember.Name != null)
-                rewriterFor.Rewriter.Replace(accessMember.Name.Start.ToIndex(), newMethodName);
+                rewriterFor.Rewriter.Replace(accessMember.Name.Start.ToIndex(), accessMember.Name.Stop.ToIndex(), newMethodName);
 
             return rewriterFor;
         }
