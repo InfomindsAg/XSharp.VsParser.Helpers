@@ -59,6 +59,7 @@
     <Compile Include="Parser\ToValue\ParameterContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ReturnStmtExpressionToValuesTests.cs" />
     <Compile Include="Parser\ToValue\LocalvarToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\MethodCallToValuesTests.cs" />
     <Compile Include="Parser\ToValue\SuperExpressionToValuesTests.cs" />
     <Compile Include="Rewriter\ClassVarListContextTests.cs" />
     <Compile Include="Rewriter\ConstructorContextTests.cs" />

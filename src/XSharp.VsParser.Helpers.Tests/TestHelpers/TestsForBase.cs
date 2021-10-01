@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using LanguageService.SyntaxTree.Tree;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
 using XSharp.VsParser.Helpers.Rewriter;
@@ -46,6 +47,12 @@ end interface";
         {
             var parser = code.ParseText();
             return parser.Tree.FirstOrDefaultType<T>();
+        }
+
+        protected IEnumerable<T> GetAll(string code)
+        {
+            var parser = code.ParseText();
+            return parser.Tree.WhereType<T>();
         }
     }
 }

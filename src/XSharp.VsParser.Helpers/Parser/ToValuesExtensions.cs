@@ -246,6 +246,24 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #endregion
 
+        #region MethodCallContext
+
+        /// <summary>
+        /// Converts a MethodCallContext instance to a MethodCallContextValues instance
+        /// </summary>
+        /// <param name="context">A MethodCallContext instance</param>
+        /// <returns>A MethodCallContextValues instance</returns>
+        public static MethodCallContextValues ToValues(this MethodCallContext context) => MethodCallContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of MethodCallContext instances to a sequence of MethodCallContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of MethodCallContext instances</param>
+        /// <returns>A sequence of MethodCallContextValues instances</returns>
+        public static IEnumerable<MethodCallContextValues> ToValues(this IEnumerable<MethodCallContext> enumerable) => enumerable.Select(MethodCallContextValues.Build);
+
+        #endregion
+
     }
 
 
