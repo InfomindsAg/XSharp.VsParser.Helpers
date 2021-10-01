@@ -26,5 +26,19 @@ namespace XSharp.VsParser.Helpers.Rewriter
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Replaces the called method name with a new method name
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="newMethodName">The new method name</param>
+        /// <returns>The rewriterFor instance</returns>
+        public static RewriterForContext<MethodCallContext> ReplaceMethodName(this RewriterForContext<MethodCallContext> rewriterFor, string newMethodName)
+        {
+            var accessMember = rewriterFor.Context.Expr?.AsEnumerable().FirstOrDefaultType<AccessMemberContext>();
+            if (accessMember != null && accessMember.Name != null)
+                rewriterFor.Rewriter.Replace(accessMember.Name.Start.ToIndex(), newMethodName);
+
+            return rewriterFor;
+        }
     }
 }
