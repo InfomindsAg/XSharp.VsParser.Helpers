@@ -9,14 +9,9 @@ namespace XSharp.VsParser.Helpers.Parser.Values
     public class MethodCallContextValues : ContextValues<MethodCallContext>
     {
         /// <summary>
-        /// The expression used to access the method
+        /// The access member values
         /// </summary>
-        public string MethodAccessExpression { get; internal set; }
-
-        /// <summary>
-        /// The method name
-        /// </summary>
-        public string MethodName { get; internal set; }
+        public AccessMemberContextValues AccessMember { get; internal set; }
 
         /// <summary>
         /// The arguments of the method call
@@ -34,8 +29,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
             return new MethodCallContextValues
             {
                 Context = context,
-                MethodAccessExpression = accessMember?.Expr?.GetText(),
-                MethodName = accessMember?.Name?.GetText(),
+                AccessMember = AccessMemberContextValues.Build(accessMember),
                 Arguments = arguments,
             };
         }

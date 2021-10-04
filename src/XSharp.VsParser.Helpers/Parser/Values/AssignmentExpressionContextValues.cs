@@ -9,14 +9,9 @@ namespace XSharp.VsParser.Helpers.Parser.Values
     public class AssignmentExpressionContextValues : ContextValues<AssignmentExpressionContext>
     {
         /// <summary>
-        /// The expression to access the property
+        /// The AccessMember for the left side of the assignment
         /// </summary>
-        public string PropertyAccessExpression { get; internal set; }
-
-        /// <summary>
-        /// The property name
-        /// </summary>
-        public string PropertyName { get; internal set; }
+        public AccessMemberContextValues AssignToAccessMember { get; internal set; }
 
         /// <summary>
         /// The expression assigned to the propety
@@ -32,8 +27,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
             return new AssignmentExpressionContextValues
             {
                 Context = context,
-                PropertyAccessExpression = accessMember?.Expr?.GetText(),
-                PropertyName = accessMember?.Name?.GetText(),
+                AssignToAccessMember = AccessMemberContextValues.Build(accessMember),
                 ValueExpression = context.Right?.GetText()
             };
         }

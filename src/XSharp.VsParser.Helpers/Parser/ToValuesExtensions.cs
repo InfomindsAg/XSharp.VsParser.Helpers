@@ -281,6 +281,25 @@ namespace XSharp.VsParser.Helpers.Parser
         public static IEnumerable<AssignmentExpressionContextValues> ToValues(this IEnumerable<AssignmentExpressionContext> enumerable) => enumerable.Select(AssignmentExpressionContextValues.Build);
 
         #endregion
+
+        #region AccessMemberContext
+
+        /// <summary>
+        /// Converts a AccessMemberContext instance to a AccessMemberContextValues instance
+        /// </summary>
+        /// <param name="context">A AccessMemberContext instance</param>
+        /// <returns>A AccessMemberContextValues instance</returns>
+        public static AccessMemberContextValues ToValues(this AccessMemberContext context) => AccessMemberContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of AccessMemberContext instances to a sequence of AccessMemberContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of AccessMemberContext instances</param>
+        /// <returns>A sequence of AccessMemberContextValues instances</returns>
+        public static IEnumerable<AccessMemberContextValues> ToValues(this IEnumerable<AccessMemberContext> enumerable) => enumerable.Select(AccessMemberContextValues.Build);
+
+        #endregion
+        
     }
 
 

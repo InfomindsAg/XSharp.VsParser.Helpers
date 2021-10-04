@@ -20,8 +20,7 @@ return nil");
 
             GetFirst(code).ToValues().Should().BeEquivalentTo(new
             {
-                MethodAccessExpression = "self",
-                MethodName = "Dummy",
+                AccessMember = new { AccessExpression = "self", MemberName = "Dummy", },
                 Arguments = new[] { new { Value = "null_object" } }
             });
         }
@@ -36,16 +35,13 @@ return nil");
             GetAll(code).ToValues().Should().BeEquivalentTo(
                 new
                 {
-                    MethodAccessExpression = "self",
-                    MethodName = "TabWindow",
+                    AccessMember = new { AccessExpression = "self", MemberName = "TabWindow", },
                     Arguments = new object[0]
                 },
                 new
                 {
-                    MethodAccessExpression = "self:TabWindow()",
-                    MethodName = "Dummy",
-                    Arguments = new[] { new { Value = "null_object" }
-                    }
+                    AccessMember = new { AccessExpression = "self:TabWindow()", MemberName = "Dummy", },
+                    Arguments = new[] { new { Value = "null_object" } }
                 });
         }
     }

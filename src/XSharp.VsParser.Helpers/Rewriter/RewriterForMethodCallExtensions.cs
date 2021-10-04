@@ -34,9 +34,9 @@ namespace XSharp.VsParser.Helpers.Rewriter
         /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<MethodCallContext> ReplaceMethodName(this RewriterForContext<MethodCallContext> rewriterFor, string newMethodName)
         {
-            var accessMember = rewriterFor.Context.Expr?.AsEnumerable().FirstOrDefaultType<AccessMemberContext>();
-            if (accessMember != null && accessMember.Name != null)
-                rewriterFor.Rewriter.Replace(accessMember.Name.Start.ToIndex(), accessMember.Name.Stop.ToIndex(), newMethodName);
+            var acccesMember = rewriterFor.Context.ToValues()?.AccessMember?.Context;
+            if (acccesMember?.Name != null)
+                rewriterFor.RewriterFor(acccesMember).ReplaceMemberName(newMethodName);
 
             return rewriterFor;
         }
