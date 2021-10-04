@@ -131,6 +131,7 @@ end class".ParseText();
             {
                 var parser = fileName.ParseFile();
                 parser.Tokens.Count.Should().BeGreaterOrEqualTo(0);
+                _ = parser.Tree.Rewriter;
             }
         }
     }
