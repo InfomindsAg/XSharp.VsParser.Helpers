@@ -299,6 +299,24 @@ namespace XSharp.VsParser.Helpers.Parser
         public static IEnumerable<AccessMemberContextValues> ToValues(this IEnumerable<AccessMemberContext> enumerable) => enumerable.Select(AccessMemberContextValues.Build);
 
         #endregion
+
+        #region NameExpressionContext
+
+        /// <summary>
+        /// Converts a NameExpressionContext instance to a NameExpressionContextValues instance
+        /// </summary>
+        /// <param name="context">A NameExpressionContext instance</param>
+        /// <returns>A NameExpressionContextValues instance</returns>
+        public static NameExpressionContextValues ToValues(this NameExpressionContext context) => NameExpressionContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of NameExpressionContext instances to a sequence of NameExpressionContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of NameExpressionContext instances</param>
+        /// <returns>A sequence of NameExpressionContextValues instances</returns>
+        public static IEnumerable<NameExpressionContextValues> ToValues(this IEnumerable<NameExpressionContext> enumerable) => enumerable.Select(NameExpressionContextValues.Build);
+
+        #endregion
         
     }
 

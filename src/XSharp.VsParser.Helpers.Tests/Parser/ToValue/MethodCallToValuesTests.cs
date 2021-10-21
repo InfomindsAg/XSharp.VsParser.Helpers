@@ -20,6 +20,7 @@ return nil");
 
             GetFirst(code).ToValues().Should().BeEquivalentTo(new
             {
+                NameExpression = (object)null,
                 AccessMember = new { AccessExpression = "self", MemberName = "Dummy", },
                 Arguments = new[] { new { Value = "null_object" } }
             });
@@ -35,14 +36,48 @@ return nil");
             GetAll(code).ToValues().Should().BeEquivalentTo(
                 new
                 {
+                    NameExpression = (object)null,
                     AccessMember = new { AccessExpression = "self", MemberName = "TabWindow", },
                     Arguments = new object[0]
                 },
                 new
                 {
+                    NameExpression = (object)null,
                     AccessMember = new { AccessExpression = "self:TabWindow()", MemberName = "Dummy", },
                     Arguments = new[] { new { Value = "null_object" } }
                 });
+        }
+
+        [Fact]
+        public void FuctionNameTest()
+        {
+            var code = WrapInMethod(@"
+IsInstanceOf(null_object, #SingleLineEdit)
+return nil");
+
+            GetFirst(code).ToValues().Should().BeEquivalentTo(new
+            {
+                NameExpression = new { Name = "IsInstanceOf" },
+                AccessMember = (object)null,
+                Arguments = new[] { new { Value = "null_object" }, new { Value = "#SingleLineEdit" }, }
+            });
+        }
+
+        [Fact]
+        public void FuctionNameInIfTest()
+        {
+            var code = WrapInMethod(@"
+if IsInstanceOf(null_object, #SingleLineEdit)
+    nop
+endif
+return nil");
+
+            GetFirst(code).ToValues().Should().BeEquivalentTo(new
+            {
+                NameExpression = new { Name = "IsInstanceOf" },
+                AccessMember = (object)null,
+                Arguments = new[] { new { Value = "null_object" }, new { Value = "#SingleLineEdit" }, }
+            });
         }
     }
 }

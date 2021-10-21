@@ -9,6 +9,11 @@ namespace XSharp.VsParser.Helpers.Parser.Values
     public class MethodCallContextValues : ContextValues<MethodCallContext>
     {
         /// <summary>
+        /// The name expression, when the call is not an access member
+        /// </summary>
+        public NameExpressionContextValues NameExpression { get; internal set; }
+
+        /// <summary>
         /// The access member values
         /// </summary>
         public AccessMemberContextValues AccessMember { get; internal set; }
@@ -24,12 +29,14 @@ namespace XSharp.VsParser.Helpers.Parser.Values
                 return null;
 
             var accessMember = context.Expr?.AsEnumerable().FirstOrDefaultType<AccessMemberContext>();
+            var nameExpression = accessMember == null ? context.Expr?.AsEnumerable().FirstOrDefaultType<NameExpressionContext>() : null;
             var arguments = (context.ArgList?._Args?.Select(q => NamedArgumentContextValues.Build(q)) ?? Enumerable.Empty<NamedArgumentContextValues>()).ToArray();
             // var signature = context.;
             return new MethodCallContextValues
             {
                 Context = context,
                 AccessMember = AccessMemberContextValues.Build(accessMember),
+                NameExpression = NameExpressionContextValues.Build(nameExpression),
                 Arguments = arguments,
             };
         }
