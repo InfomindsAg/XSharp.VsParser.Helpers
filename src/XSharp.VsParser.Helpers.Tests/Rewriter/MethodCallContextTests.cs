@@ -17,8 +17,19 @@ namespace XSharp.Parser.Helpers.Tests.Rewriter
 
             var expected = WrapInMethod(@"self:NewDummy()");
 
-            Rewrite(code, expected, r => r.ReplaceMethodName("NewDummy"));
+            Rewrite(code, expected, r => r.ReplaceAccessMemberMethodName("NewDummy"));
         }
+
+        [Fact]
+        public void ReplaceNameExpressionTest()
+        {
+            var code = WrapInMethod(@"Dummy()");
+
+            var expected = WrapInMethod(@"NewDummy()");
+
+            Rewrite(code, expected, r => r.ReplaceNameExpression("NewDummy"));
+        }
+
 
         [Fact]
         public void DeleteAllParametersTest()
