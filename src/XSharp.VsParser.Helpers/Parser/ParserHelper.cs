@@ -198,7 +198,7 @@ namespace XSharp.VsParser.Helpers.Parser
         {
             var detectedEncoding = CharsetDetector.DetectFromFile(fileName);
             var encoding = Encoding.UTF8;
-            if (detectedEncoding.Details != null && detectedEncoding.Details.All(q => q.Encoding != encoding))
+            if (detectedEncoding.Details != null && detectedEncoding.Details.All(q => q.Encoding != encoding) && detectedEncoding.Detected.Encoding != null)
                 encoding = detectedEncoding.Detected.Encoding;
             if (encoding == Encoding.ASCII)
                 encoding = Encoding.UTF8;
