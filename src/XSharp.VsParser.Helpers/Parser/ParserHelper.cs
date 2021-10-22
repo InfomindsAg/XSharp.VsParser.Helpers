@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using UtfUnknown;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
@@ -50,7 +52,7 @@ namespace XSharp.VsParser.Helpers.Parser
             return result;
         }
 
-        static bool IsLineMatch(LineInfo lineInfo, int positionInSourceCode) 
+        static bool IsLineMatch(LineInfo lineInfo, int positionInSourceCode)
             => lineInfo.Start <= positionInSourceCode && positionInSourceCode <= lineInfo.End;
 
         static (int Line, int Column) ToLineColumn(LineInfo lineInfo, int positionInSourceCode)
@@ -188,13 +190,37 @@ namespace XSharp.VsParser.Helpers.Parser
         }
 
         /// <summary>
+        /// Loads a source file (respecting the file encoding)
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>The source code and the detected encoding</returns>
+        public static (string Content, Encoding DetectedEncoding) ReadSourceFileWithDetectedEncoding(string fileName)
+        {
+            var detectedEncoding = CharsetDetector.DetectFromFile(fileName);
+            var encoding = Encoding.UTF8;
+            if (detectedEncoding.Details != null && detectedEncoding.Details.All(q => q.Encoding != encoding))
+                encoding = detectedEncoding.Detected.Encoding;
+            if (encoding == Encoding.ASCII)
+                encoding = Encoding.UTF8;
+
+            return (File.ReadAllText(fileName, encoding), encoding);
+        }
+
+        /// <summary>
         /// Loads and parses a file
         /// </summary>
         /// <param name="fileName">The fileName</param>
+        /// <param name="detectEncoding">When true, the file is analyze before reading to detect encodings line Win1252, ... Otherwise, the file is assumed to be unicode</param>
         /// <returns>A result instance</returns>
-        public Result ParseFile(string fileName)
-            => ParseText(File.ReadAllText(fileName), fileName);
-
+        public Result ParseFile(string fileName, bool detectEncoding = true)
+        {
+            string sourceCode;
+            if (detectEncoding)
+                (sourceCode, _) = ReadSourceFileWithDetectedEncoding(fileName);
+            else
+                sourceCode = File.ReadAllText(fileName);
+            return ParseText(sourceCode, fileName);
+        }
         /// <summary>
         /// Parses the sourceCode 
         /// </summary>
