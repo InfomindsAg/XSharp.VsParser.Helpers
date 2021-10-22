@@ -6,11 +6,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Xml.Linq;
 using XSharp.VsParser.Helpers.Rewriter;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
+    /// <summary>
+    /// The AbstractSyntaxTree class wraps the parsing result in a class, that provides additional features like 
+    /// <list type="bullet">
+    /// <item><description>Making it enumerable</description></item>
+    /// <item><description>Dump it as Yaml or XML</description></item>
+    /// <item><description>Creating Rewriters</description></item>
+    /// <item><description>Saving the result of code rewrites</description></item>
+    /// <item><description>Exectuing XSharpBaseListeners</description></item>
+    /// </list>
+    /// </summary>
     public class AbstractSyntaxTree : IEnumerable<IParseTree>
     {
         #region Private Fields
@@ -23,6 +34,25 @@ namespace XSharp.VsParser.Helpers.Parser
         #endregion
 
         #region Private Helper Methods
+
+        Encoding GetFileEncoding(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                using (var fileStream = new FileStream(fileName, FileMode.Open))
+                {
+                    if (fileStream.Length > 3)
+                    {
+                        var bits = new byte[3];
+                        fileStream.Read(bits, 0, 3);
+
+                        var utf8Bom = (bits[0] == 0xEF && bits[1] == 0xBB && bits[2] == 0xBF);
+                        return new UTF8Encoding(utf8Bom);
+                    }
+                }
+            }
+            return Encoding.UTF8;
+        }
 
         void CheckParseSuccessful()
         {
@@ -47,7 +77,8 @@ namespace XSharp.VsParser.Helpers.Parser
                 File.Move(FileName, backupName);
             }
 
-            File.WriteAllText(newFileName, newSourceCode);
+            File.WriteAllText(newFileName, newSourceCode, GetFileEncoding(newFileName));
+            ResetRewriter();
             return true;
         }
 
@@ -55,6 +86,9 @@ namespace XSharp.VsParser.Helpers.Parser
 
         #region Public Properties
 
+        /// <summary>
+        /// The FileNane of the Prg File, that was parsed to generate the
+        /// </summary>
         public string FileName { get; private set; }
 
         /// <summary>
@@ -62,7 +96,19 @@ namespace XSharp.VsParser.Helpers.Parser
         /// </summary>
         public TokenStreamRewriter Rewriter
         {
-            get => _TokenStreamRewriter ??= new TokenStreamRewriter(_Tokens);
+            get
+            {
+                if (_TokenStreamRewriter == null)
+                {
+                    _TokenStreamRewriter = new TokenStreamRewriter(_Tokens);
+                    var trimChars = new char[] { '\uFEFF', '\u200B', ' ', '\r', '\n' };
+                    // Ensure that the rewriter doesn't change break code. (Example " "" " => " " "
+                    if (_SourceCode.Trim(trimChars) != _TokenStreamRewriter.GetText().Trim(trimChars))
+                        throw new InvalidOperationException("Emtpy Rewriter created unexprected changes to the code!");
+                }
+
+                return _TokenStreamRewriter;
+            }
         }
 
         #endregion
@@ -75,11 +121,18 @@ namespace XSharp.VsParser.Helpers.Parser
             FileName = fileName;
         }
 
+        /// <summary>
+        /// Clearst the AbstractSyntaxTree
+        /// </summary>
         public void Clear()
         {
             _TokenStreamRewriter = null;
         }
 
+        /// <summary>
+        /// Returns an Enumerator for the AbstractSyntaxTree
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<IParseTree> GetEnumerator()
         {
             CheckParseSuccessful();
@@ -91,8 +144,14 @@ namespace XSharp.VsParser.Helpers.Parser
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Returns a Rewriter for a specified context
+        /// </summary>
+        /// <typeparam name="T">The type of the rewriter conext (ex. MethodContext, Class_Context, ...)</typeparam>
+        /// <param name="context">The context</param>
+        /// <returns>A RewriterForContext object</returns>
         public RewriterForContext<T> RewriterFor<T>(T context) where T : IParseTree
-            => new RewriterForContext<T>(Rewriter, context);
+            => new(Rewriter, context);
 
         /// <summary>
         /// Dumps the AST created by parsing as Yaml
@@ -135,6 +194,16 @@ namespace XSharp.VsParser.Helpers.Parser
         public string GetRewriteResult()
             => _TokenStreamRewriter != null ? _TokenStreamRewriter.GetText() : _SourceCode;
 
+        /// <summary>
+        /// Resets the rewriter
+        /// </summary>
+        public void ResetRewriter()
+            => _TokenStreamRewriter = null;
+
+        /// <summary>
+        /// Executes a list of XSharpBaseListener instances on the AbstractSyntaxTree
+        /// </summary>
+        /// <param name="listeners">A list of XSharpBaseListener instances</param>
         public void ExecuteListeners(List<XSharpBaseListener> listeners)
         {
             Debug.Assert((listeners?.Count ?? 0) > 0, "List of listeners can not be empty");

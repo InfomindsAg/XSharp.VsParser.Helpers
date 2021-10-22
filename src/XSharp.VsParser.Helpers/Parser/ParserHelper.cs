@@ -1,22 +1,141 @@
 ﻿using LanguageService.CodeAnalysis.XSharp;
 using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
 using LanguageService.SyntaxTree;
-using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
-using System.Xml.Linq;
+using UtfUnknown;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
+    /// <summary>
+    /// The ParserHelper class. Use the BuildWith... Static methods to instantiate the class
+    /// </summary>
     public class ParserHelper
     {
-        readonly GenericErrorListener _ErrorListener = new();
-        readonly XSharpParseOptions _XSharpOptions;
+        class LineInfo
+        {
+            public int Line { get; set; }
+            public int Start { get; set; }
+            public int End { get; set; }
+        }
 
-        public AbstractSyntaxTree SourceTree { get; private set; }
+        readonly XSharpParseOptions _XSharpOptions;
+        private BufferedTokenStream _XSharpTokenStream;
+        private List<LineInfo> _Lines;
+        private List<TokenValues> _Tokens;
+        private List<TokenValues> _Comments;
+
+        List<LineInfo> BuildLineInfo()
+        {
+            if (string.IsNullOrEmpty(SourceCode))
+                return null;
+
+            var line = 1;
+            var result = new List<LineInfo>() { };
+            var start = 0;
+            do
+            {
+                var end = SourceCode.IndexOf('\n', start);
+                if (end == -1)
+                    end = SourceCode.Length;
+                result.Add(new LineInfo { Start = start, End = end, Line = line });
+                line++;
+                start = end + 1;
+            } while (start < SourceCode.Length);
+
+            // Additional line for the last newline
+            result.Add(new LineInfo { Start = start, End = start, Line = line });
+
+            return result;
+        }
+
+        static bool IsLineMatch(LineInfo lineInfo, int positionInSourceCode)
+            => lineInfo.Start <= positionInSourceCode && positionInSourceCode <= lineInfo.End;
+
+        static (int Line, int Column) ToLineColumn(LineInfo lineInfo, int positionInSourceCode)
+            => (lineInfo.Line, positionInSourceCode - lineInfo.Start + 1);
+
+        string[] BuildSourceCodeLines()
+        {
+            if (string.IsNullOrEmpty(SourceCode))
+                return new string[0];
+
+            var result = SourceCode.Split(new string[] { "\n" }, StringSplitOptions.None);
+            if (result.Length > 0 && result[0].EndsWith("\r"))
+                result = result.Select(q => q.TrimEnd('\r')).ToArray();
+            return result;
+        }
+
+        List<TokenValues> BuildTokens()
+        {
+            if (_XSharpTokenStream == null)
+                return null;
+
+            _Lines ??= BuildLineInfo();
+
+            var lineIndex = 0;
+            (int Line, int Column) GetLineAndColumnOptimized(int positionInSourceCode)
+            {
+                while (lineIndex < _Lines.Count && !IsLineMatch(_Lines[lineIndex], positionInSourceCode))
+                    lineIndex++;
+                if (lineIndex < _Lines.Count)
+                    return ToLineColumn(_Lines[lineIndex], positionInSourceCode);
+
+                return GetLineAndColumn(positionInSourceCode);
+            }
+
+            var result = new List<TokenValues>();
+            foreach (IToken token in _XSharpTokenStream.GetTokens().Where(q => q.Type != -1))
+            {
+                var start = GetLineAndColumnOptimized(token.StartIndex);
+                var stop = GetLineAndColumnOptimized(token.StopIndex);
+                result.Add(new TokenValues
+                {
+                    Context = token,
+                    Type = token.GetTokenType(),
+                    Text = token.Text,
+                    StartLine = start.Line,
+                    StartColumn = start.Column,
+                    EndLine = stop.Line,
+                    EndColumn = stop.Column,
+                });
+            }
+
+            return result;
+        }
+        /// <summary>
+        /// The Abstract Syntax Tree. Will be initialized by parsing a file.
+        /// </summary>
+        public AbstractSyntaxTree Tree { get; private set; }
+
+        /// <summary>
+        /// Obsolete
+        /// </summary>
+        [Obsolete("Replaced by Tree Property")]
+        public AbstractSyntaxTree SourceTree => Tree;
+
+        /// <summary>
+        /// The source code, that was parsed
+        /// </summary>
+        public string SourceCode { get; private set; }
+
+        /// <summary>
+        /// The source code lines, that was parsed 
+        /// </summary>
+        public string[] SourceCodeLines { get; private set; }
+
+        /// <summary>
+        /// A list of the comments. Will be initialized by parsing a file.
+        /// </summary>
+        public IReadOnlyList<TokenValues> Comments => _Comments ??= Tokens.Where(q => q.Type == TokenType.Comment).ToList();
+
+        /// <summary>
+        /// A list of the Tokens. Will be initialized by parsing a file.
+        /// </summary>
+        public IReadOnlyList<TokenValues> Tokens => _Tokens ??= BuildTokens();
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
         {
@@ -26,37 +145,142 @@ namespace XSharp.VsParser.Helpers.Parser
 
             _XSharpOptions = xsharpOptions;
 
-            SourceTree = null;
+            Tree = null;
         }
 
+        /// <summary>
+        /// Calculates the line and column based on an absolute position in source code
+        /// </summary>
+        /// <param name="positionInSourceCode">The absolute position in source code</param>
+        /// <returns>The line and column (1 based)</returns>
+        public (int Line, int Column) GetLineAndColumn(int positionInSourceCode)
+        {
+            _Lines ??= BuildLineInfo();
+            var line = _Lines.LastOrDefault(q => IsLineMatch(q, positionInSourceCode));
+            if (line == null)
+                throw new ArgumentException("Invalid positionInSourceCode");
+
+            return ToLineColumn(line, positionInSourceCode);
+        }
+
+        /// <summary>
+        /// Calculates the start and end line and column for a token
+        /// </summary>
+        /// <param name="token">The token</param>
+        /// <returns>The start and end line and column (1 based)</returns>
+        public (int StartLine, int StartColumn, int EndLine, int EndColumn) GetTokenPosition(IToken token)
+        {
+            var (startLine, startColumn) = GetLineAndColumn(token.StartIndex);
+            var (endLine, endColumn) = GetLineAndColumn(token.StopIndex);
+            return (startLine, startColumn, endLine, endColumn);
+        }
+
+        /// <summary>
+        /// Clears the ParserHelper
+        /// </summary>
         public void Clear()
         {
-            _ErrorListener.Clear();
-            SourceTree = null;
+            Tree = null;
+            _XSharpTokenStream = null;
+            _Lines = null;
+            _Tokens = null;
+            _Comments = null;
+            SourceCode = null;
+            SourceCodeLines = new string[0];
         }
 
-        public Result ParseFile(string fileName)
-            => ParseText(File.ReadAllText(fileName), fileName);
+        /// <summary>
+        /// Loads a source file (respecting the file encoding)
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>The source code and the detected encoding</returns>
+        public static (string Content, Encoding DetectedEncoding) ReadSourceFileWithDetectedEncoding(string fileName)
+        {
+            var detectedEncoding = CharsetDetector.DetectFromFile(fileName);
+            var encoding = Encoding.UTF8;
+            if (detectedEncoding.Details != null && detectedEncoding.Details.All(q => q.Encoding != encoding))
+                encoding = detectedEncoding.Detected.Encoding;
+            if (encoding == Encoding.ASCII)
+                encoding = Encoding.UTF8;
 
+            return (File.ReadAllText(fileName, encoding), encoding);
+        }
+
+        /// <summary>
+        /// Loads and parses a file
+        /// </summary>
+        /// <param name="fileName">The fileName</param>
+        /// <param name="detectEncoding">When true, the file is analyze before reading to detect encodings line Win1252, ... Otherwise, the file is assumed to be unicode</param>
+        /// <returns>A result instance</returns>
+        public Result ParseFile(string fileName, bool detectEncoding = true)
+        {
+            string sourceCode;
+            if (detectEncoding)
+                (sourceCode, _) = ReadSourceFileWithDetectedEncoding(fileName);
+            else
+                sourceCode = File.ReadAllText(fileName);
+            return ParseText(sourceCode, fileName);
+        }
+        /// <summary>
+        /// Parses the sourceCode 
+        /// </summary>
+        /// <param name="sourceCode">The sourceCode</param>
+        /// <param name="fileName">The fileName of the file, that contains the sourceCode</param>
+        /// <returns>A result instance</returns>
         public Result ParseText(string sourceCode, string fileName)
         {
             Clear();
+            var errorListener = new GenericErrorListener();
 
-            var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, _ErrorListener, out var tokens, out var startRule);
-            if (!ok && _ErrorListener.Result.OK)
-                _ErrorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
+            try
+            {
+                for (int retry = 0; retry < 3; retry++)
+                {
+                    errorListener.Clear();
+                    var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, errorListener, out var tokens, out var startRule);
+                    if (!ok && errorListener.Result.OK)
+                        errorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
 
-            if (_ErrorListener.Result.OK)
-                SourceTree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
+                    // Workaround for known issue. Sometimes a "Include file not found" is found.
+                    if (!errorListener.Result.OK && errorListener.Result.Errors.Any(q => q.Message.Contains("Include file not found")))
+                        continue;
 
-            return _ErrorListener.Result;
+                    if (errorListener.Result.OK)
+                    {
+                        Tree = new AbstractSyntaxTree(fileName, sourceCode, tokens, startRule);
+                        _XSharpTokenStream = tokens as BufferedTokenStream;
+                        SourceCode = sourceCode;
+                        SourceCodeLines = BuildSourceCodeLines();
+                    }
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                errorListener.Result.Errors.Add(new Result.Item { Message = "Exception: " + ex.Message, Line = 0 });
+            }
+
+            return errorListener.Result;
         }
 
+        /// <summary>
+        /// Re-Parses the tree to include rewrites
+        /// </summary>
+        /// <returns></returns>
         public Result ParseRewriter()
-            => ParseText(SourceTree.Rewriter.GetText(), SourceTree.FileName);
+        {
+            var result = ParseText(Tree.GetRewriteResult(), Tree.FileName);
+            if (result.OK)
+                Tree.ResetRewriter();
+            return result;
+        }
 
         #region Builders
 
+        /// <summary>
+        /// Creates a new instance of the ParserHelper, using the default Vo Options
+        /// </summary>
+        /// <returns>A new ParserHelper instance</returns>
         public static ParserHelper BuildWithVoDefaultOptions()
                  => new(XSharpParseOptions.FromVsValues(new List<string>
                     {
@@ -88,6 +312,10 @@ namespace XSharp.VsParser.Helpers.Parser
                     "vo16-",
                     }));
 
+        /// <summary>
+        /// Creates a new instance of the ParserHelper, using the options in the list
+        /// </summary>
+        /// <returns>A new ParserHelper instance</returns>
         public static ParserHelper BuildWithOptionsList(List<string> options)
             => new(XSharpParseOptions.FromVsValues(options));
 

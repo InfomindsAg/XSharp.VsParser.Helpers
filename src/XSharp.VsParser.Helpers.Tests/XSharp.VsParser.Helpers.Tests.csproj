@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,17 +48,40 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CacheTests.cs" />
-    <Compile Include="RewriteFor\StatementContextTests.cs" />
-    <Compile Include="RewriteFor\RewriteForTests.cs" />
-    <Compile Include="RewriteFor\MethodContextTests.cs" />
-    <Compile Include="SourceTreeRewriteTests.cs" />
-    <Compile Include="SourceTreeTests.cs" />
-    <Compile Include="ProjectHelperTests.cs" />
-    <Compile Include="ParserHelperTests.cs" />
+    <Compile Include="Cache\CacheTests.cs" />
+    <Compile Include="Parser\ToValue\NameExpressionToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\AccessMemberToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\ClassVarListContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\ClassvarsContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\ClassContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\FuncprocContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\ConstructorContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\CommonLocalDeclContextValuesTests.cs" />
+    <Compile Include="Parser\ToValue\AssignmentExpressionToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\PropertyToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\ParameterContextToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\ReturnStmtExpressionToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\LocalvarToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\MethodCallToValuesTests.cs" />
+    <Compile Include="Parser\ToValue\SuperExpressionToValuesTests.cs" />
+    <Compile Include="Rewriter\ClassVarListContextTests.cs" />
+    <Compile Include="Rewriter\ConstructorContextTests.cs" />
+    <Compile Include="Rewriter\FuncprocContextTests.cs" />
+    <Compile Include="Rewriter\AssignmentExpressionContextTests.cs" />
+    <Compile Include="Rewriter\ParameterContextTests.cs" />
+    <Compile Include="Rewriter\LocalvarContextTests.cs" />
+    <Compile Include="Rewriter\ClassVarsContextTests.cs" />
+    <Compile Include="Rewriter\PropertyContextTests.cs" />
+    <Compile Include="Rewriter\MethodCallContextTests.cs" />
+    <Compile Include="Rewriter\StatementContextTests.cs" />
+    <Compile Include="TestHelpers\TestsForBase.cs" />
+    <Compile Include="Rewriter\MethodContextTests.cs" />
+    <Compile Include="Parser\IParseTreeExtensionsTests.cs" />
+    <Compile Include="Project\ProjectHelperTests.cs" />
+    <Compile Include="Parser\ParserHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HelperExtensions.cs" />
-    <Compile Include="ToValuesTests.cs" />
+    <Compile Include="TestHelpers\TestHelperExtensions.cs" />
+    <Compile Include="Parser\ToValue\MethodContextToValuesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XSharp.VsParser.Helpers\XSharp.VsParser.Helpers.csproj">
@@ -78,25 +103,29 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="UnitTestData\CodeFiles\Program.prg">
+    <None Include="_UnitTestData\CodeFiles\Program.prg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="_UnitTestData\CodeFiles\StringBuilderExamples.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="UnitTestData\CodeFiles\StringBuilderExamples.prg">
+    </None>
+    <None Include="_UnitTestData\CodeFiles\XSharpExamples.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="UnitTestData\CodeFiles\XSharpExamples.xsproj">
+    </None>
+    <None Include="_UnitTestData\ProjectFiles\Program.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="UnitTestData\ProjectFiles\Program.prg">
+    </None>
+    <None Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsFalse.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="UnitTestData\ProjectFiles\XSharpVoAllFlagsFalse.xsproj">
+    </None>
+    <None Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsTrue.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="UnitTestData\ProjectFiles\XSharpVoAllFlagsTrue.xsproj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="_UnitTestData\CodeFiles\ProgramWin1252.prg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,25 +6,17 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Rewriter
 {
+    /// <summary>
+    /// RewriterForStatement Extensions
+    /// </summary>
     public static class RewriterForStatementExtensions
     {
-
-        #region ReturnStmt
-
-        public static RewriterForContext<ReturnStmtContext> DeleteExpression(this RewriterForContext<ReturnStmtContext> rewriterFor)
-        {
-            var expr = rewriterFor.Context.Expr;
-            if ((expr?.ChildCount ?? 0) == 0)
-                return rewriterFor;
-
-            rewriterFor.Rewriter.Delete(expr.Start.ToIndex(), expr.Stop.ToIndex());
-            return rewriterFor;
-        }
-
-        #endregion
-
-        #region Statement
-
+        /// <summary>
+        /// Replaces the statement with a new statement
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>#
+        /// <param name="newStatement">The new statement</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<StatementContext> ReplaceStatement(this RewriterForContext<StatementContext> rewriterFor, string newStatement)
         {
             if (!string.IsNullOrEmpty(newStatement) && !newStatement.EndsWith(Environment.NewLine))
@@ -34,13 +26,16 @@ namespace XSharp.VsParser.Helpers.Rewriter
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Deletes a statement
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <returns>The rewriterFor instance</returns>
         public static RewriterForContext<StatementContext> DeleteStatement(this RewriterForContext<StatementContext> rewriterFor)
         {
             rewriterFor.Rewriter.Delete(rewriterFor.Context.start.ToIndex(), rewriterFor.Context.stop.ToIndex());
             return rewriterFor;
         }
-
-        #endregion
 
     }
 }

@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
 namespace XSharp.VsParser.Helpers.Project
 {
+    /// <summary>
+    /// The ProjectHelper Class
+    /// </summary>
     public class ProjectHelper
     {
         private readonly string _FilePath;
         private readonly XDocument _ProjectXml;
         private readonly XNamespace _Ns;
 
-
+        /// <summary>
+        /// Creates a new instance of the ProjectHelper class for a XSharp project file
+        /// </summary>
+        /// <param name="filePath">The fileName of an XSharp project file</param>
         public ProjectHelper(string filePath)
         {
             _FilePath = filePath;
@@ -26,15 +32,23 @@ namespace XSharp.VsParser.Helpers.Project
         /// <returns>
         /// A list of source files.
         /// </returns>
-        public List<string> GetSourceFiles()
+        public List<string> GetSourceFiles(bool fullPath = false)
         {
             var root = _ProjectXml.Root;
             var result = new List<string>();
 
-            return root.Descendants(_Ns + "Compile")
+            var files = root.Descendants(_Ns + "Compile")
                 .Select(q => q.Attribute("Include")?.Value)
-                .Where(q => !string.IsNullOrEmpty(q))
-                .ToList();
+                .Where(q => !string.IsNullOrEmpty(q));
+
+            if (fullPath)
+            {
+                var basePath = Path.GetDirectoryName(_FilePath);
+                if (!string.IsNullOrEmpty(basePath))
+                    files = files.Select(q => Path.Combine(basePath, q));
+            }
+
+            return files.ToList();
         }
 
         /// <summary>

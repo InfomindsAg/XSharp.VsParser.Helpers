@@ -2,13 +2,20 @@
 using LanguageService.SyntaxTree;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
+    /// <summary>
+    /// ToIndex extensions
+    /// </summary>
     public static class ToIndexExtensions
     {
+        /// <summary>
+        /// Returns the OriginalTokenIndex for a token
+        /// </summary>
+        /// <param name="token">A token</param>
+        /// <returns>The OriginalTokenIndex</returns>
         public static int ToIndex(this IToken token)
         {
             if (token is XSharpToken xsToken && xsToken != null)
@@ -17,7 +24,21 @@ namespace XSharp.VsParser.Helpers.Parser
             throw new ArgumentException("Token must be a XSharpToken and can not be null");
         }
 
+        /// <summary>
+        /// Returns the OriginalTokenIndex for an IdentifierContext
+        /// </summary>
+        /// <param name="id">An IdentifierContext</param>
+        /// <returns>The OriginalTokenIndex</returns>
         public static int ToIndex(this IdentifierContext id)
-            => ToIndex(id?.Token);
+        {
+            if (id == null)
+                throw new ArgumentException("id can not be null");
+            if (id.Token != null)
+                return ToIndex(id.Token);
+            if (id.XsToken?.Token != null)
+                return ToIndex(id.XsToken?.Token);
+
+            throw new ArgumentException("Can not convert ID to Index");
+        }
     }
 }
