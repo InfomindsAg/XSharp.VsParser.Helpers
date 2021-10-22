@@ -32,7 +32,7 @@
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);GetParserAssembly</TargetsForTfmSpecificBuildOutput>
     <PackageId>XSharp.VsParser.Helpers</PackageId>
-    <Version>0.4.0.41</Version>
+    <Version>0.4.0.43</Version>
     <Authors>Volkmar Rigo</Authors>
     <Company />
     <Product>XSharp.VsParser.Helpers</Product>

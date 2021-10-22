@@ -27,7 +27,7 @@ end class";
             var code = @"class Test implements IInterface1, IInterface2
 end class";
 
-            GetFirst(code).ToValues().Should().BeEquivalentTo(new { Name = "Test", Inherits = (string)null, Implents = new string[] { "IInterface1", "IInterface2" } });
+            GetFirst(code).ToValues().Should().BeEquivalentTo(new { Name = "Test", Inherits = (string)null, Implements = new string[] { "IInterface1", "IInterface2" } });
         }
 
     }

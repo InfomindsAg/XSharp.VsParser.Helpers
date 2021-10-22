@@ -21,9 +21,9 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         public string Inherits { get; internal set; }
 
         /// <summary>
-        /// The interfaces, that the class implents
+        /// The interfaces, that the class implements
         /// </summary>
-        public string[] Implents { get; internal set; }
+        public string[] Implements { get; internal set; }
 
 
         static internal ClassContextValues Build(Class_Context context)
@@ -36,7 +36,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
                 Context = context,
                 Name = context.identifier()?.GetText(),
                 Inherits = context.BaseType?.GetText(),
-                Implents = (context._Implements?.Select(q => q.GetText()) ?? Enumerable.Empty<string>()).ToArray(),
+                Implements = (context._Implements?.Select(q => q.GetText()) ?? Enumerable.Empty<string>()).ToArray(),
             };
         }
     }
