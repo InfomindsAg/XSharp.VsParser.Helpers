@@ -8,7 +8,7 @@ using static XSharp.Parser.Helpers.Tests.TestHelpers.TestHelperExtensions;
 using XSharp.Parser.Helpers.Tests.TestHelpers;
 using System.Text;
 
-namespace XSharp.Parser.Helpers.Tests.FileEncoding
+namespace XSharp.Parser.Helpers.Tests.Parser
 {
     public class ParserHelperTests
     {
