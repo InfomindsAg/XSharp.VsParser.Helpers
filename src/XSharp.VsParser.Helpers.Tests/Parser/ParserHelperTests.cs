@@ -8,7 +8,7 @@ using static XSharp.Parser.Helpers.Tests.TestHelpers.TestHelperExtensions;
 using XSharp.Parser.Helpers.Tests.TestHelpers;
 using System.Text;
 
-namespace XSharp.Parser.Helpers.Tests.Parser
+namespace XSharp.Parser.Helpers.Tests.FileEncoding
 {
     public class ParserHelperTests
     {
@@ -133,15 +133,6 @@ end class".ParseText();
                 parser.Tokens.Count.Should().BeGreaterOrEqualTo(0);
                 _ = parser.Tree.Rewriter;
             }
-        }
-
-
-        [Fact]
-        public void ReadSourceCode()
-        {
-            var program = ParserHelper.ReadSourceFileWithDetectedEncoding(CodeFile("program.prg"));
-            var programWin1252 = ParserHelper.ReadSourceFileWithDetectedEncoding(CodeFile("ProgramWin1252.prg"));
-            program.Should().Be(programWin1252);
         }
     }
 }

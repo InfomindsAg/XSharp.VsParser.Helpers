@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheTests.cs" />
+    <Compile Include="FileEncoding\FileEncodingHelperTests.cs" />
     <Compile Include="Parser\ToValue\NameExpressionToValuesTests.cs" />
     <Compile Include="Parser\ToValue\AccessMemberToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ClassVarListContextToValuesTests.cs" />

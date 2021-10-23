@@ -29,6 +29,10 @@ In order to use this Nuget, you must install a version of the XSharp Compiler an
 * Caches serializable data objects for source files
 * Is helpful to store calculated data to reduce the amount of files to parse
 
+### FileExtensionHelper
+
+* Detects the most likely encoding of a file
+
 ### Extension Methods
 
 A series of IParseTree extension methods like
