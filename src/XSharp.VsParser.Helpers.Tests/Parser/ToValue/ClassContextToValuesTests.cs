@@ -18,7 +18,7 @@ namespace XSharp.Parser.Helpers.Tests.Parser.ToValue
             var code = @"class Test inherit BaseTest
 end class";
 
-            GetFirst(code).ToValues().Should().BeEquivalentTo(new { Name = "Test", Inherits = "BaseTest", Implents = new string[0] });
+            GetFirst(code).ToValues().Should().BeEquivalentTo(new { Name = "Test", Inherits = "BaseTest", Implements = new string[0] });
         }
 
         [Fact]

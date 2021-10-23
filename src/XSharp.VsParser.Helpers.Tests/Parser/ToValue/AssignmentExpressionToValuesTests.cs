@@ -20,8 +20,7 @@ return nil");
 
             GetFirst(code).ToValues().Should().BeEquivalentTo(new
             {
-                PropertyAccessExpression = "self",
-                PropertyName = "Dummy",
+                AssignToAccessMember = new { AccessExpression = "self", MemberName = "Dummy", },
                 ValueExpression = "'15'",
             });
         }
