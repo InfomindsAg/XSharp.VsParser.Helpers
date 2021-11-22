@@ -1,7 +1,4 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 using static XSharp.Parser.Helpers.Tests.TestHelpers.TestHelperExtensions;
 using XSharp.VsParser.Helpers.FileEncoding;
@@ -30,6 +27,9 @@ namespace XSharp.Parser.Helpers.Tests.FileEncoding
         public void DebugEncodingTest()
         {
             var fileName = @"";
+            if (string.IsNullOrEmpty(fileName))
+                return;
+
             var helper = new FileEncodingHelper(new() { Encoding.UTF8, Encoding.Default });
             var encoding = helper.DetectFileEncoding(fileName);
             var content = File.ReadAllText(fileName, encoding.Encoding);
