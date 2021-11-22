@@ -76,6 +76,7 @@
     <Compile Include="Rewriter\ClassVarsContextTests.cs" />
     <Compile Include="Rewriter\PropertyContextTests.cs" />
     <Compile Include="Rewriter\MethodCallContextTests.cs" />
+    <Compile Include="Rewriter\XSharpParserRuleContextTests.cs" />
     <Compile Include="Rewriter\StatementContextTests.cs" />
     <Compile Include="TestHelpers\TestsForBase.cs" />
     <Compile Include="Rewriter\MethodContextTests.cs" />
