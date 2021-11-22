@@ -31,6 +31,17 @@ end interface";
 ");
         }
 
+        protected string WrapInConstructor(string code)
+        {
+            if (!string.IsNullOrEmpty(code))
+                return WrapInClass($@"Constructor()
+{code}
+");
+            else
+                return WrapInClass($@"Constructor()
+");
+        }
+
         protected void Rewrite(string code, string expected, Action<RewriterForContext<T>> rewriteAction)
         {
             var parser = code.ParseText();
