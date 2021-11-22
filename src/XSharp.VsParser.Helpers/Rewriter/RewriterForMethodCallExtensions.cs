@@ -27,6 +27,23 @@ namespace XSharp.VsParser.Helpers.Rewriter
         }
 
         /// <summary>
+        /// Replaces all the arguments from the method call with new arguments
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="newArguments">The new arguments</param>
+        /// <returns>The rewriterFor instance</returns>
+        public static RewriterForContext<MethodCallContext> ReplaceAllArguments(this RewriterForContext<MethodCallContext> rewriterFor, string newArguments)
+        {
+            var argList = rewriterFor.Context.ArgList;
+            if (argList != null)
+                rewriterFor.Rewriter.Replace(argList.Start.ToIndex(), argList.Stop.ToIndex(), newArguments);
+            else
+                rewriterFor.Rewriter.Replace(rewriterFor.Context.LPAREN().ToIndex(), rewriterFor.Context.RPAREN().ToIndex(), $"({newArguments})");
+            return rewriterFor;
+        }
+
+
+        /// <summary>
         /// Replaces the called method name with a new method name, whenn the method called a member
         /// </summary>
         /// <param name="rewriterFor">The rewriterFor instance</param>
