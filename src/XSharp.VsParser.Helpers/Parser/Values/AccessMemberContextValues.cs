@@ -23,17 +23,24 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         /// </summary>
         public bool IsSuperAccess { get; set; }
 
+        /// <summary>
+        /// True, if the member is accessed on self
+        /// </summary>
+        public bool IsSelfAccess { get; set; }
+
         static internal AccessMemberContextValues Build(AccessMemberContext context)
         {
             if (context == null)
                 return null;
 
+            var primaryExpression = (context.Expr as PrimaryExpressionContext)?.Expr;
             return new AccessMemberContextValues
             {
                 Context = context,
                 AccessExpression = context.Expr?.GetText(),
                 MemberName = context.Name?.GetText(),
-                IsSuperAccess = context.Expr is PrimaryExpressionContext primaryExpression && primaryExpression.Expr is SuperExpressionContext,
+                IsSuperAccess = primaryExpression is SuperExpressionContext,
+                IsSelfAccess = primaryExpression is SelfExpressionContext,
             };
         }
     }
