@@ -134,14 +134,5 @@ end class".ParseText();
                 _ = parser.Tree.Rewriter;
             }
         }
-
-
-        [Fact]
-        public void ReadSourceCode()
-        {
-            var program = ParserHelper.ReadSourceFileWithDetectedEncoding(CodeFile("program.prg"));
-            var programWin1252 = ParserHelper.ReadSourceFileWithDetectedEncoding(CodeFile("ProgramWin1252.prg"));
-            program.Should().Be(programWin1252);
-        }
     }
 }

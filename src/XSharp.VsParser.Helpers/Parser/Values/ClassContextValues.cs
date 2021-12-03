@@ -1,4 +1,5 @@
-﻿using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
+﻿using System.Linq;
+using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Parser.Values
 {
@@ -19,6 +20,12 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         /// </summary>
         public string Inherits { get; internal set; }
 
+        /// <summary>
+        /// The interfaces, that the class implements
+        /// </summary>
+        public string[] Implements { get; internal set; }
+
+
         static internal ClassContextValues Build(Class_Context context)
         {
             if (context == null)
@@ -29,6 +36,7 @@ namespace XSharp.VsParser.Helpers.Parser.Values
                 Context = context,
                 Name = context.identifier()?.GetText(),
                 Inherits = context.BaseType?.GetText(),
+                Implements = (context._Implements?.Select(q => q.GetText()) ?? Enumerable.Empty<string>()).ToArray(),
             };
         }
     }

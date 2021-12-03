@@ -37,5 +37,18 @@ namespace XSharp.VsParser.Helpers.Rewriter
             return rewriterFor;
         }
 
+        /// <summary>
+        /// Replaces all the arguments from the method call with new arguments
+        /// </summary>
+        /// <param name="rewriterFor">The rewriterFor instance</param>
+        /// <param name="newArguments">The new arguments</param>
+        /// <returns>The rewriterFor instance</returns>
+        public static RewriterForContext<SuperExpressionContext> ReplaceAllArguments(this RewriterForContext<SuperExpressionContext> rewriterFor, string newArguments)
+        {
+            rewriterFor.RewriterFor(rewriterFor.Context.FirstParentOrDefault<MethodCallContext>()).ReplaceAllArguments(newArguments);
+            return rewriterFor;
+        }
+
+
     }
 }

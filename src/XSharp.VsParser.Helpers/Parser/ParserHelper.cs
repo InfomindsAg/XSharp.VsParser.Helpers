@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UtfUnknown;
+using XSharp.VsParser.Helpers.FileEncoding;
 
 namespace XSharp.VsParser.Helpers.Parser
 {
@@ -22,6 +23,7 @@ namespace XSharp.VsParser.Helpers.Parser
             public int End { get; set; }
         }
 
+        readonly FileEncodingHelper _FileEncodingHelper = new();
         readonly XSharpParseOptions _XSharpOptions;
         private BufferedTokenStream _XSharpTokenStream;
         private List<LineInfo> _Lines;
@@ -190,23 +192,6 @@ namespace XSharp.VsParser.Helpers.Parser
         }
 
         /// <summary>
-        /// Loads a source file (respecting the file encoding)
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns>The source code and the detected encoding</returns>
-        public static (string Content, Encoding DetectedEncoding) ReadSourceFileWithDetectedEncoding(string fileName)
-        {
-            var detectedEncoding = CharsetDetector.DetectFromFile(fileName);
-            var encoding = Encoding.UTF8;
-            if (detectedEncoding.Details != null && detectedEncoding.Details.All(q => q.Encoding != encoding))
-                encoding = detectedEncoding.Detected.Encoding;
-            if (encoding == Encoding.ASCII)
-                encoding = Encoding.UTF8;
-
-            return (File.ReadAllText(fileName, encoding), encoding);
-        }
-
-        /// <summary>
         /// Loads and parses a file
         /// </summary>
         /// <param name="fileName">The fileName</param>
@@ -216,7 +201,10 @@ namespace XSharp.VsParser.Helpers.Parser
         {
             string sourceCode;
             if (detectEncoding)
-                (sourceCode, _) = ReadSourceFileWithDetectedEncoding(fileName);
+            {
+                var detectedEncoding = _FileEncodingHelper.DetectFileEncoding(fileName);
+                sourceCode = File.ReadAllText(fileName, detectedEncoding.Encoding);
+            }
             else
                 sourceCode = File.ReadAllText(fileName);
             return ParseText(sourceCode, fileName);

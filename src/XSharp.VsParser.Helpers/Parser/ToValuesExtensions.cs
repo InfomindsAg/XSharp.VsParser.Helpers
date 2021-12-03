@@ -317,7 +317,24 @@ namespace XSharp.VsParser.Helpers.Parser
         public static IEnumerable<NameExpressionContextValues> ToValues(this IEnumerable<NameExpressionContext> enumerable) => enumerable.Select(NameExpressionContextValues.Build);
 
         #endregion
-        
+
+        #region ConstructorchainContext
+
+        /// <summary>
+        /// Converts a ConstructorchainContext instance to a ConstructorchainContextValues instance
+        /// </summary>
+        /// <param name="context">A ConstructorchainContext instance</param>
+        /// <returns>A ConstructorchainContextValues instance</returns>
+        public static ConstructorchainContextValues ToValues(this ConstructorchainContext context) => ConstructorchainContextValues.Build(context);
+
+        /// <summary>
+        /// Converts a sequence of ConstructorchainContext instances to a sequence of ConstructorchainContextValues instances
+        /// </summary>
+        /// <param name="enumerable">A sequence of ConstructorchainContext instances</param>
+        /// <returns>A sequence of ConstructorchainContextValues instances</returns>
+        public static IEnumerable<ConstructorchainContextValues> ToValues(this IEnumerable<ConstructorchainContext> enumerable) => enumerable.Select(ConstructorchainContextValues.Build);
+
+        #endregion        
     }
 
 

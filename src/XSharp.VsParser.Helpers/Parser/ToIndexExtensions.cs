@@ -1,5 +1,6 @@
 ﻿using LanguageService.CodeAnalysis.XSharp.SyntaxParser;
 using LanguageService.SyntaxTree;
+using LanguageService.SyntaxTree.Tree;
 using System;
 using System.Collections.Generic;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
@@ -39,6 +40,19 @@ namespace XSharp.VsParser.Helpers.Parser
                 return ToIndex(id.XsToken?.Token);
 
             throw new ArgumentException("Can not convert ID to Index");
+        }
+
+        /// <summary>
+        /// Returns the OriginalTokenIndex for a token
+        /// </summary>
+        /// <param name="terminalNode">A terminalNode</param>
+        /// <returns>The OriginalTokenIndex</returns>
+        public static int ToIndex(this ITerminalNode terminalNode)
+        {
+            if (terminalNode?.Symbol != null)
+                return terminalNode.Symbol.ToIndex();
+
+            throw new ArgumentException("TerminalNode can not be null");
         }
     }
 }

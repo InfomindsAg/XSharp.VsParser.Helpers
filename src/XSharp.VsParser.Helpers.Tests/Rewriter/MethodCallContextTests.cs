@@ -32,7 +32,7 @@ namespace XSharp.Parser.Helpers.Tests.Rewriter
 
 
         [Fact]
-        public void DeleteAllParametersTest()
+        public void DeleteAllArgumentsTest()
         {
             var code = WrapInMethod(@"self:Dummy(null_object)");
 
@@ -41,6 +41,25 @@ namespace XSharp.Parser.Helpers.Tests.Rewriter
             Rewrite(code, expected, r => r.DeleteAllArguments());
         }
 
+        [Fact]
+        public void ReplaceAllArgumentsTest()
+        {
+            var code = WrapInMethod(@"self:Dummy(null_object)");
+
+            var expected = WrapInMethod(@"self:Dummy(1, 2)");
+
+            Rewrite(code, expected, r => r.ReplaceAllArguments("1, 2"));
+        }
+
+        [Fact]
+        public void ReplaceAllArgumentsWhenEmptyTestTest()
+        {
+            var code = WrapInMethod(@"self:Dummy()");
+
+            var expected = WrapInMethod(@"self:Dummy(1, 2)");
+
+            Rewrite(code, expected, r => r.ReplaceAllArguments("1, 2"));
+        }
 
     }
 }
