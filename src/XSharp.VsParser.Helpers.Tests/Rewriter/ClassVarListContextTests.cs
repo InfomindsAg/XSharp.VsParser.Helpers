@@ -8,6 +8,7 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.Parser.Helpers.Tests.Rewriter
 {
+    /*
     public class ClassVarListContextTests : TestsFor<ClassVarListContext>
     {
 
@@ -31,5 +32,5 @@ namespace XSharp.Parser.Helpers.Tests.Rewriter
             Rewrite(code, expected, r => r.ReplaceType("usual"));
         }
 
-    }
+    }*/
 }

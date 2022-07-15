@@ -20,6 +20,10 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         /// </summary>
         public string InitExpression { get; private set; }
 
+        /// <summary>
+        /// The type
+        /// </summary>
+        public string Type { get; private set; }
 
         static internal ClassvarContextValues Build(ClassvarContext context)
         {
@@ -30,7 +34,8 @@ namespace XSharp.VsParser.Helpers.Parser.Values
             {
                 Context = context,
                 Name = context.Id.GetText(),
-                InitExpression = context.expression()?.GetText()
+                InitExpression = context.expression()?.GetText(),
+                Type = context.DataType?.GetText(),
             };
         }
     }

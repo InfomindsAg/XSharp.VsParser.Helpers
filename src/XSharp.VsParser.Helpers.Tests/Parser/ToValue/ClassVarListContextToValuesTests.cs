@@ -10,15 +10,26 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.Parser.Helpers.Tests.Parser.ToValue
 {
-    public class ClassVarListContextToValuesTests : TestsFor<ClassVarListContext>
+    public class ClassVarListContextToValuesTests : TestsFor<ClassvarContext>
     {
         [Fact]
         public void SingleTest()
         {
             var code = @"static global dummy := {} as usual";
 
-            GetFirst(code).ToValues().Should().BeEquivalentTo(new { Variables = new[] { new { Name = "dummy", InitExpression = "{}" } }, Type = "usual" });
+            GetFirst(code).ToValues().Should().BeEquivalentTo(new { Name = "dummy", InitExpression = "{}", Type = "usual" });
         }
+
+        [Fact]
+        public void MultipleTest()
+        {
+            var code = @"static global sa2ConvTabansi2html, saConvTabansi2html as array";
+
+            GetFirst(code).ToValues().Should().BeEquivalentTo(new { Name = "sa2ConvTabansi2html", InitExpression = (string)null, Type = "array" });
+        }
+
+
+        // 
 
     }
 }

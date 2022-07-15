@@ -38,8 +38,8 @@ namespace XSharp.VsParser.Helpers.Parser.Values
             return new ClassvarsContextValues
             {
                 Context = context,
-                Names = context.Vars?._Var?.Select(q => q.Id.GetText()).ToArray(),
-                Type = context.Vars?.DataType?.GetText(),
+                //Names = context.Vars?._Var?.Select(q => q.Id.GetText()).ToArray(),
+                //Type = context.Vars?.DataType?.GetText(),
                 Modifiers = (context.Modifiers?._Tokens?.Select(q => q.Text) ?? Enumerable.Empty<string>()).ToArray(),
             };
         }
