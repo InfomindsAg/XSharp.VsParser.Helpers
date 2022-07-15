@@ -1,53 +1,62 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<Version>22.28.0.0</Version>
+		<Authors>Volkmar Rigo</Authors>
+		<Company />
+		<Product>XSharp.VsParser.Helpers</Product>
+		<Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files. Based on XSharp.VsParser 2.8.1.15.</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageTags>XSharp;VsParser;Helper</PackageTags>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageProjectUrl></PackageProjectUrl>
+		<RepositoryUrl>https://github.com/InfomindsAg/XSharp.VsParser.Helpers</RepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="XSharp.VSParser">
-      <HintPath>..\..\Assets\XSharp.VSParser.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="XSharp.VSParser">
+			<HintPath>..\..\Assets\XSharp.VSParser.dll</HintPath>
+			<Private>true</Private>
+		</Reference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Extensions.Data.xxHash.core20" Version="1.0.2.1" />
-    <PackageReference Include="LiteDB" Version="5.0.11" />
-    <PackageReference Include="UTF.Unknown" Version="2.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Extensions.Data.xxHash.core20" Version="1.0.2.1" />
+		<PackageReference Include="LiteDB" Version="5.0.11" />
+		<PackageReference Include="UTF.Unknown" Version="2.4.0" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+	</ItemGroup>
 
-  <!-- 
+	<!-- 
        Include the original parser assembly in the nuget
        https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#targetsfortfmspecificbuildoutput 
-  -->
-  <PropertyGroup>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);GetParserAssembly</TargetsForTfmSpecificBuildOutput>
-    <PackageId>XSharp.VsParser.Helpers</PackageId>
-    <Version>0.4.0.52</Version>
-    <Authors>Volkmar Rigo</Authors>
-    <Company />
-    <Product>XSharp.VsParser.Helpers</Product>
-    <Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files. Based on XSharp.VsParser 2.8.1.15.</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageTags>XSharp;VsParser;Helper</PackageTags>
-  </PropertyGroup>
-  <PropertyGroup>
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+	-->
+	<PropertyGroup>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);GetParserAssembly</TargetsForTfmSpecificBuildOutput>
+		<PackageId>XSharp.VsParser.Helpers</PackageId>
+	</PropertyGroup>
 
-  <Target Name="GetParserAssembly">
-    <ItemGroup>
-      <BuildOutputInPackage Include="$(OutputPath)XSharp.VSParser.dll" />
-	</ItemGroup>
-  </Target>
+	<Target Name="GetParserAssembly">
+		<ItemGroup>
+			<BuildOutputInPackage Include="$(OutputPath)XSharp.VSParser.dll" />
+		</ItemGroup>
+	</Target>
 
 </Project>
