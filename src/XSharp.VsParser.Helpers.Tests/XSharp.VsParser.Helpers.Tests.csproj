@@ -53,7 +53,6 @@
     <Compile Include="Parser\ToValue\ConstructorchainToValuesTests.cs" />
     <Compile Include="Parser\ToValue\NameExpressionToValuesTests.cs" />
     <Compile Include="Parser\ToValue\AccessMemberToValuesTests.cs" />
-    <Compile Include="Parser\ToValue\ClassVarListContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ClassvarsContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ClassContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\FuncprocContextToValuesTests.cs" />
@@ -67,6 +66,7 @@
     <Compile Include="Parser\ToValue\MethodCallToValuesTests.cs" />
     <Compile Include="Parser\ToValue\SuperExpressionToValuesTests.cs" />
     <Compile Include="Rewriter\ClassVarListContextTests.cs" />
+    <Compile Include="Rewriter\ClassVarContextTests.cs" />
     <Compile Include="Rewriter\ConstructorContextTests.cs" />
     <Compile Include="Rewriter\FuncprocContextTests.cs" />
     <Compile Include="Rewriter\AssignmentExpressionContextTests.cs" />
