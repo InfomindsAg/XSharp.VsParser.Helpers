@@ -40,17 +40,22 @@ namespace XSharp.VsParser.Helpers.Rewriter
 
         private static void MoveTypeDefinition(RewriterForContext<ClassvarContext> rewriterFor, ClassvarContext variable)
         {
+            if (variable.DataType == null)
+                return;
+
             var prevVariable = GetPreviousVariable(variable);
             if (prevVariable != null && !HasTypeDefinition(prevVariable))
             {
                 rewriterFor.Rewriter.InsertAfter(prevVariable.stop.ToIndex(), " " + InternalRewriterHelper.AddAsToType(variable.DataType.GetText()));
             }
         }
+
         private static bool HasTypeDefinition(ClassvarContext classvar) => classvar.As != null;
 
         private static ClassvarContext GetPreviousVariable(ClassvarContext context)
         {
-            var parent = context.Parent as ClassvarsContext;
+            if (context.Parent is not ClassvarsContext parent)
+                return null;
 
             return parent.children.WhereType<ClassvarContext>()
                 .TakeWhile(x => x != context)
