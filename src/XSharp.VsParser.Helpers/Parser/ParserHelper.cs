@@ -225,7 +225,7 @@ namespace XSharp.VsParser.Helpers.Parser
                 for (int retry = 0; retry < 3; retry++)
                 {
                     errorListener.Clear();
-                    var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, errorListener, out var tokens, out var startRule);
+                    var ok = XSharp.Parser.VsParser.Parse(sourceCode, fileName, _XSharpOptions, errorListener, out var tokens, out var startRule, out _);
                     if (!ok && errorListener.Result.OK)
                         errorListener.Result.Errors.Add(new Result.Item { Message = "Generic Parse Error", Line = 0 });
 
