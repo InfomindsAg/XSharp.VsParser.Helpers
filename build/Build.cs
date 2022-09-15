@@ -7,14 +7,13 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
-using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
+using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-[CheckBuildProjectConfigurations]
 class Build : NukeBuild
 {
     public static int Main () => Execute<Build>(x => x.Compile);
@@ -25,36 +24,56 @@ class Build : NukeBuild
     [Solution] readonly Solution Solution;
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
-    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    AbsolutePath PublishDirectory => RootDirectory / "publish";
+
+    AbsolutePath MainProjectFile => SourceDirectory / "XSharp.VsParser.Helpers" / "XSharp.VsParser.Helpers.csproj";
+
 
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>
         {
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            EnsureCleanDirectory(ArtifactsDirectory);
+            EnsureCleanDirectory(PublishDirectory);
         });
 
     Target Restore => _ => _
         .Executes(() =>
         {
-            MSBuild(s => s
-                .SetTargetPath(Solution)
-                .SetVerbosity(MSBuildVerbosity.Quiet)
-                .SetTargets("Restore"));
+            DotNetRestore(s => s
+                .SetProjectFile(Solution)
+                .SetVerbosity(DotNetVerbosity.Quiet));
         });
 
     Target Compile => _ => _
         .DependsOn(Restore)
         .Executes(() =>
         {
-            MSBuild(s => s
-                .SetTargetPath(Solution)
-                .SetTargets("Rebuild")
+            DotNetBuild(s => s
+                .SetProjectFile(Solution)
+                .SetNoRestore(true)
+                .SetForce(true)
                 .SetConfiguration(Configuration)
-                .SetMaxCpuCount(Environment.ProcessorCount)
-                .SetVerbosity(MSBuildVerbosity.Quiet)
-                .SetNodeReuse(IsLocalBuild));
+                .SetVerbosity(DotNetVerbosity.Quiet));
         });
 
+    Target IncrementVersion => _ => _
+        .Executes(() =>
+        {
+            VersionHelper.IncrementProjectVersion(MainProjectFile);
+        });
+
+    Target Publish => _ => _
+        .DependsOn(Clean, Restore, IncrementVersion)
+        .Executes(() =>
+        {
+            DotNetPack(s => s
+                .SetProject(MainProjectFile)
+                .SetNoRestore(true)
+                .SetForce(true)
+                .SetContinuousIntegrationBuild(true)
+                .SetConfiguration(Configuration.Release)
+                .SetOutputDirectory(PublishDirectory)
+                .SetVerbosity(DotNetVerbosity.Quiet));
+        });
 }
