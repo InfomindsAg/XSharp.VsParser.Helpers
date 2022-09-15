@@ -1,13 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
-		<Version>22.37.0.0</Version>
+		<Version>22.37.1.0</Version>
 		<Authors>Volkmar Rigo</Authors>
 		<Company />
 		<Product>XSharp.VsParser.Helpers</Product>
-		<Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files. Based on XSharp.VsParser 2.8.1.15.</Description>
+		<Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files. Based on XSharp.VsParser 2.12.2.0.</Description>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>XSharp;VsParser;Helper</PackageTags>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
