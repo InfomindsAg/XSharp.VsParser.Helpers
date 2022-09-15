@@ -35,16 +35,17 @@ class Test inherit BaseTest // SingleLineComment
   */
 end class".ParseText();
 
-            parser.Comments.Should().BeEquivalentTo(
-                new { Text = "///<summary>", StartLine = 1, StartColumn = 1, EndLine = 1, EndColumn = 12 },
-                new { Text = "///XMLHelp", StartLine = 2, StartColumn = 1, EndLine = 2, EndColumn = 10 },
-                new { Text = "///</summary>", StartLine = 3, StartColumn = 1, EndLine = 3, EndColumn = 13 },
-                new { Text = "// SingleLineComment", StartLine = 4, StartColumn = 29, EndLine = 4, EndColumn = 48 },
-                new { Text = @"/*
+            var result = parser.Comments;
+            result.Should().HaveCount(5);
+
+            result[0].Should().BeEquivalentTo(new { Text = "///<summary>", StartLine = 1, StartColumn = 1, EndLine = 1, EndColumn = 12 });
+            result[1].Should().BeEquivalentTo(new { Text = "///XMLHelp", StartLine = 2, StartColumn = 1, EndLine = 2, EndColumn = 10 });
+            result[2].Should().BeEquivalentTo(new { Text = "///</summary>", StartLine = 3, StartColumn = 1, EndLine = 3, EndColumn = 13 });
+            result[3].Should().BeEquivalentTo(new { Text = "// SingleLineComment", StartLine = 4, StartColumn = 29, EndLine = 4, EndColumn = 48 });
+            result[4].Should().BeEquivalentTo(new { Text = @"/*
   BlockComment
   */", StartLine = 5, StartColumn = 3, EndLine = 7, EndColumn = 4 });
         }
-
 
         [Fact]
         public void ParallelTest()

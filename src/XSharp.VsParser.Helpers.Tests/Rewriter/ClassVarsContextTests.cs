@@ -9,7 +9,7 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 namespace XSharp.Parser.Helpers.Tests.Rewriter
 {
     public class ClassVarsContextTests : TestsFor<ClassvarsContext>
-    {
+    {/*
 
         [Fact]
         public void ReplaceTypeClassVarTest()
@@ -30,6 +30,6 @@ namespace XSharp.Parser.Helpers.Tests.Rewriter
 
             Rewrite(code, expected, r => r.ReplaceType("string"));
         }
-
+        */
     }
 }

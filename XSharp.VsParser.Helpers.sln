@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31515.178
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XSharp.VsParser.Helpers", "src\XSharp.VsParser.Helpers\XSharp.VsParser.Helpers.csproj", "{52115E2E-383C-4420-BF18-21416F835BFA}"
 EndProject
@@ -11,6 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.cspr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F716D05E-2E5B-409A-953E-D9EA2635A3CA}"
 	ProjectSection(SolutionItems) = preProject
+		Changelog.md = Changelog.md
 		README.md = README.md
 	EndProjectSection
 EndProject

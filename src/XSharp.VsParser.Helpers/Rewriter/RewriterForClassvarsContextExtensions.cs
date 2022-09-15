@@ -6,6 +6,7 @@ using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Rewriter
 {
+    /*
     /// <summary>
     /// RewriterForPropertyClassVars Extensions
     /// </summary>
@@ -30,6 +31,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
             else
                 rewriterFor.Rewriter.InsertAfter(rewriterFor.Context.classVarList().stop.ToIndex(), " " + InternalRewriterHelper.AddAsToType(newType));
             return rewriterFor;
-        }
+        } 
     }
+    */
 }

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using XSharp.VsParser.Helpers.Parser.Values.Interfaces;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
@@ -16,31 +18,34 @@ namespace XSharp.VsParser.Helpers.Parser.Values
         public string[] Modifiers { get; private set; }
 
         /// <summary>
-        /// The list of variables
+        /// The array of variables
         /// </summary>
-        public string[] Names { get; private set; }
-
-        /// <summary>
-        /// The type
-        /// </summary>
-        public string Type { get; private set; }
+        public ClassvarContextValues[] Vars { get; private set; }
 
         static internal ClassvarsContextValues Build(ClassvarsContext context)
         {
             if (context == null)
                 return null;
+            var variables = context._Vars;
+            var varsNoDatatype = new List<ClassvarContext>();
 
-            var variables = context.AsEnumerable().WhereType<LocalvarContext>().ToValues().ToArray();
-            var isGroupType = !string.IsNullOrEmpty(variables.LastOrDefault()?.Type);
-            if (variables.Length > 1)
-                isGroupType = isGroupType && variables.Take(variables.Length - 1).All(q => string.IsNullOrEmpty(q.Type));
+            foreach (var variable in variables)
+            {
+                if (variable.DataType == null)
+                {
+                    varsNoDatatype.Add(variable);
+                    continue;
+                }
+
+                varsNoDatatype.ForEach(v => v.DataType = variable.DataType);
+                varsNoDatatype.Clear();
+            }
 
             return new ClassvarsContextValues
             {
                 Context = context,
-                Names = context.Vars?._Var?.Select(q => q.Id.GetText()).ToArray(),
-                Type = context.Vars?.DataType?.GetText(),
                 Modifiers = (context.Modifiers?._Tokens?.Select(q => q.Text) ?? Enumerable.Empty<string>()).ToArray(),
+                Vars = variables.Select(x => ClassvarContextValues.Build(x)).ToArray()
             };
         }
     }

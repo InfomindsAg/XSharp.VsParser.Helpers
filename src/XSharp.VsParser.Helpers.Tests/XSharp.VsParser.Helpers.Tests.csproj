@@ -53,7 +53,6 @@
     <Compile Include="Parser\ToValue\ConstructorchainToValuesTests.cs" />
     <Compile Include="Parser\ToValue\NameExpressionToValuesTests.cs" />
     <Compile Include="Parser\ToValue\AccessMemberToValuesTests.cs" />
-    <Compile Include="Parser\ToValue\ClassVarListContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ClassvarsContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\ClassContextToValuesTests.cs" />
     <Compile Include="Parser\ToValue\FuncprocContextToValuesTests.cs" />
@@ -66,7 +65,7 @@
     <Compile Include="Parser\ToValue\LocalvarToValuesTests.cs" />
     <Compile Include="Parser\ToValue\MethodCallToValuesTests.cs" />
     <Compile Include="Parser\ToValue\SuperExpressionToValuesTests.cs" />
-    <Compile Include="Rewriter\ClassVarListContextTests.cs" />
+    <Compile Include="Rewriter\ClassVarContextTests.cs" />
     <Compile Include="Rewriter\ConstructorContextTests.cs" />
     <Compile Include="Rewriter\FuncprocContextTests.cs" />
     <Compile Include="Rewriter\AssignmentExpressionContextTests.cs" />
@@ -95,13 +94,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions">
-      <Version>5.10.3</Version>
+      <Version>6.7.0</Version>
     </PackageReference>
     <PackageReference Include="xunit">
-      <Version>2.4.1</Version>
+      <Version>2.4.2</Version>
     </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.4.3</Version>
+      <Version>2.4.5</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

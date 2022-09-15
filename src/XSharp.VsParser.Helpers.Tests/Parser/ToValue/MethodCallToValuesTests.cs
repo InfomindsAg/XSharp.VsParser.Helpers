@@ -33,19 +33,20 @@ return nil");
 self:TabWindow():Dummy(null_object)
 return nil");
 
-            GetAll(code).ToValues().Should().BeEquivalentTo(
-                new
-                {
-                    NameExpression = (object)null,
-                    AccessMember = new { AccessExpression = "self", MemberName = "TabWindow", },
-                    Arguments = new object[0]
-                },
-                new
-                {
-                    NameExpression = (object)null,
-                    AccessMember = new { AccessExpression = "self:TabWindow()", MemberName = "Dummy", },
-                    Arguments = new[] { new { Value = "null_object" } }
-                });
+            var result = GetAll(code).ToValues().ToArray();
+            result.Should().HaveCount(2);
+            result[0].Should().BeEquivalentTo(new
+            {
+                NameExpression = (object)null,
+                AccessMember = new { AccessExpression = "self:TabWindow()", MemberName = "Dummy", },
+                Arguments = new[] { new { Value = "null_object" } }
+            });
+            result[1].Should().BeEquivalentTo(new
+            {
+                NameExpression = (object)null,
+                AccessMember = new { AccessExpression = "self", MemberName = "TabWindow", },
+                Arguments = new object[0]
+            });
         }
 
         [Fact]
