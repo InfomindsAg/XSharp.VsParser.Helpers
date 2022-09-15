@@ -19,7 +19,10 @@ namespace XSharp.Parser.Helpers.Tests.Parser.ToValue
             var code = WrapInClass(@"method Dummy(text as string, number := 0 as int) as string strict
 return nil");
 
-            GetFirst(code).ToValues().Parameters.Should().BeEquivalentTo(new { Name = "text", DataType = "string" }, new { Name = "number", DataType = "int", Default = "0" });
+            var result = GetFirst(code).ToValues().Parameters;
+            result.Should().HaveCount(2);
+            result[0].Should().BeEquivalentTo(new { Name = "text", DataType = "string" });
+            result[1].Should().BeEquivalentTo(new { Name = "number", DataType = "int", Default = "0" });
         }
 
         [Fact]
@@ -28,7 +31,10 @@ return nil");
             var code = WrapInClass(@"method Dummy(text, number)
 return nil");
 
-            GetFirst(code).ToValues().Parameters.Should().BeEquivalentTo(new { Name = "text", DataType = (string)null }, new { Name = "number", DataType = (string)null });
+            var result = GetFirst(code).ToValues().Parameters;
+            result.Should().HaveCount(2);
+            result[0].Should().BeEquivalentTo(new { Name = "text", DataType = (string)null });
+            result[1].Should().BeEquivalentTo(new { Name = "number", DataType = (string)null });
         }
     }
 }
