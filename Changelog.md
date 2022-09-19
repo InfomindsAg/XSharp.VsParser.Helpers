@@ -10,3 +10,7 @@
 - Used XSharp.VsParser 2.12
 - Changes to ClassVariables Extensions because of changes in VsParser
 - New extension method string.EqualsIgnoreCase
+
+## 22.38.1.0
+
+- Used XSharp.VsParser 2.13.2.2
