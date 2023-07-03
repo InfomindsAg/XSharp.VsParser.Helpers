@@ -23,18 +23,19 @@ class Build : NukeBuild
 
     [Solution] readonly Solution Solution;
 
-    AbsolutePath SourceDirectory => RootDirectory / "src";
-    AbsolutePath PublishDirectory => RootDirectory / "publish";
+    static AbsolutePath SourceDirectory => RootDirectory / "src";
 
-    AbsolutePath MainProjectFile => SourceDirectory / "XSharp.VsParser.Helpers" / "XSharp.VsParser.Helpers.csproj";
+    static AbsolutePath PublishDirectory => RootDirectory / "publish";
+
+    static AbsolutePath MainProjectFile => SourceDirectory / "XSharp.VsParser.Helpers" / "XSharp.VsParser.Helpers.csproj";
 
 
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            EnsureCleanDirectory(PublishDirectory);
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(q => q.DeleteDirectory());
+            PublishDirectory.CreateOrCleanDirectory();
         });
 
     Target Restore => _ => _

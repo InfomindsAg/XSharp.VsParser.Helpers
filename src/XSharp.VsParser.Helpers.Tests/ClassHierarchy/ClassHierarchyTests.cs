@@ -8,7 +8,7 @@ namespace XSharp.Parser.Helpers.Tests.ClassHierarchy;
 
 public class ClassHierarchyTests
 {
-    XSharp.VsParser.Helpers.ClassHierarchy.ClassHierarchy _classHierarchy;
+    readonly XSharp.VsParser.Helpers.ClassHierarchy.ClassHierarchy _classHierarchy;
 
     public ClassHierarchyTests()
     {
