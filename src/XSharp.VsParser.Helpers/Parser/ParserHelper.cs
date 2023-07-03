@@ -92,17 +92,17 @@ namespace XSharp.VsParser.Helpers.Parser
             var result = new List<TokenValues>();
             foreach (IToken token in _XSharpTokenStream.GetTokens().Where(q => q.Type != -1))
             {
-                var start = GetLineAndColumnOptimized(token.StartIndex);
-                var stop = GetLineAndColumnOptimized(token.StopIndex);
+                var (startLine, startColumn) = GetLineAndColumnOptimized(token.StartIndex);
+                var (stopLine, stopColumn) = GetLineAndColumnOptimized(token.StopIndex);
                 result.Add(new TokenValues
                 {
                     Context = token,
                     Type = token.GetTokenType(),
                     Text = token.Text,
-                    StartLine = start.Line,
-                    StartColumn = start.Column,
-                    EndLine = stop.Line,
-                    EndColumn = stop.Column,
+                    StartLine = startLine,
+                    StartColumn = startColumn,
+                    EndLine = stopLine,
+                    EndColumn = stopColumn,
                 });
             }
 
@@ -158,9 +158,7 @@ namespace XSharp.VsParser.Helpers.Parser
         public (int Line, int Column) GetLineAndColumn(int positionInSourceCode)
         {
             _Lines ??= BuildLineInfo();
-            var line = _Lines.LastOrDefault(q => IsLineMatch(q, positionInSourceCode));
-            if (line == null)
-                throw new ArgumentException("Invalid positionInSourceCode");
+            var line = _Lines.LastOrDefault(q => IsLineMatch(q, positionInSourceCode)) ?? throw new ArgumentException("Invalid positionInSourceCode");
 
             return ToLineColumn(line, positionInSourceCode);
         }
