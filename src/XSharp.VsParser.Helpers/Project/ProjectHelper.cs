@@ -52,6 +52,16 @@ namespace XSharp.VsParser.Helpers.Project
         }
 
         /// <summary>
+        /// Reads the list of fileinfos from the project and returns it.
+        /// </summary>
+        /// <returns>
+        /// A list of source files.
+        /// </returns>
+        public IEnumerable<FileInfo> GetSourceFileInfos()
+            => GetSourceFiles(true)
+                .Select(q => new FileInfo(q));
+
+        /// <summary>
         /// Reads the list of options from the project and returns it.
         /// </summary>
         /// <returns>
