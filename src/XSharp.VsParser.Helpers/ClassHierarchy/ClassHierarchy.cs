@@ -193,6 +193,15 @@ namespace XSharp.VsParser.Helpers.ClassHierarchy
         }
 
         /// <summary>
+        /// Checks, if the base-class-name is a base-class for the class
+        /// </summary>
+        /// <param name="className">The class-name for the class</param>
+        /// <param name="baseClassName">The base-class-name</param>
+        /// <returns>True, is one of the base-class-names is a base-class for the class</returns>
+        public bool IsBaseClass(string className, string baseClassName)
+            => IsBaseClass(className, new NameHashset() { baseClassName });
+
+        /// <summary>
         /// Returns the ProjectFileName (without the path), in which the class is defined
         /// </summary>
         /// <param name="className"></param>

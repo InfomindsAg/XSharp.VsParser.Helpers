@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheTests.cs" />
+    <Compile Include="ClassHierarchy\ClassHierarchyTests.cs" />
     <Compile Include="FileEncoding\FileEncodingHelperTests.cs" />
     <Compile Include="Parser\ToValue\ConstructorchainToValuesTests.cs" />
     <Compile Include="Parser\ToValue\NameExpressionToValuesTests.cs" />
@@ -129,6 +130,17 @@
     <None Include="_UnitTestData\CodeFiles\ProgramWin1252.prg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="_UnitTestData\Project\Program.prg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_UnitTestData\Project\Properties\AssemblyInfo.prg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_UnitTestData\Project\TestProject.xsproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

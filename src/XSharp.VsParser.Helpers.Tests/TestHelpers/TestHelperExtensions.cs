@@ -18,6 +18,8 @@ namespace XSharp.Parser.Helpers.Tests.TestHelpers
         public static string ProjectFile(string fileName)
             => UnitTestData(Path.Combine("ProjectFiles", fileName));
 
+        public static string TestProjectFileName()
+            => UnitTestData(Path.Combine("Project", "TestProject.xsproj"));
 
         public static ParserHelper ParseText(this string code, string fileName = "dummy.prg")
         {
