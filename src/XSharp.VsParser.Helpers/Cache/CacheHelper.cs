@@ -1,4 +1,4 @@
-﻿using Extensions.Data;
+﻿using K4os.Hash.xxHash;
 using LiteDB;
 using System;
 using System.Collections.Generic;
@@ -65,7 +65,11 @@ namespace XSharp.VsParser.Helpers.Cache
             return _DB.GetCollection<CacheItem<T>>(typeof(T).Name);
         }
 
-        static uint GetHash(string sourceCode) => XXHash.XXH32(Encoding.UTF8.GetBytes(sourceCode));
+        static uint GetHash(string sourceCode)
+        {
+            var bytes = Encoding.UTF8.GetBytes(sourceCode);
+            return XXH32.DigestOf(bytes, 0, bytes.Length);
+        }
 
         /// <summary>
         /// Creates a new CacheHelper instance
