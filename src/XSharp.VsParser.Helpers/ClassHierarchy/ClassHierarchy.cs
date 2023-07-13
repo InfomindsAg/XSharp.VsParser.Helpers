@@ -143,7 +143,11 @@ namespace XSharp.VsParser.Helpers.ClassHierarchy
                 var fileNames = project.GetSourceFileInfos().OrderByLargestFiles().Select(q => q.FullName).ToArray();
 
                 var projectFileName = Path.GetFileName(projectFilePath);
-                Parallel.ForEach(fileNames, new() { MaxDegreeOfParallelism = Environment.ProcessorCount }, fileName => ExecuteFile(fileName, projectFileName, SourceFilePreprocessor));
+                var maxProcessorCount = Environment.ProcessorCount;
+                if (maxProcessorCount > 10)
+                    maxProcessorCount -= 2;
+
+                Parallel.ForEach(fileNames, new() { MaxDegreeOfParallelism = maxProcessorCount }, fileName => ExecuteFile(fileName, projectFileName, SourceFilePreprocessor));
             }
             finally
             {
