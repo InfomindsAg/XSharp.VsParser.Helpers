@@ -30,5 +30,18 @@ end class";
             GetFirst(code).ToValues().Should().BeEquivalentTo(new { Name = "Test", Inherits = (string)null, Implements = new string[] { "IInterface1", "IInterface2" } });
         }
 
+        [Fact]
+        public void ModifiersTest()
+        {
+            var code = @"public partial abstract class Test inherit BaseTest
+end class";
+
+            var values = GetFirst(code).ToValues();
+            values.IsPublic.Should().BeTrue();
+            values.IsPartial.Should().BeTrue();
+            values.IsAbstract.Should().BeTrue();
+            values.IsProtected.Should().BeFalse();
+            values.IsPrivate.Should().BeFalse();
+        }
     }
 }

@@ -132,6 +132,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="_UnitTestData\Project\PartialClasses2.prg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_UnitTestData\Project\PartialClasses1.prg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="_UnitTestData\Project\Program.prg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
