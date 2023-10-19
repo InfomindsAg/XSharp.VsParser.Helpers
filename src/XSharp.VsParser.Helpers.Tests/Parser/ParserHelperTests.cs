@@ -107,7 +107,7 @@ method Dummy() as string
 end class".ParseText();
             Action emptyRewrite = () => parser.Tree.Rewriter.GetText();
 
-            emptyRewrite.Should().Throw<InvalidOperationException>();
+            emptyRewrite.Should().Throw<RewriterException>();
         }
 
         [Fact]
@@ -120,7 +120,7 @@ method Dummy() as string
 end class".ParseText();
             Action emptyRewrite = () => parser.Tree.Rewriter.GetText();
 
-            emptyRewrite.Should().Throw<InvalidOperationException>();
+            emptyRewrite.Should().Throw<RewriterException>();
         }
 
 

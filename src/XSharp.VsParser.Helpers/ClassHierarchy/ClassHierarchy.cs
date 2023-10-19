@@ -27,7 +27,7 @@ namespace XSharp.VsParser.Helpers.ClassHierarchy
     /// </summary>
     public class ClassHierarchy
     {
-        const string CacheVersionNumber = "3";
+        const string CacheVersionNumber = "4";
         readonly ConcurrentQueue<CacheData> CacheDataQueue = new();
         readonly string CacheFileName;
 
@@ -43,6 +43,7 @@ namespace XSharp.VsParser.Helpers.ClassHierarchy
 
         class CacheDataItem
         {
+            public bool IsPartial { get; set; }
             public string Name { get; set; }
             public string BaseClassName { get; set; }
             public string[] Implements { get; set; }
@@ -82,7 +83,8 @@ namespace XSharp.VsParser.Helpers.ClassHierarchy
                                                 Name = q.Name,
                                                 BaseClassName = q.Inherits,
                                                 Implements = q.Implements,
-                                                ProjectFileName = projectName
+                                                ProjectFileName = projectName,
+                                                IsPartial = q.IsPartial,
                                             })
                                             .ToArray();
                 _Cache?.Add(fileName, sourceCode, currentCache);
@@ -105,13 +107,29 @@ namespace XSharp.VsParser.Helpers.ClassHierarchy
             {
                 foreach (CacheDataItem item in cacheData.Classes)
                 {
-                    if (!string.IsNullOrEmpty(item.BaseClassName))
+                    if (!item.IsPartial)
+                    {
+                        if (item.Implements?.Length > 0)
+                            tempClassInterfaces[item.Name] = new(item.Implements);
+                    }
+                    else
+                    {
+                        if (item.Implements?.Length > 0)
+                        {
+                            if (!tempClassInterfaces.ContainsKey(item.Name))
+                                tempClassInterfaces[item.Name] = new(item.Implements);
+                            else
+                            {
+                                var interfaces = tempClassInterfaces[item.Name];
+                                foreach (var implements in item.Implements)
+                                    interfaces.Add(implements);
+                            }
+                        }
+                    }
+                    if (!string.IsNullOrWhiteSpace(item.BaseClassName))
                         tempClassBaseClass[item.Name] = item.BaseClassName;
 
-                    if (item.Implements?.Length > 0)
-                        tempClassInterfaces[item.Name] = new(item.Implements);
-
-                    if (!string.IsNullOrEmpty(item.ProjectFileName))
+                    if (!string.IsNullOrWhiteSpace(item.ProjectFileName))
                         tempClassProjectFileNames[item.Name] = item.ProjectFileName;
                 }
             }
@@ -143,7 +161,11 @@ namespace XSharp.VsParser.Helpers.ClassHierarchy
                 var fileNames = project.GetSourceFileInfos().OrderByLargestFiles().Select(q => q.FullName).ToArray();
 
                 var projectFileName = Path.GetFileName(projectFilePath);
-                Parallel.ForEach(fileNames, new() { MaxDegreeOfParallelism = Environment.ProcessorCount }, fileName => ExecuteFile(fileName, projectFileName, SourceFilePreprocessor));
+                var maxProcessorCount = Environment.ProcessorCount;
+                if (maxProcessorCount > 10)
+                    maxProcessorCount -= 2;
+
+                Parallel.ForEach(fileNames, new() { MaxDegreeOfParallelism = maxProcessorCount }, fileName => ExecuteFile(fileName, projectFileName, SourceFilePreprocessor));
             }
             finally
             {

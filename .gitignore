@@ -351,3 +351,4 @@ MigrationBackup/
 .nuke/build.schema.json
 .cr/
 src/XSharp.VsParser.Helpers/XSharp.VsParser.Helpers.xml
+.idea

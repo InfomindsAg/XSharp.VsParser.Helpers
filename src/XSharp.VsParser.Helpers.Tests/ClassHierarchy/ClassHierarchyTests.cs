@@ -29,4 +29,18 @@ public class ClassHierarchyTests
         _classHierarchy.GetProjectFileName("A_A").Should().Be("TestProject.xsproj");
     }
 
+    [Fact]
+    public void PartialIsBaseClassTest()
+    {
+        _classHierarchy.IsBaseClass("PA", "PBase").Should().BeTrue();
+    }
+
+    [Fact]
+    public void PartialIsInterfaceTest()
+    {
+        _classHierarchy.ImplementsInterface("PA", "PI1").Should().BeTrue();
+        _classHierarchy.ImplementsInterface("PA", "PI2").Should().BeTrue();
+        _classHierarchy.ImplementsInterface("PA", "IA").Should().BeFalse();
+    }
+
 }

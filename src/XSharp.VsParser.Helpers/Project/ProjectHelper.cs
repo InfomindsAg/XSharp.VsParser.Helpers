@@ -93,7 +93,11 @@ namespace XSharp.VsParser.Helpers.Project
         private string GetProjectProperty(string propertyName)
             => _ProjectXml.Root.Element(_Ns + "PropertyGroup").Element(_Ns + propertyName)?.Value;
 
-        private List<string> GetReferences()
+        /// <summary>
+        /// Gets all the references and project references
+        /// </summary>
+        /// <returns>A List of all the references</returns>
+        public List<string> GetReferences()
         {
             var root = _ProjectXml.Root;
             var tagNames = new string[] { "Reference", "ProjectReference" };

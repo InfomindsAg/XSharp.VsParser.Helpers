@@ -115,6 +115,12 @@
     <Compile Include="Program.prg">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PartialClasses1.prg">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PartialClasses2.prg">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
