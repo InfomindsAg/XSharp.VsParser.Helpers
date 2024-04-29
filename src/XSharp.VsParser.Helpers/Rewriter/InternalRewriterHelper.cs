@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
+using XSharp.VsParser.Helpers.Parser.Values;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Rewriter
@@ -31,7 +32,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
 
         public static void DeleteAllParameters(TokenStreamRewriter rewriter, ParameterListContext paramList)
         {
-            if ((paramList?._Params?.Count ?? 0) > 0)
+            if (!SignatureContextValues.IsParamListEmpty(paramList))
                 rewriter.Replace(paramList.Start.ToIndex(), paramList.Stop.ToIndex(), "()");
         }
 
@@ -59,5 +60,6 @@ namespace XSharp.VsParser.Helpers.Rewriter
                 return $"as {type}";
             return type;
         }
+
     }
 }

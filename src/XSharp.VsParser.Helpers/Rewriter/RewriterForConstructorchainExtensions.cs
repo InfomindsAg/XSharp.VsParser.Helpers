@@ -20,7 +20,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         public static RewriterForContext<ConstructorchainContext> DeleteAllArguments(this RewriterForContext<ConstructorchainContext> rewriterFor)
         {
             var argList = rewriterFor.Context.ArgList;
-            if ((argList?.ChildCount ?? 0) == 0)
+            if (MethodCallContextValues.IsArgListEmpty(argList))
                 return rewriterFor;
 
             rewriterFor.Rewriter.Delete(argList.Start.ToIndex(), argList.Stop.ToIndex());

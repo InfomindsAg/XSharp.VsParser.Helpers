@@ -61,6 +61,32 @@ return nil");
         }
 
         [Fact]
+        public void DeleteAllParametersTest()
+        {
+            var code = WrapInClass(@"Constructor(test)
+return nil");
+
+            var expected = WrapInClass(@"Constructor()
+return nil");
+
+            Rewrite(code, expected, r => r.DeleteAllParameters());
+        }
+
+        [Fact]
+        public void DeleteAllParametersWithNoParametersTest()
+        {
+            var code = WrapInClass(@"Constructor()
+super()
+return nil");
+
+            var expected = WrapInClass(@"Constructor()
+super()
+return nil");
+
+            Rewrite(code, expected, r => r.DeleteAllParameters());
+        }
+
+        [Fact]
         public void ReplaceParametersEmptyTest()
         {
             var code = WrapInClass(@"Constructor ()
