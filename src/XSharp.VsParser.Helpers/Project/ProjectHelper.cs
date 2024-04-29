@@ -91,7 +91,7 @@ namespace XSharp.VsParser.Helpers.Project
 
 
         private string GetProjectProperty(string propertyName)
-            => _ProjectXml.Root.Element(_Ns + "PropertyGroup").Element(_Ns + propertyName)?.Value;
+            => _ProjectXml.Root.Element(_Ns + "PropertyGroup").ElementIgnoreCase(propertyName)?.Value;
 
         /// <summary>
         /// Gets all the references and project references
@@ -134,5 +134,24 @@ namespace XSharp.VsParser.Helpers.Project
             return result;
         }
 
+    }
+
+    /// <summary>
+    /// XElementExtensions
+    /// </summary>
+    internal static class XElementExtensions
+    {
+        /// <summary>
+        /// ElementIgnoreCase
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="localName"></param>
+        /// <returns></returns>
+        public static XElement ElementIgnoreCase(this XElement element, string localName)
+        {
+            return element.Elements()
+                .FirstOrDefault(x =>
+                    string.Equals(x.Name.LocalName, localName, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }

@@ -167,6 +167,30 @@ return nil");
         }
 
         [Fact]
+        public void DeleteAllParametersTest()
+        {
+            var code = WrapInClass(@"method Dummy(test) as void
+return nil");
+
+            var expected = WrapInClass(@"method Dummy() as void
+return nil");
+
+            Rewrite(code, expected, r => r.DeleteAllParameters());
+        }
+
+        [Fact]
+        public void DeleteAllParametersWithNoParametersTest()
+        {
+            var code = WrapInClass(@"method Dummy() as void
+return nil");
+
+            var expected = WrapInClass(@"method Dummy() as void
+return nil");
+
+            Rewrite(code, expected, r => r.DeleteAllParameters());
+        }
+
+        [Fact]
         public void ReplaceParametersEmptyTest()
         {
             var code = WrapInClass(@"method Dummy()

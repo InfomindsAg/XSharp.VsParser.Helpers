@@ -35,5 +35,10 @@ namespace XSharp.VsParser.Helpers.Parser.Values
                 Default = context.Default?.GetText(),
             };
         }
+
+        static internal bool IsEmpty(ParameterContext context)
+        {
+            return context == null || string.IsNullOrWhiteSpace(context.identifier()?.GetText());
+        }
     }
 }

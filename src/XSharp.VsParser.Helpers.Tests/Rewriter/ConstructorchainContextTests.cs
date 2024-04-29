@@ -21,6 +21,16 @@ namespace XSharp.Parser.Helpers.Tests.Rewriter
         }
 
         [Fact]
+        public void DeleteAllParametersNoParametersTest()
+        {
+            var code = WrapInConstructor(@"super()");
+
+            var expected = WrapInConstructor(@"super()");
+
+            Rewrite(code, expected, r => r.DeleteAllArguments());
+        }
+
+        [Fact]
         public void ReplaceAllParametersTest()
         {
             var code = WrapInConstructor(@"super(1, 2, 3)");

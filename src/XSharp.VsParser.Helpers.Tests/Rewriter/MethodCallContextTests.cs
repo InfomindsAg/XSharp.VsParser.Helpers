@@ -30,11 +30,20 @@ namespace XSharp.Parser.Helpers.Tests.Rewriter
             Rewrite(code, expected, r => r.ReplaceNameExpression("NewDummy"));
         }
 
-
         [Fact]
         public void DeleteAllArgumentsTest()
         {
             var code = WrapInMethod(@"self:Dummy(null_object)");
+
+            var expected = WrapInMethod(@"self:Dummy()");
+
+            Rewrite(code, expected, r => r.DeleteAllArguments());
+        }
+
+        [Fact]
+        public void DeleteAllArgumentsNoArgumentsTest()
+        {
+            var code = WrapInMethod(@"self:Dummy()");
 
             var expected = WrapInMethod(@"self:Dummy()");
 

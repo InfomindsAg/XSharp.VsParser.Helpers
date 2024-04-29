@@ -43,5 +43,10 @@ namespace XSharp.VsParser.Helpers.Parser.Values
                 Parameters = (context.parameterList()?.AsEnumerable().WhereType<ParameterContext>().ToValues() ?? Enumerable.Empty<ParameterContextValues>()).ToArray(),
             };
         }
+
+        static internal bool IsParamListEmpty(ParameterListContext context)
+        {
+            return context?._Params == null || context._Params.Count == 0 || context._Params.All(q => ParameterContextValues.IsEmpty(q));
+        }
     }
 }
