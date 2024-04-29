@@ -267,10 +267,11 @@ namespace XSharp.VsParser.Helpers.Parser
         /// Creates a new instance of the ParserHelper, using the default Vo Options
         /// </summary>
         /// <returns>A new ParserHelper instance</returns>
-        public static ParserHelper BuildWithVoDefaultOptions()
-                 => new(XSharpParseOptions.FromVsValues(new List<string>
-                    {
-                    @"i:c:\Program Files(x86)\XSharp\Include\",
+        public static ParserHelper BuildWithVoDefaultOptions(bool namedArgs = false)
+        { 
+            var args = new List<string>
+                        {
+                @"i:c:\Program Files(x86)\XSharp\Include\",
                     "dialect:VO",
                     "d:DEBUG;__XSHARP_RT__",
                     "az-",
@@ -296,7 +297,13 @@ namespace XSharp.VsParser.Helpers.Parser
                     "vo14-",
                     "vo15+",
                     "vo16-",
-                    }));
+                    "nostddefs+",
+                    };
+            if (namedArgs)
+                args.Add("namedargs+");
+            
+            return new(XSharpParseOptions.FromVsValues(args));
+        }
 
         /// <summary>
         /// Creates a new instance of the ParserHelper, using the options in the list

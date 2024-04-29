@@ -8,6 +8,10 @@ namespace XSharp.VsParser.Helpers.Parser.Values
     public class NamedArgumentContextValues : ContextValues<NamedArgumentContext>
     {
         /// <summary>
+        /// The argument name (only for named argument)
+        /// </summary>
+        public string Name { get; internal set; }
+        /// <summary>
         /// The argument value
         /// </summary>
         public string Value { get; internal set; }
@@ -17,11 +21,19 @@ namespace XSharp.VsParser.Helpers.Parser.Values
             if (context == null)
                 return null;
 
-            return new NamedArgumentContextValues
-            {
-                Context = context,
-                Value = context.GetText(),
-            };
+            var result = new NamedArgumentContextValues { Context = context, Name = context.Name?.GetText() };
+
+            if (!string.IsNullOrEmpty(result.Name))
+                result.Value = context.Expr?.GetText();
+            else
+                result.Value = context.GetText();
+
+            return result;
+        }
+
+        static internal bool IsEmpty(NamedArgumentContext context)
+        {
+            return context == null || (context.Name == null && context.Expr == null);
         }
     }
 }

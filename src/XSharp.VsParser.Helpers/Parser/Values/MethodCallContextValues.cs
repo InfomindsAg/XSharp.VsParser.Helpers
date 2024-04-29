@@ -30,7 +30,10 @@ namespace XSharp.VsParser.Helpers.Parser.Values
 
             var accessMember = context.Expr?.AsEnumerable().FirstOrDefaultType<AccessMemberContext>();
             var nameExpression = accessMember == null ? context.Expr?.AsEnumerable().FirstOrDefaultType<NameExpressionContext>() : null;
-            var arguments = (context.ArgList?._Args?.Select(q => NamedArgumentContextValues.Build(q)) ?? Enumerable.Empty<NamedArgumentContextValues>()).ToArray();
+            var arguments = (
+                IsArgListEmpty(context.ArgList) ? Enumerable.Empty<NamedArgumentContextValues>() : context.ArgList._Args.Select(q => NamedArgumentContextValues.Build(q))
+                ).ToArray();
+
             // var signature = context.;
             return new MethodCallContextValues
             {
@@ -39,6 +42,11 @@ namespace XSharp.VsParser.Helpers.Parser.Values
                 NameExpression = NameExpressionContextValues.Build(nameExpression),
                 Arguments = arguments,
             };
+        }
+
+        static internal bool IsArgListEmpty(ArgumentListContext context)
+        {
+            return context?._Args == null || context._Args.Count == 0 || context._Args.All(q => NamedArgumentContextValues.IsEmpty(q));
         }
     }
 }

@@ -50,6 +50,25 @@ return nil");
         }
 
         [Fact]
+        public void MethodCallWithNoArguments()
+        {
+            var code = WrapInMethod(
+                """
+                self:TabWindow()
+                return nil
+                """);
+
+            var result = GetAll(code).ToValues().ToArray();
+            result.Should().HaveCount(1);
+            result[0].Should().BeEquivalentTo(new
+            {
+                NameExpression = (object)null,
+                AccessMember = new { AccessExpression = "self", MemberName = "TabWindow", },
+                Arguments = new object[0]
+            });
+        }
+
+        [Fact]
         public void FuctionNameTest()
         {
             var code = WrapInMethod(@"

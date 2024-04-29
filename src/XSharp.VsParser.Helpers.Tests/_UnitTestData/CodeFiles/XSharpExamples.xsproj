@@ -16,6 +16,7 @@
     <XSharpProjectversion>2.8.2.13</XSharpProjectversion>
     <StartupObject />
     <EnforceSelf>True</EnforceSelf>
+	<NoStandardDefs>true</NoStandardDefs>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'" Label="Configuration">
     <PlatformTarget>AnyCPU</PlatformTarget>
