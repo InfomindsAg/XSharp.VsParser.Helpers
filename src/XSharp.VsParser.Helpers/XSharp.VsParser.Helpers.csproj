@@ -3,11 +3,11 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
-		<Version>24.17.0.0</Version>
-		<Authors>Volkmar Rigo</Authors>
-		<Company />
+		<Version>24.18.0.0</Version>
+		<Authors>Volkmar Rigo, Hansjoerg Petriffer</Authors>
+		<Company>Infominds AG</Company>
 		<Product>XSharp.VsParser.Helpers</Product>
-		<Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files. Based on XSharp.VsParser 2.17.0.3.</Description>
+		<Description>XSharp.VsParser.Helpers contains some helper classes, that simplify the parsing and rewriting of XSharp code files. Based on XSharp.VsParser.</Description>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>XSharp;VsParser;Helper</PackageTags>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
