@@ -60,9 +60,9 @@ end interface";
             return parser.Tree.FirstOrDefaultType<T>();
         }
 
-        protected IEnumerable<T> GetAll(string code)
+        protected IEnumerable<T> GetAll(string code, bool namedArgs = false)
         {
-            var parser = code.ParseText();
+            var parser = code.ParseText(namedArgs: namedArgs);
             return parser.Tree.WhereType<T>();
         }
     }

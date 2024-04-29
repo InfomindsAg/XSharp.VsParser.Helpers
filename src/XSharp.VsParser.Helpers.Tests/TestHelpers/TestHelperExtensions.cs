@@ -21,9 +21,9 @@ namespace XSharp.Parser.Helpers.Tests.TestHelpers
         public static string TestProjectFileName()
             => UnitTestData(Path.Combine("Project", "TestProject.xsproj"));
 
-        public static ParserHelper ParseText(this string code, string fileName = "dummy.prg")
+        public static ParserHelper ParseText(this string code, string fileName = "dummy.prg", bool namedArgs = false)
         {
-            var parser = ParserHelper.BuildWithVoDefaultOptions();
+            var parser = ParserHelper.BuildWithVoDefaultOptions(namedArgs);
             var result = parser.ParseText(code, fileName);
             result.Should().NotBeNull();
             result.Errors.Should().BeEmpty();

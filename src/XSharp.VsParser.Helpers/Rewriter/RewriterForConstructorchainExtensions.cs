@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using XSharp.VsParser.Helpers.Parser;
+using XSharp.VsParser.Helpers.Parser.Values;
 using static LanguageService.CodeAnalysis.XSharp.SyntaxParser.XSharpParser;
 
 namespace XSharp.VsParser.Helpers.Rewriter
@@ -35,7 +36,7 @@ namespace XSharp.VsParser.Helpers.Rewriter
         public static RewriterForContext<ConstructorchainContext> ReplaceAllArguments(this RewriterForContext<ConstructorchainContext> rewriterFor, string newArguments)
         {
             var argList = rewriterFor.Context.ArgList;
-            if (argList != null)
+            if (!MethodCallContextValues.IsArgListEmpty(argList))
                 rewriterFor.Rewriter.Replace(argList.Start.ToIndex(), argList.Stop.ToIndex(), newArguments);
             else
                 rewriterFor.Rewriter.Replace(rewriterFor.Context.LPAREN().ToIndex(), rewriterFor.Context.RPAREN().ToIndex(), $"({newArguments})");

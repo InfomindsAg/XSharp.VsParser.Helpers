@@ -19,3 +19,7 @@
 
 - Used XSharp.VsParser 2.17.0.3
 - Added ClassHierarchy class for extracting class hierarchy for a project
+
+## 24.17.0.0
+
+- Used XSharp.VsParser 2.19.0.2

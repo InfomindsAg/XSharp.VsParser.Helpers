@@ -42,7 +42,7 @@
     <VOCompatibleImplicitRetvals>false</VOCompatibleImplicitRetvals>
     <VOCompatibleArithmeticConversions>false</VOCompatibleArithmeticConversions>
     <UseDefaultNamespace>false</UseDefaultNamespace>
-    <NoStandardDefs>false</NoStandardDefs>
+    <NoStandardDefs>true</NoStandardDefs>
     <EnforceSelf>True</EnforceSelf>
     <Allowdot>True</Allowdot>
     <EnforceVirtual>True</EnforceVirtual>
