@@ -141,10 +141,6 @@ namespace XSharp.VsParser.Helpers.Parser
 
         internal ParserHelper(XSharpParseOptions xsharpOptions)
         {
-            XSharpSpecificCompilationOptions.SetDefaultIncludeDir(@"c:\Program Files(x86)\XSharp\Include\");
-            XSharpSpecificCompilationOptions.SetWinDir(Environment.GetFolderPath(Environment.SpecialFolder.Windows));
-            XSharpSpecificCompilationOptions.SetSysDir(Environment.GetFolderPath(Environment.SpecialFolder.System));
-
             _XSharpOptions = xsharpOptions;
 
             Tree = null;

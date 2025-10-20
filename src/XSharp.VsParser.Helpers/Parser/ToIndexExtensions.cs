@@ -36,8 +36,8 @@ namespace XSharp.VsParser.Helpers.Parser
                 throw new ArgumentException("id can not be null");
             else if (id.ID() != null)
                 return ToIndex(id.ID());
-            else if (id.keywordxs()?.Token != null)
-                return ToIndex(id.keywordxs()?.Token);
+            else if (id.keywordsoft()?.Token != null)
+                return ToIndex(id.keywordsoft()?.Token);
 
             throw new ArgumentException("Can not convert ID to Index");
         }
