@@ -23,3 +23,10 @@
 ## 24.17.0.0
 
 - Used XSharp.VsParser 2.19.0.2
+
+## 25.43.0.0
+
+- Used XSharp.VsParser 2.24.0.1
+- Removed XSharpSpecificCompilationOptions.SetDefaultIncludeDir
+- Removed XSharpSpecificCompilationOptions.SetWinDir
+- Removed XSharpSpecificCompilationOptions.SetSysDir
