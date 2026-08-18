@@ -115,7 +115,7 @@ namespace XSharp.VsParser.Helpers.Project
             var flags = new string[] {"vo1", "vo2" , "vo3" , "vo4" , "vo5" , "vo6" , "vo7" , "vo8" , "vo9" ,
                 "vo10" , "vo11" , "vo12", "vo13", "vo14", "vo15","vo16",
                 "cs", "az","ins", "lb","memvar","namedargs","undeclared","unsafe","xpp1","xpp2","fox1", "allowdot",
-                "ovf", "ns"};
+                "ovf", "ns", "modernsyntax"};
             var result = new List<string>();
 
             foreach (var node in root.Element(_Ns + "PropertyGroup").Elements())

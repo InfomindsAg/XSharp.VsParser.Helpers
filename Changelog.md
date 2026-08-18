@@ -30,3 +30,8 @@
 - Removed XSharpSpecificCompilationOptions.SetDefaultIncludeDir
 - Removed XSharpSpecificCompilationOptions.SetWinDir
 - Removed XSharpSpecificCompilationOptions.SetSysDir
+
+## 26.34.0.0
+
+- Used XSharp.VsParser 3.0.1.0
+- Add ModernSyntax-Flag

@@ -24,6 +24,7 @@
     <AZ>False</AZ>
     <EnforceSelf>False</EnforceSelf>
     <Allowdot>False</Allowdot>
+    <ModernSyntax>False</ModernSyntax>
     <NS>False</NS>
     <INS>False</INS>
     <MemVar>False</MemVar>

@@ -24,6 +24,7 @@
     <AZ>True</AZ>
     <EnforceSelf>True</EnforceSelf>
     <Allowdot>True</Allowdot>
+    <ModernSyntax>True</ModernSyntax>
     <NS>True</NS>
     <INS>True</INS>
     <MemVar>True</MemVar>
