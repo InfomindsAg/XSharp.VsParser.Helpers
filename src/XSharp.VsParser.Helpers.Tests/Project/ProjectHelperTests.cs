@@ -35,6 +35,7 @@ namespace XSharp.Parser.Helpers.Tests.Project
             "vo14",
             "vo15",
             "vo16",
+            "modernsyntax",
         };
 
         static List<string> AllFlags(List<string> flags, bool value)

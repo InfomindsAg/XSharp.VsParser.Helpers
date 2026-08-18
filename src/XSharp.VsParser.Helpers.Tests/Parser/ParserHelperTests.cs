@@ -68,6 +68,24 @@ end class".ParseText();
         }
 
         [Fact]
+        public void ModernSyntaxTest()
+        {
+            // In the VO dialect "&&" starts an old style xBase line comment, unless the ModernSyntax flag is set.
+            // Without that flag everything behind the "&&" is dropped, including the closing ")".
+            var code = @"function Dummy() as logic
+return (1 == 1 && 2 == 2)";
+
+            List<string> OptionsOf(string projectFileName)
+                => new XSharp.VsParser.Helpers.Project.ProjectHelper(ProjectFile(projectFileName)).GetOptions();
+
+            var modernSyntaxOn = ParserHelper.BuildWithOptionsList(OptionsOf("XSharpVoAllFlagsTrue.xsproj"));
+            modernSyntaxOn.ParseText(code, "Dummy.prg").Errors.Should().BeEmpty();
+
+            var modernSyntaxOff = ParserHelper.BuildWithOptionsList(OptionsOf("XSharpVoAllFlagsFalse.xsproj"));
+            modernSyntaxOff.ParseText(code, "Dummy.prg").Errors.Should().NotBeEmpty();
+        }
+
+        [Fact]
         public void LinesTest()
         {
             var lines = new List<string> { "class dummy", "method test()", "return nil", "end class" };
