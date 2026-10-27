@@ -90,8 +90,18 @@ namespace XSharp.VsParser.Helpers.Project
         }
 
 
+        /// <summary>
+        /// All PropertyGroups of the project: groups without a Condition first, then the conditional ones,
+        /// each in document order. A property is taken from the first group that defines it.
+        /// </summary>
+        private IEnumerable<XElement> GetPropertyGroups()
+            => _ProjectXml.Root.Elements(_Ns + "PropertyGroup")
+                .OrderBy(q => q.Attribute("Condition") != null);
+
         private string GetProjectProperty(string propertyName)
-            => _ProjectXml.Root.Element(_Ns + "PropertyGroup").ElementIgnoreCase(propertyName)?.Value;
+            => GetPropertyGroups()
+                .Select(q => q.ElementIgnoreCase(propertyName))
+                .FirstOrDefault(q => q != null)?.Value;
 
         /// <summary>
         /// Gets all the references and project references
@@ -111,23 +121,25 @@ namespace XSharp.VsParser.Helpers.Project
 
         private List<string> GetFlags()
         {
-            var root = _ProjectXml.Root;
             var flags = new string[] {"vo1", "vo2" , "vo3" , "vo4" , "vo5" , "vo6" , "vo7" , "vo8" , "vo9" ,
                 "vo10" , "vo11" , "vo12", "vo13", "vo14", "vo15","vo16",
                 "cs", "az","ins", "lb","memvar","namedargs","undeclared","unsafe","xpp1","xpp2","fox1", "allowdot",
                 "ovf", "ns", "modernsyntax"};
             var result = new List<string>();
+            var found = new HashSet<string>();
 
-            foreach (var node in root.Element(_Ns + "PropertyGroup").Elements())
+            foreach (var node in GetPropertyGroups().SelectMany(q => q.Elements()))
             {
                 string localName = node.Name.LocalName.ToLower();
 
                 if (!flags.Contains(localName) ||
+                    found.Contains(localName) ||
                     !bool.TryParse(node.Value, out bool value))
                 {
                     continue;
                 }
 
+                found.Add(localName);
                 result.Add($"{localName}{(value ? "+" : "-")}");
             }
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(XSharpMsBuildDir)\XSharp.Default.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>5c6b2a7e-3f0d-4c2b-9a51-0d8e2f1b7c44</ProjectGuid>
+    <LB>True</LB>
+    <Vo2>True</Vo2>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Later.Groups</RootNamespace>
+    <AssemblyName>LaterGroups</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <Dialect>VO</Dialect>
+    <NoStandardDefs>True</NoStandardDefs>
+    <Vo7>True</Vo7>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'" Label="Configuration">
+    <Dialect>Core</Dialect>
+    <LB>False</LB>
+    <Vo9>True</Vo9>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Vo2>False</Vo2>
+  </PropertyGroup>
+  <Import Project="$(XSharpMsBuildDir)\XSharp.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.prg" />
+  </ItemGroup>
+</Project>

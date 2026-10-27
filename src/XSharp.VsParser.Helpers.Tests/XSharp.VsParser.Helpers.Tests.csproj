@@ -20,6 +20,9 @@
     <None Include="_UnitTestData\ProjectFiles\XSharpVoAllFlagsTrue.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="_UnitTestData\ProjectFiles\XSharpPropertiesInLaterGroups.xsproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="_UnitTestData\Project\TestProject.xsproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

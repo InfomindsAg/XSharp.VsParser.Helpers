@@ -60,6 +60,25 @@ namespace XSharp.Parser.Helpers.Tests.Project
         }
 
         [Fact]
+        public void PropertiesInLaterGroups()
+        {
+            var projectHelper = new ProjectHelper(ProjectFile("XSharpPropertiesInLaterGroups.xsproj"));
+            var options = projectHelper.GetOptions();
+
+            options.Should().Contain(new[] { "dialect:vo", "ns:Later.Groups", "nostddefs+", "vo7+", "vo9+" });
+        }
+
+        [Fact]
+        public void UnconditionalGroupsWinOverConditionalAndLaterGroups()
+        {
+            var projectHelper = new ProjectHelper(ProjectFile("XSharpPropertiesInLaterGroups.xsproj"));
+            var options = projectHelper.GetOptions();
+
+            options.Should().Contain(new[] { "lb+", "vo2+" });
+            options.Should().NotContain(new[] { "dialect:core", "lb-", "vo2-" });
+        }
+
+        [Fact]
         public void GetSourceFiles()
         {
             var projectHelper = new ProjectHelper(CodeFile("XSharpExamples.xsproj"));
