@@ -35,3 +35,8 @@
 
 - Used XSharp.VsParser 3.0.1.0
 - Add ModernSyntax-Flag
+
+## 26.44.0.0
+
+- ProjectHelper reads properties and flags from all PropertyGroups, not only the first one
+  (groups without a Condition first, first definition wins)
